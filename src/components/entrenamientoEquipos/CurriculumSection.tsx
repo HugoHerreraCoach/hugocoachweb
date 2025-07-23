@@ -53,9 +53,6 @@ export function CurriculumSection() {
             {modules.map((module) => {
               const IconComponent: ElementType = module.icon;
               return (
-                // Las tarjetas ahora son divs estáticos.
-                // Usamos un fondo semitransparente (bg-black/20) y un borde sutil
-                // para que el resplandor animado se note por detrás.
                 <div
                   key={module.title}
                   className="h-full rounded-2xl bg-black/20 p-8 ring-1 ring-white/10 transition-all duration-300 hover:ring-white/20"

@@ -28,11 +28,11 @@ export function HeroSection() {
             href={CALENDLY_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="rounded-md bg-gradient-to-b from-[#0a4afc] to-[#153eb5] px-4 py-3 text-lg font-semibold leading-[1.2] text-white shadow-sm transition-colors duration-500 ease-in-out hover:from-[#153eb5] hover:to-[#0a4afc]"
+            className="rounded-md bg-gradient-to-b from-[#0a4afc] to-[#153eb5] px-4 py-3 text-lg lg:text-xl font-semibold leading-[1.2] text-white shadow-sm transition-colors duration-500 ease-in-out hover:from-[#153eb5] hover:to-[#0a4afc]"
           >
             Agendar Sesión de Diagnóstico
           </Link>
-          <Link href="#plan-de-estudios" className="group text-lg mt-6 md:mt-0 font-semibold leading-[1.2] text-slate-300 flex items-center gap-x-1">
+          <Link href="#plan-de-estudios" className="group text-lg lg:text-xl mt-6 md:mt-0 font-semibold leading-[1.2] text-slate-300 flex items-center gap-x-1">
             Ver Plan de Estudios <ChevronRight className="h-4 w-4 transform group-hover:translate-x-1 transition-transform" />
           </Link>
         </div>
