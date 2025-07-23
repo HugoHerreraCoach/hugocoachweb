@@ -1,0 +1,2 @@
+// app/lib/types.ts
+
