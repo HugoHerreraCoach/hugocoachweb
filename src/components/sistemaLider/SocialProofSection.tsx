@@ -1,16 +1,25 @@
-'use client'
+"use client";
 
 import Image from 'next/image';
 import { Quote } from 'lucide-react';
 
+// Interfaces para tipado estricto
 interface Testimonial {
     name: string;
     role: string;
     company: string;
-    image: string; 
+    image: string;
     quote: string;
 }
 
+interface CompanyLogo {
+    name: string;
+    path: string;
+    width: number;
+    height: number;
+}
+
+// Datos del componente
 const testimonials: Testimonial[] = [
     {
         name: 'Abey Díaz',
@@ -24,22 +33,22 @@ const testimonials: Testimonial[] = [
         role: 'Dueña',
         company: 'Belcan Inmobiliaria',
         image: '/images/empresas/isabel.jpg',
-        quote: 'Las ventas no son mi fuerte, pero con esta estructura duplicamos los resultados en 2 semanas. Mi equipo ahora tiene un guion de ventas que provoca resultados..'
+        quote: 'Las ventas no son mi fuerte, pero con esta estructura duplicamos los resultados en 2 semanas. Mi equipo ahora tiene un guion de ventas que provoca resultados.'
     },
 ];
 
-const companyLogos: { name: string; path: string , width: number, height: number}[] = [
-    { name: 'Municipalidad de Cajamarca', path: '/images/empresas/muncipalidadCajamarca.png', width: 300, height: 924},
+const companyLogos: CompanyLogo[] = [
+    { name: 'Municipalidad de Cajamarca', path: '/images/empresas/municipalidadCajamarca.png', width: 300, height: 924},
     { name: 'Top X', path: '/images/empresas/topXLogo.png', width: 220, height: 1226 },
     { name: 'Century 21', path: '/images/empresas/century21Logo.png', width: 300, height: 696 },
     { name: 'Inclub', path: '/images/empresas/inclubLogo.png', width: 300, height: 903 },
     { name: 'Royal Prestige', path: '/images/empresas/royalLogo.png', width: 300, height: 1526 },
-    { name: 'Fuxion', path: '/images/empresas/fuxionLogo.png', width: 175, height: 536 }, 
+    { name: 'Fuxion', path: '/images/empresas/fuxionLogo.png', width: 175, height: 536 },
 ];
 
 export function SocialProofSection() {
     return (
-        <section className="w-ful text-white py-20 sm:py-28 overflow-hidden bg-gradient-to-t from-black to-slate-900 bg-fixed">
+        <section className="w-full text-white py-20 sm:py-28 overflow-hidden bg-gradient-to-t from-black to-slate-900 bg-fixed">
             <div className="container mx-auto max-w-7xl px-6">
                 <div className="text-center">
                     <Quote className="mx-auto h-12 w-12 text-[#0a4afc] mb-4" aria-hidden="true" />
@@ -52,7 +61,7 @@ export function SocialProofSection() {
                 </div>
 
                 <div className="mt-10 lg:mt-16 grid grid-cols-1 gap-10 lg:gap-12 md:grid-cols-2 lg:grid-cols-2">
-                    {testimonials.map((testimonial: Testimonial) => (
+                    {testimonials.map((testimonial) => (
                         <figure key={testimonial.name} className="bg-black/20 p-8 rounded-2xl shadow-xl border border-gray-800 flex flex-col justify-between h-full transition-all duration-300 hover:scale-[1.01] hover:shadow-2xl hover:border-[#0a4afc]/50">
                             <blockquote className="text-lg lg:text-xl leading-relaxed text-slate-200 flex-grow">
                                 <p className="italic">
@@ -80,14 +89,12 @@ export function SocialProofSection() {
                     <h3 className="text-xl lg:text-3xl font-bold text-white mb-10">
                         Empresas que han implementado mi metodología de gestión:
                     </h3>
-                    {/* Contenedor para el carrusel de logos infinito */}
                     <div className="relative w-full overflow-hidden py-6">
-                        <div className="flex items-center animate-marquee-h-infinite whitespace-nowrap">
-                            {/* Duplicar los logos para un efecto de scroll continuo */}
+                        <div className="animate-marquee-h-infinite">
                             {[...companyLogos, ...companyLogos].map((logo, index) => (
                                 <Image
                                     key={`${logo.name}-${index}`}
-                                    className="max-h-[80px] w-auto object-contain mx-8 opacity-70 hover:opacity-100 transition-opacity duration-300 filter grayscale hover:grayscale-0"
+                                    className="max-h-[70px] w-auto object-contain mx-8 flex-shrink-0 opacity-70 hover:opacity-100 transition-opacity duration-300 filter grayscale hover:grayscale-0"
                                     src={logo.path}
                                     alt={logo.name}
                                     width={logo.width}
@@ -98,23 +105,25 @@ export function SocialProofSection() {
                     </div>
                 </div>
             </div>
-            {/* Tailwind CSS para la animación del carrusel */}
+            
             <style jsx>{`
                 @keyframes marqueeH {
                     0% { transform: translateX(0%); }
                     100% { transform: translateX(-50%); }
                 }
+
                 .animate-marquee-h-infinite {
-                    /* Mobile-first: Animación rápida por defecto (15s) */
-                    animation: marqueeH 15s linear infinite;
+                    /* LA SOLUCIÓN DEFINITIVA: */
+                    width: max-content;
+                    
                     display: flex;
-                    width: 200%;
+                    align-items: center; /* Buena práctica para alinear verticalmente los logos */
+                    animation: marqueeH 15s linear infinite;
                 }
 
-                /* Para pantallas de 1024px (lg) en adelante, la animación es más lenta */
                 @media (min-width: 1024px) {
                     .animate-marquee-h-infinite {
-                        animation-duration: 30s;
+                        animation-duration: 35s;
                     }
                 }
             `}</style>

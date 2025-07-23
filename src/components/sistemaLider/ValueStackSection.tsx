@@ -46,7 +46,7 @@ const valueStack: ValueItem[] = [
   }
 ];
 
-const AUTOPLAY_INTERVAL: number = 8000; 
+const AUTOPLAY_INTERVAL: number = 6000; 
 
 export function ValueStackSection(): ReactNode {
   const [activeIndex, setActiveIndex] = useState<number>(0);
