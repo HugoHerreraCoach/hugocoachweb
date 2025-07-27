@@ -24,11 +24,16 @@ const config: Config = {
           '0%': { width: '0%' },
           '100%': { width: '100%' },
         },
+        marquee: {
+          '0%': { transform: 'translateX(0%)' },
+          '100%': { transform: 'translateX(-50%)' },
+        },
       },
       animation: {
         blink: 'blink 1s step-end infinite',
         fadeIn: 'fadeIn 0.5s ease-in-out',
         'fill-progress': 'fill-progress linear forwards',
+        marquee: 'marquee 40s linear infinite',
       },
     },
   },

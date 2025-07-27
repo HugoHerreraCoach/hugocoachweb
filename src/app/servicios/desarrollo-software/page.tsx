@@ -13,8 +13,8 @@ import CtaSection from '@/components/software/CtaSection';
 
 
 export const metadata: Metadata = {
-    title: 'Certificación Vendedor Experto | Entrenamiento para Equipos',
-    description: 'Transforma a tu equipo de ventas en una fuerza de élite estandarizada con nuestro entrenamiento práctico de 8 horas en vivo.',
+    title: 'Desarrollo de software',
+    description: 'Software a medida para tus procesos de ventas',
 };
 
 export default function SoftwareParaEmpresasPage() {
