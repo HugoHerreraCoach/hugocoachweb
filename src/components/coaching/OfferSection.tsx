@@ -33,7 +33,7 @@ const offerItems: OfferItem[] = [
         icon: ClipboardPen,
         type: 'Entregable Principal',
         title: 'Sesión Estratégica 1 a 1 (2h)',
-        description: 'Auditamos tu proceso de venta actual y construimos tu nuevo plan de ataque para los próximos 30 días. Tu guion, tu proceso, tu plan de comisiones.',
+        description: 'Auditamos tu proceso de venta de inicio a fin. Construimos tu nuevo plan de ataque para los próximos 90 días: tu guion, tu proceso, tu plan de comisiones.',
         value: 200,
         isPrimary: true,
     },
@@ -41,7 +41,7 @@ const offerItems: OfferItem[] = [
         icon: CalendarClock,
         type: 'Bono #1',
         title: 'Acceso a Talleres Grupales (3 Meses)',
-        description: 'Te unes a 6 talleres en vivo vía Zoom (uno cada 15 días) donde entreno, resuelvo dudas y practico con ventas y objeciones reales. Mantén tu filo y aprende junto a otros vendedores.',
+        description: 'Te unes a 6 sesiones quincenales en vivo para mantener el filo. Entrenamos con casos reales, resolvemos objeciones y garantizamos que el sistema se ejecute.',
         value: 150,
         isPrimary: false,
     },
@@ -56,8 +56,8 @@ const offerItems: OfferItem[] = [
     {
         icon: MessageSquareQuote,
         type: 'Bono #3',
-        title: 'Acompañamiento por WhatsApp (7 Días)',
-        description: '¿Tienes una venta difícil esta semana? Me escribes, vemos el caso juntos y te doy la estrategia para cerrarlo.',
+        title: 'Soporte Táctico por WhatsApp (7 Días)',
+        description: '¿Tienes una venta difícil esta semana? Me escribes, analizamos el caso y te doy la estrategia para cerrarla. Soy tu coach en tu bolsillo.',
         value: 90,
         isPrimary: false,
     },
@@ -65,7 +65,7 @@ const offerItems: OfferItem[] = [
         icon: Video,
         type: 'Bono #4',
         title: 'Grabación Completa de la Sesión',
-        description: 'Repasa tu plan y las técnicas cuantas veces quieras. Es tu activo de entrenamiento personal para toda la vida.',
+        description: 'Tu plan de acción y cada técnica que discutimos, grabadas para que las repases de por vida. Es tu activo de entrenamiento personal.',
         value: 'Incalculable',
         isPrimary: false,
     },
@@ -98,14 +98,14 @@ export default function OfferSection () {
     };
 
     return (
-        <section className="w-full text-slate-900 py-20 sm:py-28 bg-slate-50 overflow-hidden">
-            <div className="mx-auto max-w-3xl px-6 lg:px-8">
+        <section className="w-full text-slate-900 py-20 lg:py-28 bg-slate-50 overflow-hidden">
+            <div className="mx-auto max-w-5xl px-6 lg:px-8">
                 <div className="text-center">
                     <h2 className="text-4xl font-bold tracking-tight text-slate-900 lg:text-5xl text-balance">
-                        No es una sesión. Es tu arsenal personal para dominar la venta.
+                        No compras una sesión. Inviertes en tu arsenal de cierre.
                     </h2>
                     <p className="mt-6 text-xl lg:text-2xl text-slate-600 text-balance">
-                        Esto es todo lo que obtienes al trabajar conmigo. Cada elemento está diseñado para darte una ventaja competitiva inmediata.
+                        Te entrego cada componente de mi sistema, diseñado para darte una ventaja competitiva inmediata. Esto es lo que vamos a construir juntos:
                     </p>
                 </div>
 

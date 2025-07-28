@@ -7,7 +7,6 @@ import {
     Users,
     Paperclip,
     XCircle,
-    History,
     ChevronDown,
     type LucideProps,
 } from 'lucide-react';
@@ -33,35 +32,28 @@ const problems: ProblemData[] = [
         icon: AreaChart,
         title: 'Comisiones Montaña Rusa',
         description:
-            'Un mes celebras, al siguiente te preocupas. Vives en una incertidumbre financiera que te impide planificar, porque tus ingresos dependen de la suerte y no de un sistema predecible.',
+            'Un mes celebras, el siguiente te preocupas. Vives en una incertidumbre que te impide planificar porque tus ingresos dependen de la suerte, no de un método predecible.',
     },
     {
         id: 'problem-2',
         icon: Users,
-        title: 'El Cliente Dirige la Venta, no Tú',
+        title: 'El Cliente Dirige la Venta',
         description:
-            'Empiezas la llamada con confianza, pero terminas reaccionando a lo que el cliente impone. En lugar de liderar hacia el cierre, te conviertes en un simple informador.',
+            'Empiezas con confianza, pero terminas reaccionando a lo que el cliente impone. En lugar de liderar hacia el cierre, te conviertes en un simple informador.',
     },
     {
         id: 'problem-3',
         icon: Paperclip,
-        title: 'Sales a Cada Venta Sin un Plan de Ataque',
+        title: 'Sales a Vender Sin un Plan',
         description:
-            'Cada prospecto es un mundo nuevo. Improvisas el guion, las preguntas, el cierre. Gastas una energía enorme en cada oportunidad porque no tienes un proceso probado que puedas replicar.',
+            'Cada llamada es una improvisación. Gastas el doble de energía porque no tienes un guion de ataque probado que puedas replicar para cerrar más y más rápido.',
     },
     {
         id: 'problem-4',
         icon: XCircle,
-        title: 'Pánico Frente a las Objeciones Clave',
+        title: 'Pánico a las Objeciones',
         description:
-            "Cuando escuchas 'lo voy a pensar' o 'es muy caro', sientes cómo la venta se te escapa de las manos. No tienes el arsenal de respuestas para rebatir con autoridad.",
-    },
-    {
-        id: 'problem-5',
-        icon: History,
-        title: 'Tu Agenda Llena, tu Pipeline Vacío',
-        description:
-            'Pasas horas en reuniones con prospectos que no van a comprar. Tu esfuerzo se fuga en oportunidades no calificadas porque no tienes un filtro para detectar quién es un cliente real.',
+            "Cuando escuchas 'lo voy a pensar' o 'es muy caro', sientes cómo la venta se te escapa. No tienes el arsenal de respuestas para rebatir con autoridad y tomar el control.",
     },
 ];
 
@@ -124,11 +116,10 @@ export default function ProblemSection() {
             <div className="mx-auto max-w-7xl px-6 lg:px-8">
                 <div className="mx-auto text-center">
                     <h2 className="text-4xl font-bold tracking-tight text-slate-900 lg:text-5xl text-balance">
-                        Cuando tu Esfuerzo y tus Comisiones No Van de la Mano
+                        Si reconoces estas fugas de energía, tu sistema está roto.
                     </h2>
                     <p className="mt-6 text-xl lg:text-2xl leading-[1.4] text-slate-600 text-balance">
-                        Si estás cansado de que tu esfuerzo no se refleje en tu cuenta de
-                        banco, es porque te falta una estructura.
+                        El problema no es tu esfuerzo. Es la falta de un proceso que transforme ese esfuerzo en resultados.
                     </p>
                 </div>
 
