@@ -17,7 +17,7 @@ export default function HeaderHome() {
                     quality={80}
                 />
             </div>
-            <div className="absolute bottom-8 left-0 right-0 ml-4 mr-4 md:mx-auto text-center px-4 lg:px-6 z-10 max-w-5xl bg-[white]/10 backdrop-blur-[12px] rounded-xl py-6">
+            <div className="absolute bottom-10 left-0 right-0 ml-4 mr-4 md:mx-auto text-center px-4 lg:px-6 z-10 max-w-5xl bg-[white]/10 backdrop-blur-[12px] rounded-xl py-6">
                 <h1 className="text-3xl md:text-5xl font-bold leading-[1] tracking-tight text-white">
                     Tus ventas no necesitan más esfuerzo. <br /> Necesitan un sistema.
                 </h1>

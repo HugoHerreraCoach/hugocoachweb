@@ -38,7 +38,7 @@ const navConfig: NavItem[] = [
         items: [
           { label: 'Libro: Cerrador Experto', href: 'https://cerradorexperto.hugoherreracoach.com/', isExternal: true, description: '139 maneras de resolver objeciones.' },
           { label: 'Programa Lobos de Ventas', href: 'https://lobosdeventas.hugoherreracoach.com/', isExternal: true, description: 'Formación de alto rendimiento en 30 días.' },
-          { label: 'Coaching 1:1', href: '/servicios/coaching-uno-a-uno', description: 'Potencia tu negocio con sesiones personalizadas.' },
+          { label: 'Coaching 1:1', href: '/servicios/coaching', description: 'Potencia tu negocio con sesiones personalizadas.' },
         ]
       },
       {
