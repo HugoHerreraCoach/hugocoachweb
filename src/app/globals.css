@@ -1,3 +1,5 @@
+/* src/app/globals.css */
+
 @import "tailwindcss";
 
 :root {
@@ -35,15 +37,9 @@ body {
 
 
 .prose {
-  /*
-    AÑADIMOS EL TAMAÑO BASE AQUÍ.
-    1.25rem es el equivalente a `text-xl` en Tailwind.
-    Este tamaño será heredado por los párrafos, listas, etc.
-  */
   font-size: 1.25rem;
   line-height: 1.7;
 
-  /* Escalamos los encabezados para que sean más grandes en proporción */
   h1 {
     color: var(--color-prose-headings);
     margin-bottom: 1em;

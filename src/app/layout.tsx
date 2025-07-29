@@ -1,5 +1,6 @@
+// src/app/layout.tsx
+
 import type { Metadata } from "next";
-// 1. Importa las fuentes que necesitas
 import {
   Montserrat,
   Barlow,
