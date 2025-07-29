@@ -16,7 +16,7 @@ export const PrimerosClientes = () => {
                         {/* Columna 1: Imagen */}
                         <div className="flex justify-center">
                             <Image
-                                src="/images/taxiPlus.jpg"
+                                src="/images/historia/taxiPlus.jpg"
                                 alt="Hugo Herrera dando una sesión de coaching para empresas"
                                 width={1000}
                                 height={594}

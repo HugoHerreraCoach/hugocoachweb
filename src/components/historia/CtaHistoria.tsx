@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 export const CtaHistoria = () => {
     return (
-        <section className="bg-[linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,1)),url('/images/buildBackground.jpg')] bg-no-repeat bg-cover min-h-[90vh] flex justify-center items-center text-white py-16 lg:py-24">
+        <section className="bg-[linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,1)),url('/images/historia/buildBackground.jpg')] bg-no-repeat bg-cover min-h-[90vh] flex justify-center items-center text-white py-16 lg:py-24">
             <div className="container mx-auto px-6 text-center">
                 <h2 className="text-3xl md:text-5xl font-extrabold text-balance">
                     El esfuerzo te trajo hasta aquí. La estructura te llevará al siguiente nivel.

@@ -79,7 +79,7 @@ export const PuntoDeInflexion = () => {
                     {/* Columna Izquierda: Imagen */}
                     <div className="w-full">
                         <Image
-                            src="/images/racser3.jpg"
+                            src="/images/historia/racser3.jpg"
                             alt="Hugo Herrera en una sesión de coaching de ventas"
                             width={1000}
                             height={750}
@@ -133,7 +133,7 @@ export const PuntoDeInflexion = () => {
                         {/* Tarjeta 1 */}
                         <div className="flex flex-col bg-gradient-to-tr from-[#1E3A8A]/60 to-[#0F172A]/60 rounded-xl overflow-hidden">
                             <Image
-                                src="/images/racser1.jpg"
+                                src="/images/historia/racser1.jpg"
                                 alt="Observando a los vendedores en la calle"
                                 width={800}
                                 height={600}
@@ -148,7 +148,7 @@ export const PuntoDeInflexion = () => {
                         {/* Tarjeta 2 */}
                         <div className="flex flex-col bg-gradient-to-tr from-[#1E3A8A]/60 to-[#0F172A]/60  rounded-xl overflow-hidden">
                             <Image
-                                src="/images/racser2.jpg"
+                                src="/images/historia/racser2.jpg"
                                 alt="Asistiendo a reuniones de equipo"
                                 width={800}
                                 height={600}

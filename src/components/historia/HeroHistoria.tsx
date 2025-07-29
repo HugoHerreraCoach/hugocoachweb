@@ -8,7 +8,7 @@ export const HeroHistoria = () => {
 
             {/* Imagen de Fondo */}
             <Image
-                src="/images/miHistoriaHeader.jpg"
+                src="/images/historia/miHistoriaHeader.jpg"
                 alt="Hugo Herrera en su faceta como estratega de ventas"
                 layout="fill"
                 objectFit="cover"

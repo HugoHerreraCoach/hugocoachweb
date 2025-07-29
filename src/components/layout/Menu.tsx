@@ -36,26 +36,25 @@ const navConfig: NavItem[] = [
       {
         sectionTitle: 'PARA VENDEDORES',
         items: [
-          { label: 'Libro: Cerrador Experto', href: 'https://cerradorexperto.hugoherreracoach.com/', isExternal: true, description: '139 maneras de resolver objeciones.' },
+          { label: 'Libro: Cerrador Experto', href: 'https://cerradorexperto.hugoherreracoach.com/', isExternal: true, description: '139 maneras de resolver objeciones y cerrar ventas con éxito.' },
           { label: 'Programa Lobos de Ventas', href: 'https://lobosdeventas.hugoherreracoach.com/', isExternal: true, description: 'Formación de alto rendimiento en 30 días.' },
-          { label: 'Coaching 1:1', href: '/servicios/coaching', description: 'Potencia tu negocio con sesiones personalizadas.' },
+          { label: 'Coaching 1:1', href: '/servicios/coaching', description: 'Sesiones personales para potenciar tus ventas' },
         ]
       },
       {
         sectionTitle: 'PARA LÍDERES Y EMPRESAS',
         items: [
-          { label: 'Libro: Líder Experto', href: 'https://liderexperto.hugoherreracoach.com/', isExternal: true, description: 'Crea equipos de élite que vendan más y mejor.' },
-          { label: 'Entrenamiento para Equipos', href: '/servicios/entrenamiento-equipos', description: 'Convierte a tu equipo en una fuerza de élite.' },
-          { label: 'Asesoría en Gestión Comercial', href: '/servicios/asesoria-comercial', description: 'Diseña un sistema de ventas que escale.' },
-          { label: 'Software y Embudos a Medida', href: '/servicios/desarrollo-software', description: 'Infraestructura digital para crecer.' },
-          { label: 'Conferencias', href: '/servicios/conferencias', description: 'Impacto y motivación para tu evento.' },
+          { label: 'Libro: Líder Experto', href: 'https://liderexperto.hugoherreracoach.com/', isExternal: true, description: 'Construye equipos de élite que venden más y mejor.' },
+          { label: 'Entrenamiento para Equipos', href: '/servicios/entrenamiento-equipos', description: 'Un sistema probado para estandarizar resultados.' },
+          { label: 'Asesoría en Gestión Comercial', href: '/servicios/asesoria-comercial', description: 'Aprende a dirigir, supervisar y escalar tu operación de ventas.' },
+          { label: 'Software y Embudos de venta', href: '/servicios/desarrollo-software', description: 'Infraestructura digital para crecer.' },
+          { label: 'Conferencias', href: '/servicios/conferencias', description: 'Contrata un arquitecto, no un motivador.' },
         ]
       }
     ]
   },
   {
     label: 'Recursos',
-    // 'Casos de Éxito' fue movido a 'Sobre Mí'
     subMenu: [
       { label: 'Blog de Ventas', href: '/blog', description: 'Estrategias y guías para dominar las ventas.' },
       { label: 'Recursos Gratuitos', href: '/recursos', description: 'Herramientas y plantillas para aplicar hoy.' },
@@ -64,7 +63,6 @@ const navConfig: NavItem[] = [
   },
   {
     label: 'Sobre Mí',
-    // Ahora es un menú desplegable
     subMenu: [
         { label: 'Mi Historia', href: '/mi-historia', description: 'Conoce la trayectoria y filosofía de Hugo.' },
         { label: 'Casos de Éxito', href: '/casos-de-exito', description: 'Resultados reales de nuestros clientes.' },
@@ -72,7 +70,6 @@ const navConfig: NavItem[] = [
   },
 ];
 
-// --- COMPONENTE REACT (Sin cambios en el JSX) ---
 
 export default function OptimizedMenu() {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);

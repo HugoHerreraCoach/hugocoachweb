@@ -15,7 +15,7 @@ export const DeLaTeoriaALaTrinchera = () => {
 
                 <div className="lg:grid lg:grid-cols-5 max-w-6xl mx-auto lg:gap-2 mt-6 lg:items-center">
                     <Image
-                        src="/images/inmobiliaria.jpg"
+                        src="/images/historia/inmobiliaria.jpg"
                         alt="Hugo Herrera liderando un equipo de ventas"
                         width={530}
                         height={734}

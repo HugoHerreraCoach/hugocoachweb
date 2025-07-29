@@ -14,7 +14,7 @@ export const LaBusquedaDelSecreto = () => {
                     {/* Columna de la Imagen (2/5 en escritorio) */}
                     <div className="order-1 flex justify-center lg:order-2 lg:col-span-2 mt-6">
                         <Image
-                            src="/images/padreRicoBook.png"
+                            src="/images/historia/padreRicoBook.png"
                             alt="Libro Padre Rico, Padre Pobre de Robert Kiyosaki"
                             width={340}
                             height={539}

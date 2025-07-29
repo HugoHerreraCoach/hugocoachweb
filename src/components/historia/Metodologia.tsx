@@ -29,7 +29,7 @@ const pilares: Pilar[] = [
 
 export const Metodologia = () => {
     return (
-        <section className="relative bg-cover bg-top bg-no-repeat bg-fixed py-16 lg:py-24 text-white bg-[linear-gradient(rgba(5,10,20,1),rgba(5,10,20,0.6)),url('/images/espiralBackground.jpg')]">
+        <section className="relative bg-cover bg-top bg-no-repeat bg-fixed py-16 lg:py-24 text-white bg-[linear-gradient(rgba(5,10,20,1),rgba(5,10,20,0.6)),url('/images/historia/espiralBackground.jpg')]">
             <div className="container mx-auto px-4">
                 <div className="text-center max-w-7xl mx-auto">
                     {/* Cambiamos el color del texto a blanco para que sea legible sobre el fondo oscuro */}
