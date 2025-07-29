@@ -1,4 +1,4 @@
-// src/components/mdx/InfoBox.tsx
+// src/components/blog/mdx/InfoBox.tsx
 
 import { Info, AlertTriangle, CheckCircle } from 'lucide-react';
 import type { ReactNode } from 'react';

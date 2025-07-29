@@ -10,10 +10,10 @@ export default function BlogPage() {
 
   return (
     <div className="bg-gray-950 text-white">
-      <header className="text-center py-20 md:py-28">
-        <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight text-blue-500">El Arsenal del Vendedor</h1>
-        <p className="mt-4 max-w-3xl mx-auto text-lg md:text-xl text-gray-300">
-          Estrategias, tácticas y mentalidad directamente desde la trinchera para dominar el arte de las ventas.
+      <header className="text-center px-4 pt-20 pb-0">
+        <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight text-white">Blog del Vendedor Experto</h1>
+        <p className="mt-4 lg:mt-6 mx-auto text-xl md:text-2xl text-gray-300">
+          El método, los guiones y la mentalidad para construir resultados de venta predecibles.
         </p>
       </header>
 

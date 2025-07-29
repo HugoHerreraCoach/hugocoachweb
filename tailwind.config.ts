@@ -1,4 +1,5 @@
 import type { Config } from 'tailwindcss';
+import typography from '@tailwindcss/typography';
 
 const config: Config = {
   content: [
@@ -8,14 +9,10 @@ const config: Config = {
   ],
   theme: {
     extend: {
-      // Mantenemos tus extensiones por si las necesitas
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
       },
-      // Eliminamos los colores 'amber' ya que no los usaremos para mantener la consistencia
-      
-      // Aquí definimos los estilos para el contenido de los artículos (MDX)
       typography: ({ theme }: { theme: (path: string) => string }) => ({
         invert: {
           css: {
@@ -32,32 +29,38 @@ const config: Config = {
             '--tw-prose-captions': theme('colors.gray[400]'),
             '--tw-prose-code': theme('colors.white'),
             '--tw-prose-pre-code': theme('colors.gray[300]'),
-            '--tw-prose-pre-bg': 'rgb(17 24 39 / 50%)', // Un fondo sutil para los bloques de código
+            '--tw-prose-pre-bg': 'rgb(17 24 39 / 50%)',
             '--tw-prose-th-borders': theme('colors.gray[600]'),
             '--tw-prose-td-borders': theme('colors.gray[700]'),
-            // Ajustes de espaciado y tamaño
+
+            // Estilos para los elementos de texto
             'h2': {
-              'marginTop': '2em',
-              'marginBottom': '1em',
+              fontSize: '2.25rem',   // text-4xl
+              fontWeight: '700',      // bold
+              marginTop: '2em',
+              marginBottom: '1em',
             },
             'h3': {
-              'marginTop': '1.8em',
-              'marginBottom': '0.8em',
+              fontSize: '1.875rem',  // text-3xl
+              fontWeight: '600',      // semi-bold
+              marginTop: '1.8em',
+              marginBottom: '0.8em',
             },
             'blockquote': {
-              'paddingLeft': '1em',
-              'fontStyle': 'italic',
+              paddingLeft: '1em',
+              fontStyle: 'italic',
             },
             'p': {
-              'lineHeight': '1.75', // Aumentamos el interlineado para mejor legibilidad
-            }
+              lineHeight: '1.75',
+            },
           },
         },
       }),
     },
   },
   plugins: [
-    require('@tailwindcss/typography'),
+    typography,
   ],
 };
+
 export default config;

@@ -1,4 +1,4 @@
-// src/components/mdx/CustomBlockquote.tsx
+// src/components/blog/mdx/CustomBlockquote.tsx
 
 import { Quote } from 'lucide-react';
 import type { ReactNode } from 'react';

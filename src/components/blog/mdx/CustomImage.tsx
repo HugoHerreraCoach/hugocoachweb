@@ -1,4 +1,4 @@
-// src/components/mdx/CustomImage.tsx
+// src/components/blog/mdx/CustomImage.tsx
 
 import Image from 'next/image';
 
@@ -14,8 +14,8 @@ export const CustomImage = ({ src, alt, caption }: CustomImageProps) => {
             <Image
                 src={src}
                 alt={alt}
-                width={1200}
-                height={675}
+                width={1408}
+                height={768}
                 className="rounded-lg border border-gray-700"
             />
             {caption && (
