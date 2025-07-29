@@ -1,3 +1,5 @@
+//src/app/blog/[slug]/page.tsx
+
 import fs from 'fs';
 import path from 'path';
 import { MDXRemote } from 'next-mdx-remote/rsc';
@@ -21,10 +23,6 @@ import { CustomImage } from '@/components/blog/mdx/CustomImage';
 import { CustomBlockquote } from '@/components/blog/mdx/CustomBlockquote';
 import { InfoBox } from '@/components/blog/mdx/InfoBox';
 
-interface PostPageProps {
-  params: { slug: string };
-}
-
 async function getPostContent(slug: string): Promise<string | null> {
   const filePath = path.join(process.cwd(), 'src/content/blog', `${slug}.mdx`);
   try {
@@ -41,8 +39,8 @@ export async function generateStaticParams() {
   return posts.map((post: Post) => ({ slug: post.slug }));
 }
 
-export default async function PostPage({ params: paramsProp }: PostPageProps) {
-  const params = await paramsProp;
+export default async function PostPage({ params: paramsPromise }: { params: Promise<{ slug: string }> }) {
+  const params = await paramsPromise;
   const { slug } = params;
 
   const post = posts.find(p => p.slug === slug);

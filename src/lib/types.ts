@@ -9,7 +9,6 @@ export interface Post {
   readingTime: number;
   publishedAt: string;
   featured?: boolean;
-  // content: string; // <-- ELIMINAR ESTA LÍNEA
   highlights: string[];
   leadMagnet: {
     title: string;
