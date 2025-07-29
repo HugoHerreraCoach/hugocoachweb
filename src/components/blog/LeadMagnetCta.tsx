@@ -36,10 +36,10 @@ export const LeadMagnetCta = ({ title, cta, link }: LeadMagnetCtaProps) => {
       <div className="bg-gray-800/50 rounded-xl p-6 my-12 border border-blue-500/20 shadow-lg">
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex-shrink-0">
-            <DownloadCloudIcon className="w-16 h-16 text-blue-400" />
+            <DownloadCloudIcon className="w-16 h-16 text-blue-600" />
           </div>
           <div className="text-center md:text-left flex-grow">
-            <h3 className="text-2xl font-bold text-blue-400">{title}</h3>
+            <h3 className="text-2xl font-bold text-blue-600">{title}</h3>
             <p className="mt-2 text-gray-300">
               Un recurso accionable para obtener resultados. Descárgalo y aplícalo hoy.
             </p>

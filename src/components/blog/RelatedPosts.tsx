@@ -27,7 +27,7 @@ export const RelatedPosts = ({ currentPostSlug }: RelatedPostsProps) => {
             href={`/blog/${post.slug}`} 
             className="block p-4 rounded-lg bg-gray-800/50 hover:bg-gray-700/50 ring-1 ring-transparent hover:ring-blue-500/50 transition-all duration-200"
           >
-            <span className="text-base font-bold uppercase tracking-wider text-blue-400">{post.category}</span>
+            <span className="text-base font-bold uppercase tracking-wider text-blue-600">{post.category}</span>
             <h5 className="font-semibold text-lg text-white mt-1">{post.title}</h5>
           </Link>
         ))}

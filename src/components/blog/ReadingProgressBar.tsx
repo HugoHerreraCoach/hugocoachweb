@@ -30,7 +30,7 @@ export const ReadingProgressBar = () => {
   return (
     <div className="fixed top-0 left-0 z-50 w-full h-1.5 bg-gray-800/50 backdrop-blur-sm">
       <div 
-        className="h-1.5 bg-blue-500 shadow-lg shadow-blue-500/50 transition-all duration-75 ease-out" 
+        className="h-1.5 bg-blue-600 shadow-lg shadow-blue-500/50 transition-all duration-75 ease-out" 
         style={{ width: `${width}%` }} 
       />
     </div>

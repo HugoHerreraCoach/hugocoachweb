@@ -27,7 +27,7 @@ const mdxComponents = {
 export const PostBody = ({ children }: PostBodyProps)=> {
   return (
     <MDXProvider components={mdxComponents}>
-      <div className="prose prose-invert prose-lg max-w-none py-8 md:py-12">
+      <div className="prose prose-invert prose-lg py-8 md:py-12">
         {children}
       </div>
     </MDXProvider>

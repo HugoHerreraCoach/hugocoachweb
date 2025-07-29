@@ -19,7 +19,7 @@ export const CustomImage = ({ src, alt, caption }: CustomImageProps) => {
                 className="rounded-lg border border-gray-700"
             />
             {caption && (
-                <figcaption className="mt-2 text-center text-sm text-gray-400">
+                <figcaption className="mt-2 text-center text-base text-gray-400">
                     {caption}
                 </figcaption>
             )}

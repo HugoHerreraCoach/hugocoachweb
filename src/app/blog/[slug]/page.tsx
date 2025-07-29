@@ -65,11 +65,11 @@ export default async function PostPage({ params: paramsPromise }: { params: Prom
       <ReadingProgressBar />
       <PostHeader post={post} />
       
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="max-w-7xl mx-auto px-4 lg:px-8 pb-20">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
           
           <main className="lg:col-span-2">
-            <article className="bg-gray-900 p-8 rounded-xl ring-1 ring-gray-700/50">
+            <article className="rounded-xl ">
               <ArticleHighlights highlights={post.highlights} />
               
               <div className="prose prose-invert prose-lg max-w-none py-8 md:py-12">

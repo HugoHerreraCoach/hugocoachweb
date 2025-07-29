@@ -17,7 +17,7 @@ export const SecondaryCta = ({ ctaData }: SecondaryCtaProps) => {
         <div className="my-12 text-center">
             <Link
                 href={ctaData.link}
-                className="inline-flex items-center gap-3 text-xl font-semibold text-blue-400 hover:text-blue-300 transition-colors duration-200 group"
+                className="inline-flex items-center gap-3 text-xl font-semibold text-blue-600 hover:text-blue-400 transition-colors duration-200 group"
             >
                 <span>{ctaData.text}</span>
                 <ArrowRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-2" />

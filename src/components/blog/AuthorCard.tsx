@@ -24,7 +24,7 @@ export const AuthorCard = () => {
         />
         <div>
           <h3 className="text-xl font-bold text-white">Hugo Herrera</h3>
-          <p className="text-sm text-blue-400">Coach & Estratega de Ventas</p>
+          <p className="text-sm text-blue-500">Coach & Estratega de Ventas</p>
         </div>
       </div>
       <p className="text-gray-300 leading-[1.2] text-lg">

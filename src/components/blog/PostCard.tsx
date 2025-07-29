@@ -36,7 +36,7 @@ export const PostCard = ({ post, isFeatured = false }: PostCardProps) => {
 
           {/* Contenido de Texto */}
           <div className="flex flex-col flex-grow p-4 md:p-6">
-            <span className="text-xs font-bold uppercase tracking-wider text-blue-400">{post.category}</span>
+            <span className="text-xs font-bold uppercase tracking-wider text-blue-600">{post.category}</span>
             <h3 className={`mt-2 text-lg font-bold text-white leading-tight flex-grow ${isFeatured ? 'md:text-4xl' : 'md:text-2xl'}`}>
               {post.title}
             </h3>
@@ -45,7 +45,7 @@ export const PostCard = ({ post, isFeatured = false }: PostCardProps) => {
                 {post.description}
               </p>
             )}
-            <div className="mt-4 text-blue-400 flex items-center text-sm font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <div className="mt-4 text-blue-600 flex items-center text-base font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-300">
               Leer Artículo <MoveRight className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
             </div>
           </div>

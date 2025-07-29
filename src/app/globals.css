@@ -32,3 +32,64 @@ body {
   color: var(--foreground);
   font-family: var(--font-sans); 
 }
+
+
+.prose {
+  /*
+    AÑADIMOS EL TAMAÑO BASE AQUÍ.
+    1.25rem es el equivalente a `text-xl` en Tailwind.
+    Este tamaño será heredado por los párrafos, listas, etc.
+  */
+  font-size: 1.25rem;
+  line-height: 1.7;
+
+  /* Escalamos los encabezados para que sean más grandes en proporción */
+  h1 {
+    color: var(--color-prose-headings);
+    margin-bottom: 1em;
+    font-weight: 800;
+    font-size:2.2rem;
+    line-height: 1.1;
+  }
+  
+  h2, h3, h4 {
+    color: var(--color-prose-headings);
+    margin-top: 1.8em;
+    margin-bottom: 1em;
+    font-weight: 700;
+    line-height: 1.3;
+  }
+  
+  h2 { font-size: 2rem; }  
+  h3 { font-size: 1.5rem; } 
+  h4 { font-size: 1.5rem; } 
+
+  p {
+    margin-top: 1em;
+    margin-bottom: 1em;
+  }
+  
+  strong {
+      font-weight: 700;
+  }
+
+  blockquote {
+    margin-top: 1.6em;
+    margin-bottom: 1.6em;
+    padding-left: 1em;
+    font-style: italic;
+    border-left-width: 0.25rem;
+  }
+}
+
+.prose-invert {
+  color: var(--color-prose-body-invert);
+  
+  h2, h3, h4 {
+    color: var(--color-prose-headings-invert);
+  }
+  
+  blockquote {
+    border-left-color: var(--color-prose-quote-borders-invert);
+  }
+}

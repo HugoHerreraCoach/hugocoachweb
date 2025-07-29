@@ -10,7 +10,7 @@ interface CustomBlockquoteProps {
 export const CustomBlockquote = ({ children }: CustomBlockquoteProps) => {
     return (
         <blockquote className="my-10 rounded-r-lg border-l-4 border-blue-500 bg-gray-800/50 p-6 relative">
-            <Quote className="absolute -top-5 -left-6 size-12 text-gray-700" aria-hidden="true" />
+            <Quote className="absolute -top-5 -left-6 size-12 text-blue-600" aria-hidden="true" />
             <div className="prose prose-invert prose-xl italic prose-p:text-gray-200">
                 {children}
             </div>
