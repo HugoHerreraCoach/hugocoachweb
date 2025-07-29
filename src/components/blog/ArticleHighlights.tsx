@@ -27,12 +27,12 @@ const CheckIcon = (props: SVGProps<SVGSVGElement>) => (
 export const ArticleHighlights = ({ highlights }: ArticleHighlightsProps) => {
   return (
     <div className="bg-gray-800/50 rounded-xl p-6 my-8 border border-blue-500/20">
-      <h3 className="text-xl font-bold text-blue-400 mb-4">En este Dossier aprenderás:</h3>
+      <h3 className="text-xl lg:text-2xl font-bold text-blue-400 mb-4">En este Dossier aprenderás:</h3>
       <ul className="space-y-3">
         {highlights.map((highlight: string, index: number) => (
           <li key={index} className="flex items-start gap-3">
             <CheckIcon className="w-5 h-5 text-blue-500 flex-shrink-0 mt-1" />
-            <span className="text-gray-200">{highlight}</span>
+            <span className="text-gray-200 text-xl">{highlight}</span>
           </li>
         ))}
       </ul>

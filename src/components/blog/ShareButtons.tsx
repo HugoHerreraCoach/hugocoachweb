@@ -36,7 +36,7 @@ export const ShareButtons = ({ title }: ShareButtonsProps) => {
   ];
 
   return (
-    <SidebarCard title="Compartir Dossier">
+    <SidebarCard title="Compartir Artículo">
       <div className="flex space-x-3">
         {shareLinks.map(({ name, href, Icon }) => (
           <a

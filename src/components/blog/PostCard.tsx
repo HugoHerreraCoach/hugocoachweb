@@ -41,12 +41,12 @@ export const PostCard = ({ post, isFeatured = false }: PostCardProps) => {
               {post.title}
             </h3>
             {isFeatured && (
-              <p className="mt-2 text-base text-gray-300 hidden md:block max-w-2xl">
+              <p className="mt-2 text-lg text-gray-300 hidden md:block max-w-2xl">
                 {post.description}
               </p>
             )}
             <div className="mt-4 text-blue-400 flex items-center text-sm font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-              Leer Dossier <MoveRight className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+              Leer Artículo <MoveRight className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
             </div>
           </div>
         </div>

@@ -19,10 +19,10 @@ export const PostHeader = ({ post }: PostHeaderProps) => {
       />
       <div className="absolute inset-0 bg-gradient-to-t from-gray-950 via-gray-950/70 to-transparent" />
       <div className="absolute bottom-0 left-0 right-0 p-8 md:p-12">
-        <div className="max-w-4xl mx-auto text-center">
-          <span className="text-sm font-bold uppercase tracking-wider text-blue-400">{post.category}</span>
-          <h1 className="mt-2 text-4xl md:text-6xl font-extrabold text-white leading-tight text-balance">{post.title}</h1>
-          <div className="mt-6 flex items-center justify-center space-x-4 text-gray-300">
+        <div className="mx-auto text-center">
+          <span className="text-base font-bold uppercase tracking-wider text-blue-400">{post.category}</span>
+          <h1 className="mt-2 text-4xl md:text-6xl font-extrabold text-white leading-[1.2] text-balance">{post.title}</h1>
+          <div className="mt-6 flex items-center text-lg leading-[1.3] justify-center space-x-4 text-gray-300">
             <span>Por Hugo Herrera</span>
             <span className="text-blue-500">•</span>
             <span>{new Date(post.publishedAt).toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
