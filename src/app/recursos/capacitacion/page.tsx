@@ -11,8 +11,10 @@ export const metadata: Metadata = {
 const pageData = {
     title: 'Descarga el Sistema de Capacitación de 30 Días',
     subtitle: 'El plan de acción probado para construir un equipo de ventas de alto rendimiento.',
-    imageSrc: '/images/recursos/sistema-30-dias.png', // Coloca tu imagen en esta ruta
+    imageSrc: '/images/recursos/capacitacion.jpg', // Coloca tu imagen en esta ruta
     imageAlt: 'Portada del PDF Sistema de Capacitación de 30 Días de Hugo Herrera',
+    imageWidth: 700,
+    imageHeight: 989,
     benefits: [
         'Instalar un proceso de onboarding que funciona sin tu supervisión constante.',
         'Acelerar la curva de aprendizaje de tus nuevos vendedores.',
@@ -22,5 +24,5 @@ const pageData = {
 };
 
 export default function CapacitacionPage() {
-    return <ResourceLayout {...pageData} />;
+    return <ResourceLayout {...pageData} resourceIdentifier="capacitacion" />;
 }

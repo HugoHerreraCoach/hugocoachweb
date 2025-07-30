@@ -1,48 +1,84 @@
+// src/components/ui/LeadCaptureForm.tsx
+
 'use client';
 
-// Este es un formulario del lado del cliente para interactividad
-export const LeadCaptureForm = ({ ctaText }: { ctaText: string }) => {
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+import { useState } from 'react';
+import type { ResourceIdentifier, SubscribePayload } from '@/lib/types';
+
+interface LeadCaptureFormProps {
+    ctaText: string;
+    resourceIdentifier: ResourceIdentifier;
+}
+
+export const LeadCaptureForm = ({ ctaText, resourceIdentifier }: LeadCaptureFormProps) => {
+    const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+    const [errorMessage, setErrorMessage] = useState('');
+
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        // TODO: Aquí va la lógica para enviar los datos a Brevo.
-        // 1. Recoger los datos del formulario (nombre y correo).
-        // 2. Enviar a un endpoint de tu API o directamente a Brevo si se usa su API de cliente.
-        // 3. Al recibir respuesta exitosa, redirigir a la página de gracias:
-        //    window.location.href = '/recursos/gracias';
-        console.log('Formulario enviado. Redirigiendo...');
-        alert('¡Gracias! Revisa tu correo para descargar el recurso.');
+        setStatus('loading');
+        setErrorMessage('');
+
+        const formData = new FormData(e.currentTarget);
+
+        // --- ZONA CRÍTICA DE REPARACIÓN ---
+        // Estas dos líneas deben estar exactamente así.
+        // Extraen los datos del formulario y los guardan en constantes locales.
+        // Esto asegura que 'name' y 'email' sean de tipo 'string'.
+        const name = formData.get('name') as string;
+        const email = formData.get('email') as string;
+        // ------------------------------------
+
+        const payload: SubscribePayload = {
+            name,
+            email,
+            resource: resourceIdentifier,
+        };
+
+        try {
+            const response = await fetch('/api/subscribe', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload),
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || 'Algo salió mal. Inténtalo de nuevo.');
+            }
+            
+            setStatus('success');
+            
+            sessionStorage.setItem('leadName', name);
+            sessionStorage.setItem('leadEmail', email);
+
+            window.location.href = `/recursos/gracias?recurso=${resourceIdentifier}`;
+
+        } catch (error: unknown) {
+            setStatus('error');
+            if (error instanceof Error) {
+                setErrorMessage(error.message);
+            } else {
+                setErrorMessage('Ocurrió un error inesperado.');
+            }
+        }
     };
 
     return (
         <form onSubmit={handleSubmit} className="mt-6 space-y-4">
             <div>
                 <label htmlFor="name" className="sr-only">Nombre</label>
-                <input
-                    type="text"
-                    name="name"
-                    id="name"
-                    required
-                    placeholder="Tu nombre"
-                    className="w-full rounded-md border-slate-300 bg-white px-4 py-3 text-base text-slate-900 placeholder-slate-400 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                />
+                <input type="text" name="name" id="name" required placeholder="Tu nombre" disabled={status === 'loading'} className="w-full rounded-md border-slate-300 bg-white px-4 py-3 text-base text-slate-900 placeholder-slate-400 shadow-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50" />
             </div>
             <div>
                 <label htmlFor="email" className="sr-only">Correo Electrónico</label>
-                <input
-                    type="email"
-                    name="email"
-                    id="email"
-                    required
-                    placeholder="Tu correo electrónico"
-                    className="w-full rounded-md border-slate-300 bg-white px-4 py-3 text-base text-slate-900 placeholder-slate-400 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                />
+                <input type="email" name="email" id="email" required placeholder="Tu correo electrónico" disabled={status === 'loading'} className="w-full rounded-md border-slate-300 bg-white px-4 py-3 text-base text-slate-900 placeholder-slate-400 shadow-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50" />
             </div>
-            <button
-                type="submit"
-                className="w-full rounded-md bg-blue-600 px-8 py-4 text-lg font-bold text-white shadow-lg transition-transform duration-200 hover:scale-105 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-            >
-                {ctaText}
+            <button type="submit" disabled={status === 'loading'} className="w-full rounded-md bg-blue-600 px-8 py-4 text-lg font-bold text-white shadow-lg transition-all duration-200 hover:scale-105 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:bg-slate-400">
+                {status === 'loading' ? 'Procesando...' : ctaText}
             </button>
+            {status === 'error' && <p className="text-red-600 text-center">{errorMessage}</p>}
         </form>
     );
 };

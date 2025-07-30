@@ -11,8 +11,10 @@ export const metadata: Metadata = {
 const pageData = {
     title: 'Descarga las 50 Preguntas Estratégicas de Calificación',
     subtitle: 'El guion exacto para dejar de perseguir y empezar a calificar a tus clientes.',
-    imageSrc: '/images/recursos/50-preguntas.png', // Coloca tu imagen en esta ruta
+    imageSrc: '/images/recursos/preguntas.png', // Coloca tu imagen en esta ruta
     imageAlt: 'Portada del PDF 50 Preguntas Estratégicas de Hugo Herrera',
+    imageWidth: 700,
+    imageHeight: 848,
     benefits: [
         'Filtrar prospectos no calificados en menos de 5 minutos.',
         'Identificar el dolor real del cliente para presentar una solución irresistible.',
@@ -22,5 +24,5 @@ const pageData = {
 };
 
 export default function PreguntasPage() {
-    return <ResourceLayout {...pageData} />;
+    return <ResourceLayout {...pageData} resourceIdentifier="preguntas" />;
 }

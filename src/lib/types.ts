@@ -20,3 +20,14 @@ export interface Post {
     link: string;
   };
 }
+
+
+
+
+export type ResourceIdentifier = 'objeciones' | 'preguntas' | 'radiografia' | 'capacitacion';
+export interface SubscribePayload {
+  name: string;
+  email: string;
+  resource: ResourceIdentifier;
+}
+

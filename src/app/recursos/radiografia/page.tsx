@@ -11,8 +11,10 @@ export const metadata: Metadata = {
 const pageData = {
   title: 'Obtén la Radiografía de tu Sistema Comercial',
   subtitle: 'La herramienta para diagnosticar los 15 errores ocultos que frenan tu crecimiento.',
-  imageSrc: '/images/recursos/radiografia-comercial.png', // Coloca tu imagen en esta ruta
+  imageSrc: '/images/recursos/radiografia.png',
   imageAlt: 'Portada del PDF Radiografía Comercial de Hugo Herrera',
+  imageWidth: 700,
+  imageHeight: 931,
   benefits: [
     'Obtener claridad total sobre los cuellos de botella de tu operación.',
     'Identificar las fugas de dinero en tu proceso de ventas actual.',
@@ -22,5 +24,5 @@ const pageData = {
 };
 
 export default function RadiografiaPage() {
-  return <ResourceLayout {...pageData} />;
+  return <ResourceLayout {...pageData} resourceIdentifier="radiografia" />;
 }
