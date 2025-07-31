@@ -5,7 +5,7 @@ import Image from 'next/image';
 
 const HeroSection: React.FC = () => {
     return (
-        <section className="relative bg-black text-white flex justify-center items-center min-h-[91vh] text-center py-20 md:py-32 overflow-hidden">
+        <section className="relative bg-black text-white flex justify-center items-center min-h-[65vh] text-center py-20 md:py-32 overflow-hidden">
             <div className="absolute inset-0 z-0">
                 <Image
                     src="/images/empresas/empresasHeader.jpg"

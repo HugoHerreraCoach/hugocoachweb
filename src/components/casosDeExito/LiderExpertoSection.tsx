@@ -18,44 +18,43 @@ type LiderExpertoPrueba = {
 const pruebasLiderExperto: LiderExpertoPrueba[] = [
     {
         type: 'video',
-        id: 'VIDEO_ID_1', // Reemplaza
-        youtubeVideoId: 'VIDEO_ID_1',
-        cita: 'La herramienta que necesitaba para estandarizar el proceso de mi equipo. Por fin hablamos el mismo idioma.',
-        nombre: 'Gerente Comercial',
-        rol: 'Empresa de Tecnología',
-    },
-    {
-        type: 'image',
-        id: 'foto-lider-1.jpg', // Reemplaza
-        imageUrl: '/images/casos-de-exito/lider-experto/foto1.jpg', // Reemplaza
-        cita: 'Un manual directo, sin adornos. Lo implementamos y vimos un cambio en la estructura de las reuniones de venta.',
-        nombre: 'Dueña de Negocio',
-        rol: 'Agencia de Marketing',
+        id: 'ZbJ70_NS2cI',
+        youtubeVideoId: 'ZbJ70_NS2cI',
+        cita: 'Hugo Herrera es un maestro. Su libro te entrega el material que necesitas para acelerar tu crecimiento como líder.',
+        nombre: 'Germán Kuttnick',
+        rol: 'Conferencista Internacional y Autor Best Seller',
     },
     {
         type: 'video',
-        id: 'VIDEO_ID_2',
-        youtubeVideoId: 'VIDEO_ID_2',
-        cita: 'Compré el libro para mí y terminé comprándolo para mis 10 supervisores. Material 100% aplicable.',
-        nombre: 'Jefe de Ventas',
-        rol: 'Sector Industrial',
+        id: 'w2VLU47PoMU',
+        youtubeVideoId: 'w2VLU47PoMU',
+        cita: 'Hugo me convocó a su evento con Brian Tracy y Margarita Pasos. Pura ejecución. Un crack.',
+        nombre: 'Cristian Arens',
+        rol: 'Inversionista, Emprendedor y Autor Best Seller',
     },
-    // ... Completa con tus 4 activos restantes (2 videos, 2 fotos)
+    {
+        type: 'video',
+        id: '-EAwx1LrF9I',
+        youtubeVideoId: '-EAwx1LrF9I',
+        cita: 'Una sola decisión lo cambió todo. El sistema de Hugo me dio claridad y llevó mi negocio al siguiente nivel.',
+        nombre: 'Sindy Castillo',
+        rol: 'Empresaria y Fundadora, Nails Art',
+    },
 ];
 
 const LiderExpertoSection: React.FC = () => {
     return (
         <section className="bg-black py-20 lg:py-28">
-            <div className="container mx-auto max-w-7xl px-4 text-center">
+            <div className="container mx-auto max-w-8xl px-4 text-center">
                 <h2 className="text-4xl font-bold tracking-tight text-white lg:text-5xl text-balance">
-                    Líderes que Construyen Equipos de Élite
+                    Un Buen Líder no Nace, se Construye.
                 </h2>
-                <p className="mt-6 text-xl lg:text-2xl text-slate-300 max-w-3xl mx-auto text-balance">
-                    Un buen líder no tiene carisma, tiene un sistema. Aquí, la prueba de cómo el manual &quot;Líder Experto&quot; se convierte en la herramienta para construir equipos que venden más y mejor.
+                <p className="mt-6 text-xl lg:text-2xl text-slate-300 mx-auto text-balance">
+                    Referentes del más alto nivel y empresarios de campo te muestran el antes y el después de aplicar &quot;Líder Experto&quot;.
                 </p>
             </div>
 
-            <div className="container mx-auto max-w-7xl px-4 mt-12 lg:mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
+            <div className="container mx-auto max-w-8xl px-4 mt-12 lg:mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
                 {pruebasLiderExperto.map((prueba) => (
                     <div key={prueba.id}>
                         <div className="overflow-hidden rounded-2xl shadow-xl shadow-black/30">
@@ -75,12 +74,12 @@ const LiderExpertoSection: React.FC = () => {
                             )}
                         </div>
                         <div className="text-left text-white mt-4 bg-slate-900/50 rounded-lg p-4 border border-slate-800">
-                            <blockquote className="text-md text-slate-300 italic leading-snug">
+                            <blockquote className="text-xl text-slate-300 italic leading-snug">
                                 &quot;{prueba.cita}&quot;
                             </blockquote>
                             <div className="mt-3 border-t border-slate-700 pt-3">
-                                <p className="font-semibold">{prueba.nombre}</p>
-                                <p className="text-sm text-slate-400">{prueba.rol}</p>
+                                <p className="font-semibold text-xl">{prueba.nombre}</p>
+                                <p className="text-lg text-slate-400">{prueba.rol}</p>
                             </div>
                         </div>
                     </div>
