@@ -44,8 +44,10 @@ const offerCardsData: OfferCardData[] = [
 export default function OffersSection() {
   return (
     <section
-      className="relative w-full bg-fixed bg-cover bg-center py-20 lg:py-28"
-      style={{ backgroundImage: "url('/images/software/liquidSoftware.jpg')" }}
+        // Se elimina 'style' y se usan clases para el fondo y el efecto parallax responsivo.
+        className="relative w-full bg-cover bg-center py-20 lg:py-28 
+                   bg-[url('/images/software/liquidSoftware.jpg')] 
+                   bg-scroll md:bg-fixed" // <-- CAMBIO APLICADO AQUÍ
     >
       <div
         className="absolute inset-0 bg-slate-950/70"

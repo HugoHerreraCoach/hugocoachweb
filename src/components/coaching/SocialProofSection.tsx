@@ -29,7 +29,7 @@ const testimonials: Testimonial[] = [
         quote: "La mentoría de Hugo no solo me ayudó a mí, transformó la experiencia que le doy a mis clientes. Estoy muy agradecida porque estoy logrando más de lo que imaginé.",
         name: "Sindy Castillo Vera",
         role: "Fundadora de Nails Art",
-        imageUrl: "/images/coaching/Sindy.jpg", 
+        imageUrl: "/images/coaching/sindy.jpg", 
     },
 ];
 

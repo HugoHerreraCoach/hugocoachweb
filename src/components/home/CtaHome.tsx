@@ -1,13 +1,14 @@
 import Link from "next/link";
 
-
 export default function CtaHome() {
     return (
         <section
-            // Contenedor principal con posicionamiento relativo y contexto de apilamiento
+            // Contenedor principal con posicionamiento relativo
             className="relative isolate py-20 
-                 bg-[url('/images/ctaBackground.jpg')] bg-cover bg-top bg-fixed"
+                       bg-[url('/images/ctaBackground.jpg')] bg-cover bg-center 
+                       bg-scroll md:bg-fixed" // <-- CAMBIO CLAVE AQUÍ
         >
+            {/* Capa de superposición oscura */}
             <div
                 className="absolute inset-0 bg-black/75 -z-10"
                 aria-hidden="true"

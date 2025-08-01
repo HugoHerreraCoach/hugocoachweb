@@ -19,9 +19,9 @@ export const posts: Post[] = [
       'El sistema de mejora continua para no estancarte jamás.'
     ],
     leadMagnet: {
-      title: 'Checklist de Mentalidad de Élite',
-      cta: 'Descargar Checklist',
-      link: '/lead-magnet/checklist-mentalidad'
+      title: '50 preguntas para calificar clientes',
+      cta: 'Descargar Guís',
+      link: '/recursos/preguntas'
     },
     secondaryCta: {
       text: 'Erradica este virus en una sesión de coaching',
@@ -43,9 +43,9 @@ export const posts: Post[] = [
         'Un sistema para que LinkedIn te traiga prospectos mientras duermes.'
     ],
     leadMagnet: {
-      title: '5 Plantillas de Mensajes para LinkedIn',
-      cta: 'Obtener las 5 Plantillas',
-      link: '/lead-magnet/plantillas-linkedin'
+      title: 'Radiografía de tu Sistema Comercial',
+      cta: 'Obtener Radiografía',
+      link: '/recursos/radiografia'
     },
     secondaryCta: {
       text: 'Implementa un sistema de prospección completo en tu empresa',
@@ -67,9 +67,9 @@ export const posts: Post[] = [
         'La técnica de cierre para confirmar que la objeción fue resuelta.'
     ],
     leadMagnet: {
-      title: 'Guía para Manejar las 5 Objeciones Más Comunes',
-      cta: 'Descargar la Guía Ahora',
-      link: '/lead-magnet/guia-objeciones'
+      title: 'Mapa Definitivo de Objeciones',
+      cta: 'Descargar el Mapa Ahora',
+      link: '/recursos/objeciones'
     },
     secondaryCta: {
       text: 'Entrena a tu equipo para que domine cualquier objeción',
@@ -92,8 +92,8 @@ export const posts: Post[] = [
     ],
     leadMagnet: {
       title: '¿Quieres un Diagnóstico para tu Negocio?',
-      cta: 'Agendar Sesión Gratuita',
-      link: '/agenda-diagnostico'
+      cta: 'Obtener Diagnóstico Gratis',
+      link: '/recursos/radiografia'
     },
     secondaryCta: {
       text: 'Descubre si una asesoría estratégica es para ti',
@@ -115,9 +115,9 @@ export const posts: Post[] = [
         'Usa la tecnología (CRM) para construir libertad, no más trabajo.'
     ],
     leadMagnet: {
-      title: 'Checklist para Elegir y Configurar tu CRM',
-      cta: 'Descargar Checklist de CRM',
-      link: '/lead-magnet/checklist-crm'
+      title: 'Sistema de Capacitación de Vendedores en 30 días',
+      cta: 'Descargar Sistema Gratis',
+      link: '/recursos/capacitacion'
     },
     secondaryCta: {
       text: 'Te ayudo a construir el sistema de ventas para tu negocio',

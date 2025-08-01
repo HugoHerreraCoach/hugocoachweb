@@ -216,8 +216,8 @@ const EscalaAutoridadSection: React.FC = () => {
                                 <Image
                                     src={mentor.imageUrl}
                                     alt={mentor.titulo}
-                                    width={250}
-                                    height={250}
+                                    width={280}
+                                    height={280}
                                     className="rounded-full object-cover border-4 border-slate-700 group-hover:border-blue-500 transition-colors duration-300"
                                 />
                                 {/* Ícono decorativo ajustado */}
@@ -225,7 +225,7 @@ const EscalaAutoridadSection: React.FC = () => {
                                     <GraduationCap className="w-6 h-6 text-blue-400" />
                                 </div>
                             </div>
-                            <h4 className="text-xl lg:text-2xl font-bold text-white text-balance">{mentor.titulo}</h4>
+                            <h4 className="text-2xl lg:text-2xl font-bold text-white text-balance">{mentor.titulo}</h4>
                             <p className="mt-2 text-lg lg:text-xl text-slate-400 flex-grow">{mentor.descripcion}</p>
                         </div>
                     ))}

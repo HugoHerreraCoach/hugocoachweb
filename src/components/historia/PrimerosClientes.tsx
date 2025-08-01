@@ -65,8 +65,12 @@ export const PrimerosClientes = () => {
             {/* --- SECCIÓN PARALLAX --- */}
             <div className="relative overflow-hidden">
 
-                {/* 2. Capa de Imagen de Fondo (con efecto Parallax) */}
-                <div className="absolute inset-0 bg-cover bg-center bg-fixed bg-[url('/images/cambioBackground.jpg')] blur-[2px] z-0"></div>
+                {/* 2. Capa de Imagen de Fondo (con efecto Parallax corregido) */}
+                <div
+                    className="absolute inset-0 bg-cover bg-center 
+                   bg-[url('/images/cambioBackground.jpg')] blur-[2px] z-0
+                   bg-scroll md:bg-fixed" // <-- CAMBIO APLICADO AQUÍ
+                ></div>
 
                 {/* 3. Capa de Superposición Oscura */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-black/40 z-10"></div>

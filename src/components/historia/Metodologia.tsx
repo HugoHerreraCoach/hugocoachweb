@@ -4,9 +4,9 @@ import { Briefcase, Users, Waypoints, type LucideIcon } from 'lucide-react';
 
 // Definimos un tipo explícito para los pilares para asegurar la consistencia de los datos.
 type Pilar = {
-  icon: LucideIcon;
-  title: string;
-  description: string;
+    icon: LucideIcon;
+    title: string;
+    description: string;
 };
 
 const pilares: Pilar[] = [
@@ -29,7 +29,11 @@ const pilares: Pilar[] = [
 
 export const Metodologia = () => {
     return (
-        <section className="relative bg-cover bg-top bg-no-repeat bg-fixed py-16 lg:py-24 text-white bg-[linear-gradient(rgba(5,10,20,1),rgba(5,10,20,0.6)),url('/images/historia/espiralBackground.jpg')]">
+        <section
+            className="relative bg-cover bg-top bg-no-repeat py-16 lg:py-24 text-white 
+                       bg-[linear-gradient(rgba(5,10,20,1),rgba(5,10,20,0.6)),url('/images/historia/espiralBackground.jpg')] 
+                       bg-scroll md:bg-fixed" // <-- CAMBIO APLICADO AQUÍ
+        >
             <div className="container mx-auto px-4">
                 <div className="text-center max-w-7xl mx-auto">
                     {/* Cambiamos el color del texto a blanco para que sea legible sobre el fondo oscuro */}
@@ -38,9 +42,9 @@ export const Metodologia = () => {
                     </h2>
                     {/* Ajustamos el color del párrafo a un gris claro para una mejor jerarquía visual */}
                     <p className="mt-6 text-xl lg:text-2xl text-gray-200 leading-[1.4]">
-                        Te he contado todo esto porque mi viaje se convirtió en un mapa, y con él, puedo ver exactamente en qué punto del camino te encuentras tú.<br/><br/>
-                        Quizás estás en el valle del &quot;esfuerzo sin recompensa&quot; o atrapado en la cima del &quot;éxito que no dura&quot;.<br/><br/>
-                        Para ambos casos, la solución no es acumular más técnicas de ventas. La verdadera solución es el <span className="font-bold text-white">sistema</span> que da sentido y poder a esas técnicas.<br/><br/>
+                        Te he contado todo esto porque mi viaje se convirtió en un mapa, y con él, puedo ver exactamente en qué punto del camino te encuentras tú.<br /><br />
+                        Quizás estás en el valle del &quot;esfuerzo sin recompensa&quot; o atrapado en la cima del &quot;éxito que no dura&quot;.<br /><br />
+                        Para ambos casos, la solución no es acumular más técnicas de ventas. La verdadera solución es el <span className="font-bold text-white">sistema</span> que da sentido y poder a esas técnicas.<br /><br />
                         Todos mis fracasos, revelaciones y aprendizajes están concentrados en una metodología probada que construye ese sistema para ti. Se llama <span className="font-bold text-white">Líder Comercial</span>, y su misión es simple: crear equipos que vendan de forma consistente, no por motivación.
                     </p>
                     <p className="mt-6 text-xl lg:text-2xl text-gray-200 leading-relaxed">
