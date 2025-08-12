@@ -1,6 +1,14 @@
 import { ResourceCard } from '@/components/ui/ResourceCard';
 // Importamos los íconos
 import { Map, ListChecks, Activity, GraduationCap } from 'lucide-react';
+import type { Metadata } from 'next';
+
+// Metadatos para SEO y posicionamiento
+export const metadata: Metadata = {
+    title: 'Recursos | Hugo Herrera Coach',
+    description: 'Recursos gratuitoa para mejorar tus ventas.',
+};
+
 
 // Separamos los datos del diseño. Esto es escalable.
 const resourcesData = [

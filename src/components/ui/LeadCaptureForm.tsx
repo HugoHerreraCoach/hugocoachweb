@@ -20,14 +20,8 @@ export const LeadCaptureForm = ({ ctaText, resourceIdentifier }: LeadCaptureForm
         setErrorMessage('');
 
         const formData = new FormData(e.currentTarget);
-
-        // --- ZONA CRÍTICA DE REPARACIÓN ---
-        // Estas dos líneas deben estar exactamente así.
-        // Extraen los datos del formulario y los guardan en constantes locales.
-        // Esto asegura que 'name' y 'email' sean de tipo 'string'.
         const name = formData.get('name') as string;
         const email = formData.get('email') as string;
-        // ------------------------------------
 
         const payload: SubscribePayload = {
             name,
