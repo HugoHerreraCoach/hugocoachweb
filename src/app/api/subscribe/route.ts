@@ -59,12 +59,14 @@ export async function POST(request: Request) {
     const trackEventData = {
       event: "recurso_solicitado",
       email: email,
-      properties: {
-        nombre_recurso: resource,
+      eventData: {
+        data: {
+          nombre_recurso: resource,
+        },
       },
     };
 
-    await fetch("https://api.brevo.com/v3/trackEvent", {
+    const trackEventResponse = await fetch("https://api.brevo.com/v3/events", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -73,13 +75,19 @@ export async function POST(request: Request) {
       body: JSON.stringify(trackEventData),
     });
 
+    if (!trackEventResponse.ok) {
+      // Leemos el cuerpo del error para obtener el mensaje específico de Brevo
+      const errorData = await trackEventResponse.json();
+      console.error("Error detallado de la API de Brevo (Events):", errorData);
+    } else {
+      console.log("Evento 'recurso_solicitado' enviado a Brevo con éxito.");
+    }
+
     return NextResponse.json(
       { message: "Contacto registrado con éxito." },
       { status: 201 }
     );
-
   } catch (error: unknown) {
-    // Este error ocurre si el body no es un JSON válido, un dato clave.
     console.error("Error al procesar la petición:", error);
     return NextResponse.json(
       {
