@@ -1,6 +1,5 @@
 // src/app/layout.tsx
 
-import Script from 'next/script';
 import type { Metadata } from "next";
 import {
   Montserrat,
@@ -58,23 +57,6 @@ export default function RootLayout({
       <body
         className={`${montserrat.variable} ${barlow.variable} ${barlowCondensed.variable} ${tangerine.variable} antialiased`}
       >
-        <Script 
-          id="brevo-sdk" 
-          src="https://cdn.brevo.com/js/sdk-loader.js" 
-          async 
-        />
-        <Script id="brevo-init" strategy="afterInteractive">
-          {`
-            window.Brevo = window.Brevo || [];
-            Brevo.push([
-                "init",
-                {
-                    client_key: "07eiu4pstz0wiy4djwvb1pn0",
-                }
-            ]);
-          `}
-        </Script>
-
         <Menu />
         <main>{children}</main>
         <Footer />
