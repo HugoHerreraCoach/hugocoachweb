@@ -16,25 +16,35 @@ import {
 type LucideIcon = ForwardRefExoticComponent<Omit<LucideProps, 'ref'> & RefAttributes<SVGSVGElement>>;
 
 // Interfaz que define la estructura de cada elemento en la oferta de coaching.
-// Es explícita y segura, evitando el uso de `any`.
 interface OfferItem {
     icon: LucideIcon;
     type: string;
     title: string;
-    description: string;
+    description: ReactNode;
     value: number | 'Incalculable';
     isPrimary: boolean;
 }
 
 // Datos centralizados de la oferta, ahora usando referencias a los componentes de icono
-// en lugar de instancias JSX para un manejo más limpio y consistente.
 const offerItems: OfferItem[] = [
     {
         icon: ClipboardPen,
-        type: 'Entregable Principal',
-        title: 'Sesión Estratégica 1 a 1 (2h)',
-        description: 'Auditamos tu proceso de venta de inicio a fin. Construimos tu nuevo plan de ataque para los próximos 90 días: tu guion, tu proceso, tu plan de comisiones.',
-        value: 200,
+        type: 'Programa Principal',
+        title: 'Sistema de Comisiones Aceleradas',
+        description: (
+            <>
+                <span className="mb-4">
+                    Es un sprint de implementación 1 a 1 de 4 semanas donde instalamos tu sistema pieza por pieza:
+                </span>
+                <ul className="list-none pt-4 space-y-2">
+                    <li><strong>Fase 1: La Arquitectura de un Ingreso Predecible.</strong> Diseñamos tu máquina personal de hacer dinero y el mapa de tu nuevo proceso de ventas.</li>
+                    <li><strong>Fase 2: El Arsenal de Cierre Inquebrantable.</strong> Forjamos tus guiones y te armamos con respuestas para pulverizar cualquier objeción.</li>
+                    <li><strong>Fase 3: Dominio de la Influencia y la Autoridad.</strong> Aprendes a proyectar una autoridad que magnetiza y te posiciona como el experto.</li>
+                    <li><strong>Fase 4: La Máquina de Seguimiento y Multiplicación.</strong> Construimos un sistema que convierte un &quot;no ahora&quot; en un &quot;sí después&quot; y multiplica tus clientes.</li>
+                </ul>
+            </>
+        ),
+        value: 1600,
         isPrimary: true,
     },
     {
@@ -56,16 +66,16 @@ const offerItems: OfferItem[] = [
     {
         icon: MessageSquareQuote,
         type: 'Bono #3',
-        title: 'Soporte Táctico por WhatsApp (7 Días)',
-        description: '¿Tienes una venta difícil esta semana? Me escribes, analizamos el caso y te doy la estrategia para cerrarla. Soy tu coach en tu bolsillo.',
-        value: 90,
+        title: 'Coach de Bolsillo por WhatsApp (4 Semanas)',
+        description: 'Durante todo el sprint de 4 semanas, soy tu coach en tu bolsillo. ¿Tienes una venta difícil? Me escribes, analizamos el caso y te doy la estrategia para cerrarla.',
+        value: 400,
         isPrimary: false,
     },
     {
         icon: Video,
         type: 'Bono #4',
-        title: 'Grabación Completa de la Sesión',
-        description: 'Tu plan de acción y cada técnica que discutimos, grabadas para que las repases de por vida. Es tu activo de entrenamiento personal.',
+        title: 'Grabaciones Completas del Entrenamiento',
+        description: 'Cada una de nuestras 4 sesiones de implementación, grabada para que las repases de por vida. Es tu activo de entrenamiento personal.',
         value: 'Incalculable',
         isPrimary: false,
     },
@@ -85,11 +95,11 @@ const ValueDisplay = ({ value, isPrimary }: { value: number | 'Incalculable'; is
             </>
         );
     }
-    
+
     return <span className="text-green-600 font-semibold">{value}</span>;
 };
 
-export default function OfferSection () {
+export default function OfferSection() {
 
     const [openIndex, setOpenIndex] = useState<number | null>(0);
 
@@ -132,9 +142,8 @@ export default function OfferSection () {
                                         aria-controls={`offer-content-${index}`}
                                     >
                                         {/* Nodo Unificado (Círculo + Icono) */}
-                                        <div className={`relative z-10 mt-1 flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full ring-8 ring-slate-50 transition-colors duration-300 border ${
-                                            isOpen ? 'border-blue-500 bg-blue-100' : 'border-slate-300 bg-white'
-                                        }`}>
+                                        <div className={`relative z-10 mt-1 flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full ring-8 ring-slate-50 transition-colors duration-300 border ${isOpen ? 'border-blue-500 bg-blue-100' : 'border-slate-300 bg-white'
+                                            }`}>
                                             <IconComponent className={`h-6 w-6 transition-colors duration-300 ${isOpen ? 'text-[#0a4afc]' : 'text-slate-500'}`} />
                                         </div>
 

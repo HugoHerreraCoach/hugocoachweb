@@ -1,3 +1,5 @@
+//src/app/recursos/radiografia/page.tsx
+
 import { ResourceLayout } from '@/components/layout/ResourceLayout';
 import type { Metadata } from 'next';
 

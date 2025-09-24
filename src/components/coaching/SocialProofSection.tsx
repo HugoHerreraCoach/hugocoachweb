@@ -20,13 +20,13 @@ interface CompanyLogo {
 // Datos de los testimonios.
 const testimonials: Testimonial[] = [
     {
-        quote: "Extraordinario, aprendí muchísimo. Hugo es directo y va al grano. Sales con herramientas que puedes usar al instante.",
+        quote: "Hugo es directo y va al grano. La técnica que me enseñó para responder al 'lo voy a pensar' fue brutal. La primera vez que la usé, cerré una venta de $1,500 que normalmente habría dejado ir. Solo con eso, el programa se pagó solo.",
         name: "Arnold Gallardo",
         role: "Emprendedor digital",
         imageUrl: "/images/coaching/arnold.jpg", 
     },
     {
-        quote: "La mentoría de Hugo no solo me ayudó a mí, transformó la experiencia que le doy a mis clientes. Estoy muy agradecida porque estoy logrando más de lo que imaginé.",
+        quote: "La mentoría de Hugo fue un antes y un después. Yo siempre dudaba en cobrar lo que valía mi trabajo. Hugo me enseñó a comunicar el valor de mi arte. El resultado fue que pude lanzar mi nuevo servicio premium y llené todas las plazas en la primera semana, facturando más que en todo el mes anterior.",
         name: "Sindy Castillo Vera",
         role: "Fundadora de Nails Art",
         imageUrl: "/images/coaching/sindy.jpg", 

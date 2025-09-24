@@ -24,7 +24,7 @@ export interface Post {
 
 
 
-export type ResourceIdentifier = 'objeciones' | 'preguntas' | 'radiografia' | 'capacitacion';
+export type ResourceIdentifier = 'objeciones' | 'preguntas' | 'radiografia' | 'capacitacion' | 'seguimiento';
 export interface SubscribePayload {
   name: string;
   email: string;

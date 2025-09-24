@@ -9,16 +9,16 @@ interface Deliverable {
 }
 
 const deliverables: Deliverable[] = [
-    { text: 'Sesión Estratégica 1 a 1 de 2 horas' },
-    { text: '3 Meses de Acceso a Talleres Grupales' },
+    { text: 'sistema de Comisiones Aceleradas (4 Semanas)' },
+    { text: 'Acceso a Talleres Grupales (3 Meses)' },
     { text: 'Manual Digital "Cerrador Experto"' },
-    { text: '7 Días de Acompañamiento por WhatsApp' },
-    { text: 'Grabación Completa de la Sesión' },
+    { text: '"Coach de Bolsillo" por WhatsApp (4 Semanas)' },
+    { text: 'Grabaciones Completas del Entrenamiento' },
 ];
 
 export default function CtaSection(): React.ReactElement {
-    const totalValue: number = 465;
-    const investment: number = 200;
+    const totalValue: number = 2175;
+    const investment: number = 1000;
 
     return (
         <section className="bg-black text-white min-h-[91vh] flex justify-center items-center py-16 lg:py-20 overflow-hidden">
@@ -60,7 +60,7 @@ export default function CtaSection(): React.ReactElement {
                         </div>
 
                         <p className="mt-6 text-xl leading-[1.4] text-yellow-400 font-semibold">
-                            Para asegurar la máxima dedicación, solo 10 cupos/mes.
+                            Para garantizar resultados de élite, solo acepto a 4 vendedores por mes.
                         </p>
 
                         <div className="mt-6 mb-12">
@@ -71,7 +71,7 @@ export default function CtaSection(): React.ReactElement {
                                 className="inline-block rounded-md bg-gradient-to-b from-[#0a4afc] to-[#153eb5] px-4 py-3 text-xl lg:text-2xl font-semibold leading-[1.2] text-white shadow-sm transition-colors duration-500 ease-in-out hover:from-[#153eb5] hover:to-[#0a4afc]"
                             >
                                 <span className="text-xl tracking-wide">
-                                    QUIERO MI PLAN PARA DUPLICAR COMISIONES
+                                    APLICAR AHORA Y CONSTRUIR MI FUTURO
                                 </span>
                             </a>
                         </div>

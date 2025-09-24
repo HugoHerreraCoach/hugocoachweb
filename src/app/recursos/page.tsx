@@ -1,6 +1,8 @@
+//src/app/recursos/page.tsx
+
 import { ResourceCard } from '@/components/ui/ResourceCard';
 // Importamos los íconos
-import { Map, ListChecks, Activity, GraduationCap } from 'lucide-react';
+import { Map, ListChecks, Activity, GraduationCap, MessagesSquare } from 'lucide-react';
 import type { Metadata } from 'next';
 
 // Metadatos para SEO y posicionamiento
@@ -43,6 +45,14 @@ const resourcesData = [
         ctaText: 'Obtener Plan de Acción',
         ctaLink: '/recursos/capacitacion',
         icon: <GraduationCap className="h-6 w-6 text-slate-600" />
+    },
+    {
+        tag: 'PARA VENDEDORES',
+        title: 'Plantillas de Seguimiento por WhatsApp',
+        description: 'La estrategia de 7 días para convertir conversaciones en ventas sin sonar insistente y sin dejar que los prospectos se enfríen.',
+        ctaText: 'Obtener Plantillas',
+        ctaLink: '/recursos/seguimiento', // La URL de la página que ya creaste
+        icon: <MessagesSquare className="h-6 w-6 text-slate-600" /> // El nuevo ícono
     }
 ];
 

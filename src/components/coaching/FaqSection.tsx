@@ -21,8 +21,8 @@ const faqData: FaqItem[] = [
         answer: "Porque no te vendo trucos, te instalo un sistema universal basado en la psicología del comprador. En la sesión, adaptamos este sistema 100% a tu producto y a tu cliente.",
     },
     {
-        question: "¿Cómo sé que los $200 USD son una buena inversión y no un gasto?",
-        answer: "Piensa en cuánto te cuesta una sola venta perdida por no tener un proceso. Este sistema se paga solo con el primer cierre adicional que logres. Además, mi garantía elimina el 100% de tu riesgo.",
+        question: "¿Cómo sé que los $1000 USD son una buena inversión y no un gasto?",
+        answer: "Una inversión de $1000 se siente grande hasta que la comparas con el costo de seguir igual. ¿Cuánto dinero dejaste sobre la mesa el mes pasado por cierres que se escaparon? Este programa es la inversión más segura de tu carrera por una razón: mi Garantía de ROI Imparable. O recuperas tu inversión con nuevas comisiones, o yo trabajo gratis hasta que lo hagas. El único riesgo real es seguir perdiendo esas ventas.",
     },
     {
         question: "¿Qué diferencia hay entre esto y ver videos gratuitos en YouTube?",

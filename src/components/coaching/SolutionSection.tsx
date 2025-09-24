@@ -36,19 +36,18 @@ export default function SolutionSection() {
                                 <br /> <br/>Yo no enseño trucos, instalo sistemas. Esa es la diferencia entre una comisión casual y un ingreso predecible.
                             </p>
                             <p>
-                                La <strong className="text-white font-semibold">Sesión de Aceleración es tu atajo a ese sistema.</strong> En 2 horas de trabajo 1 a 1, te entrego un plan de ataque.<br /> <br/>
-                                Auditamos tu proceso, corregimos las fugas de comisiones y construimos el guion exacto que necesitas para duplicar tus resultados. <br /> <br/>
-                                Sales con un sistema para ejecutar, no con teoría para olvidar.
+                                Mi solución no es una sesión de teoría. Es un <strong className="text-white font-semibold">sprint de implementación de 4 semanas</strong> donde instalamos juntos tu <strong className="text-white font-semibold">Sistema de Comisiones Aceleradas.</strong><br /> <br/>
+                                Es el atajo para dejar de depender de la suerte y empezar a fabricar resultados.
                             </p>
                         </div>
 
                         {/* Llamada a la Acción (CTA) */}
                         <div className="mt-10 flex justify-center lg:justify-start">
                             <Link
-                                href="/sesion" // Asegúrate de que esta ruta sea la correcta
+                                href="https://calendly.com/hugoherrera-coach/agendar-videollamada" // Asegúrate de que esta ruta sea la correcta
                                 className="inline-flex items-center justify-center gap-2 rounded-md bg-gradient-to-b from-[#0a4afc] to-[#153eb5] transition-colors duration-500 ease-in-out hover:from-[#153eb5] hover:to-[#0a4afc] px-8 py-3 text-xl font-semibold text-white shadow-lg"
                             >
-                                Descubrir la Sesión
+                                CONSTRUIR MI SISTEMA
                                 <ArrowRight className="h-5 w-5" />
                             </Link>
                         </div>

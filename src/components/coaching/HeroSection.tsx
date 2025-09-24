@@ -36,12 +36,12 @@ export default function HeroSection() {
                 {/* Llamada a la Acción (CTA): Clara, visible y con un diseño premium */}
                 <div className="mt-10">
                     <Link
-                        href="/"
+                        href="https://calendly.com/hugoherrera-coach/agendar-videollamada"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="inline-block rounded-md bg-gradient-to-b from-[#0a4afc] to-[#153eb5] px-4 py-3 text-lg lg:text-xl font-semibold leading-[1.4] text-white shadow-sm transition-colors duration-500 ease-in-out hover:from-[#153eb5] hover:to-[#0a4afc]"
                     >
-                        Duplicar Mis Comisiones
+                        QUIERO MI PLAN...
                     </Link>
                 </div>
             </div>

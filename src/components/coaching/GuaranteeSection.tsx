@@ -31,7 +31,7 @@ export default function GuaranteeSection() {
                                 </div>
                             </div>
                             <h2 className="text-balance text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl lg:text-4xl">
-                                Garantía de Resultados: O es un plan ganador, o es gratis.
+                                Garantía de <span className='text-blue-600'>ROI Imparable:</span> O Ganas Dinero, o Te Entreno Gratis.
                             </h2>
                         </div>
 
@@ -39,11 +39,11 @@ export default function GuaranteeSection() {
                         <div className="mt-8 lg:col-span-1 lg:mt-0">
                             <blockquote className="space-y-4 border-l-4 border-blue-500 pl-6">
                                 <p className="text-xl lg:text-2xl leading-[1.4] text-slate-700">
-                                    &quot;El riesgo es 100% mío. Si después de nuestra sesión no tienes{' '}
+                                    &quot;Mi compromiso es simple: si después de nuestras 4 semanas no generas al menos $1000 USD en nuevas comisiones,{' '}
                                     <strong className="font-semibold text-blue-600">
-                                        un plan de acción claro y un guion probado para duplicar tus cierres
+                                        seguiré trabajando contigo (dándote una sesión semanal) completamente gratis hasta que lo logres
                                     </strong>
-                                    , la sesión es gratis y te quedas con el arsenal completo de bonos. Mi reputación se mide en tus resultados, no en mis horas facturadas.&quot;
+                                    . No hay letra pequeña. O recuperas tu inversión y la multiplicas, o yo trabajo gratis. El riesgo es 100% mío.&quot;
                                 </p>
                                 <p className="text-right text-base lg:text-lg font-medium italic text-slate-500">
                                     — Hugo Herrera
