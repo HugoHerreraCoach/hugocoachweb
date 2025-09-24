@@ -23,7 +23,8 @@ function GraciasContent() {
         objeciones: 'Mapa Definitivo de Objeciones',
         preguntas: 'Guion de 50 Preguntas Estratégicas',
         radiografia: 'Radiografía de tu Sistema Comercial',
-        capacitacion: 'Sistema de Capacitación de 30 Días'
+        capacitacion: 'Sistema de Capacitación de 30 Días',
+        seguimiento: 'Plantillas de Seguimiento por WhatsApp'
     };
 
     const contenidoVendedor = {
@@ -40,7 +41,7 @@ function GraciasContent() {
         ctaEnlace: 'https://calendly.com/hugoherrera-coach/agendar-videollamada'
     };
 
-    const esVendedor = recurso === 'objeciones' || recurso === 'preguntas';
+    const esVendedor = recurso === 'objeciones' || recurso === 'preguntas'|| recurso === 'seguimiento';
     const contenido = esVendedor ? contenidoVendedor : contenidoDueño;
     const nombreRecurso = resourceNames[recurso || ''] || 'recurso';
 
