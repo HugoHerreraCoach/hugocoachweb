@@ -43,7 +43,7 @@ const footerColumns: Readonly<FooterColumn[]> = [
         links: [
             { label: 'Blog de Ventas', href: '/blog' },
             { label: 'Recursos Gratuitos', href: '/recursos' },
-            { label: 'App con IA: TotalScript', href: 'https://totalscript.app/', isExternal: true },
+            { label: 'App con IA: TotalScript', href: 'https://totalscript.hugoherreracoach.com/', isExternal: true },
         ],
     },
 ];

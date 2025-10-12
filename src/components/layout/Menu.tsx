@@ -60,7 +60,7 @@ const navConfig: NavItem[] = [
     subMenu: [
       { label: 'Blog de Ventas', href: '/blog', description: 'Estrategias y guías para dominar las ventas.' },
       { label: 'Recursos Gratuitos', href: '/recursos', description: 'Herramientas y plantillas para aplicar hoy.' },
-      { label: 'App con IA: TotalScript', href: 'https://totalscript.app/', isExternal: true, description: 'Genera guiones de venta en segundos.' },
+      { label: 'App con IA: TotalScript', href: 'https://totalscript.hugoherreracoach.com/', isExternal: true, description: 'Genera guiones de venta en segundos.' },
     ]
   },
   {
