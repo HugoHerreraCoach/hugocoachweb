@@ -58,6 +58,28 @@ const testimoniosData: TestimonioVideo[] = [
         nombre: 'Elias Vargas',
         rol: 'Líder de Red Multinivel',
     },
+    {
+        youtubeVideoId: 'JOGFJRrbZZk',
+        resultado: 'Nos dió soporte y guía para nuestros emprendimientos',
+        cita: 'Es un excelente coach que te tiene paciencia y te enseña todo lo que un emprendedor necesita.',
+        nombre: 'Cámara de Mujeres Emprendedoras y Empresarias',
+        rol: 'Emprendedoras',
+    },
+    {
+        youtubeVideoId: 'D5SPYMxdhNE',
+        resultado: 'Me actualizó tecnológicamente y ahora puedo tener mi empresa en la mano',
+        cita: 'Es increíble que ya pueda tener el control de mi empresa y herramientas en la palma de mi mano.',
+        nombre: 'Diego Nicolalde',
+        rol: 'Gerente General de Ikona Inmobiliaria',
+    },
+    {
+        youtubeVideoId: 'lwjpIWJ7s-k',
+        resultado: 'Hoy tenemos a un Ikona de antes y un Ikona del después',
+        cita: 'Hoy entendemos que el mejor equipo no se contrata, sino que se construye. Gracias a Hugo por ser parte de este crecimiento.',
+        nombre: 'Pamela Gaón',
+        rol: 'Fundadora de Ikona Inmobiliaria',
+    },
+    
 ];
 
 const TestimoniosVideoSection: React.FC = () => {
