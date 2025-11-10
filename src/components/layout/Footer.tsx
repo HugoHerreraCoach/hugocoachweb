@@ -1,6 +1,8 @@
+//src/components/layout/Footer.tsx
+
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, BookA } from 'lucide-react';
 
 // --- DEFINICIONES DE TIPOS (Intactas) ---
 interface SocialLink {
@@ -101,10 +103,30 @@ export default function Footer() {
 
                 <div className="mt-16 pt-8 border-t border-gray-800 flex flex-col-reverse md:flex-row items-center justify-between">
                     <div className="text-center md:text-left mt-6 md:mt-0">
+                        {/* AVISO OFICIAL DE INDECOPI */}
+                        <div className="mb-0">
+                            <Link href="/libro-de-reclamaciones" className="inline-block">
+                                <Image
+                                    src="/images/libro-reclamaciones-aviso.png"
+                                    alt="Aviso de Libro de Reclamaciones"
+                                    width={145} 
+                                    height={58}
+                                    className="mx-auto md:mx-0"
+                                />
+                            </Link>
+                        </div>
+
                         <p className="text-sm text-gray-500">© {currentYear} Todos los derechos reservados.</p>
-                        <div className="mt-2 space-x-4">
+                        <div className="mt-2 flex flex-wrap justify-center md:justify-start gap-x-4 gap-y-2">
                             <Link href="/politica-de-privacidad" className="text-sm text-gray-500 hover:text-gray-300 transition-colors">Política de Privacidad</Link>
                             <Link href="/terminos-de-servicio" className="text-sm text-gray-500 hover:text-gray-300 transition-colors">Términos de Servicio</Link>
+                            <Link
+                                href="/libro-de-reclamaciones"
+                                className="text-sm text-gray-500 hover:text-gray-300 transition-colors inline-flex items-center"
+                            >
+                                <BookA size={14} className="mr-1" />
+                                Libro de Reclamaciones
+                            </Link>
                         </div>
                     </div>
 
