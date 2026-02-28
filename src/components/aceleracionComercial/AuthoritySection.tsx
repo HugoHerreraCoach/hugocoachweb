@@ -13,7 +13,7 @@ interface Credential {
 }
 
 const credentials: Credential[] = [
-  { icon: Users, value: '22', label: 'Personas en mi equipo' },
+  { icon: Users, value: '25', label: 'Personas en mi equipo' },
   { icon: BookOpen, value: '2', label: 'Libros publicados' },
   { icon: Tv, value: '+350', label: 'Lecciones en video' },
   { icon: Building2, value: '+7,000', label: 'Asistentes a eventos' },
@@ -30,7 +30,7 @@ export function AuthoritySection() {
             <div className="relative mx-auto max-w-[320px] lg:max-w-[380px]">
               <div className="relative rounded-2xl overflow-hidden border border-gray-800 shadow-2xl">
                 <Image
-                  src="/images/equipos/equiposHeader.jpg"
+                  src="/images/blog/hugo-perfil-cuadrado.jpg"
                   alt="Hugo Herrera, arquitecto de sistemas comerciales"
                   width={600}
                   height={750}
@@ -61,9 +61,10 @@ export function AuthoritySection() {
               </h2>
 
               <p className="mt-4 lg:mt-6 text-base lg:text-xl leading-[1.6] text-slate-300 text-balance">
-                A los 27 años dirijo una empresa de más de 20 personas, desarrollo mis propios CRMs y ERPs,
-                y organizo <span className="font-semibold text-white">Negocios Legendarios</span>: los eventos educativos
-                más grandes de Perú. Sé lo que es tener planilla que pagar, metas agresivas que cumplir y
+                A los 27 años dirijo una empresa de <span className="font-semibold text-white">más de 25 personas</span>, desarrollo{' '}
+                <span className="font-semibold text-white">mis propios CRMs y ERPs</span>,
+                y soy creador de <span className="font-semibold text-white">los eventos educativos de ventas y negocios más grandes de Perú</span>.
+                Sé lo que es tener planilla que pagar, metas agresivas que cumplir y
                 un equipo que necesita estructura para rendir.
               </p>
 
