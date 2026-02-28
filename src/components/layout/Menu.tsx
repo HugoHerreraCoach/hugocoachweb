@@ -47,8 +47,7 @@ const navConfig: NavItem[] = [
         sectionTitle: 'PARA LÍDERES Y EMPRESAS',
         items: [
           { label: 'Libro: Líder Experto', href: 'https://liderexperto.hugoherreracoach.com/', isExternal: true, description: 'Construye equipos de élite que venden más y mejor.' },
-          { label: 'Entrenamiento para Equipos', href: '/servicios/entrenamiento-equipos', description: 'Un sistema probado para estandarizar resultados.' },
-          { label: 'Asesoría en Gestión Comercial', href: '/servicios/asesoria-comercial', description: 'Aprende a dirigir, supervisar y escalar tu operación de ventas.' },
+          { label: 'Aceleración Comercial', href: '/servicios/aceleracion-comercial', description: 'Instalamos un sistema de ventas integral en tu empresa. +20% facturación en 90 días.' },
           { label: 'Software y Embudos de venta', href: '/servicios/desarrollo-software', description: 'Infraestructura digital para crecer.' },
           { label: 'Conferencias', href: '/servicios/conferencias', description: 'Contrata un arquitecto, no un motivador.' },
         ]

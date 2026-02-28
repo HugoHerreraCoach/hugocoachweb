@@ -35,8 +35,7 @@ const footerColumns: Readonly<FooterColumn[]> = [
     {
         title: 'Servicios',
         links: [
-            { label: 'Entrenamiento para Equipos', href: '/servicios/entrenamiento-equipos' },
-            { label: 'Asesoría para Empresas', href: '/servicios/asesoria-comercial' },
+            { label: 'Aceleración Comercial', href: '/servicios/aceleracion-comercial' },
             { label: 'Conferencias', href: '/servicios/conferencias' },
         ],
     },
