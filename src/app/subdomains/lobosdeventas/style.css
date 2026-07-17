@@ -1,0 +1,657 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap');
+
+/* Force font family on all children */
+.lobos-body-wrapper, 
+.lobos-body-wrapper *,
+.lobos-body-wrapper button,
+.lobos-body-wrapper p,
+.lobos-body-wrapper a,
+.lobos-body-wrapper span {
+  font-family: 'Poppins', sans-serif !important;
+}
+
+/* Base styles scoped under .lobos-body-wrapper */
+.lobos-body-wrapper {
+  text-align: center;
+  margin: 0 auto;
+  background-color: white;
+  color: black;
+  width: 100%;
+  overflow-x: hidden;
+}
+.lobos-body-wrapper h1 {
+  font-size: 42px;
+  line-height: 46px;
+  font-weight: 700 !important;
+}
+.lobos-body-wrapper h2 {
+  font-size: 36px;
+  line-height: 36px;
+  font-weight: 600 !important;
+}
+.lobos-body-wrapper h3 {
+  font-size: 21px;
+  line-height: 23px;
+  font-weight: 600 !important;
+}
+.lobos-body-wrapper p {
+  font-size: 21px;
+  line-height: 25px;
+  padding: 12px 0px;
+}
+.lobos-body-wrapper a {
+  color: white;
+  text-decoration: none;
+  cursor: pointer;
+}
+.lobos-body-wrapper button {
+  background: rgb(72, 113, 235);
+  background: linear-gradient(
+    180deg,
+    rgba(72, 113, 235, 1) 0%,
+    rgba(21, 62, 181, 1) 100%
+  );
+  transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+}
+.lobos-body-wrapper button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(58, 101, 251, 0.4);
+  filter: brightness(1.1);
+}
+.lobos-body-wrapper button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(58, 101, 251, 0.3);
+}
+
+.lobos-body-wrapper header {
+  background-color: black !important;
+  width: 100%;
+}
+.lobos-body-wrapper .header-barContainer {
+  max-width: 840px;
+  margin: 0 auto;
+}
+.lobos-body-wrapper .header-bar {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin: 0 auto;
+  background-color: black;
+  height: 100px;
+}
+.lobos-body-wrapper .header-bar__left {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 16px;
+  height: 44px;
+  padding: 12px;
+  background: rgb(72, 113, 235);
+  background: linear-gradient(
+    180deg,
+    rgba(72, 113, 235, 1) 0%,
+    rgba(21, 62, 181, 1) 100%
+  );
+  border-radius: 16px;
+  color: white;
+}
+.lobos-body-wrapper .header-bar__right {
+  font-size: 16px;
+  color: white;
+}
+.lobos-body-wrapper .header-front {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: url("/subdomains/lobosdeventas/src/img/header-mobile.jpg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  height: 570px;
+  color: white;
+}
+.lobos-body-wrapper .header-front__name {
+  font-size: 18px;
+  font-weight: 300;
+  letter-spacing: 8px;
+  margin: 24px 0 24px 0;
+}
+.lobos-body-wrapper .header-front__title {
+  padding: 0 12px 0 12px;
+}
+.lobos-body-wrapper .header-front__description {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 50px;
+  padding: 0 16px;
+}
+.lobos-body-wrapper .access-button {
+  font-size: 24px;
+  font-weight: 700;
+  color: white;
+  padding: 14px 32px;
+  border: none;
+  border-radius: 8px;
+  font-family: Poppins, sans-serif;
+  cursor: pointer;
+  letter-spacing: 0.5px;
+}
+
+.lobos-body-wrapper .main {
+  width: 100vw;
+}
+.lobos-body-wrapper .main-integralProgram {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 40px 16px 24px 16px;
+}
+.lobos-body-wrapper .main-integralProgram__img {
+  width: 100%;
+  max-width: 720px;
+  margin-bottom: 12px;
+}
+
+.lobos-body-wrapper .main-credibility {
+  background-color: #0a0f1a;
+  padding: 40px 16px;
+}
+.lobos-body-wrapper .main-credibility__stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  max-width: 840px;
+  margin: 0 auto;
+}
+.lobos-body-wrapper .main-credibility__stat {
+  text-align: center;
+}
+.lobos-body-wrapper .main-credibility__stat-number {
+  font-size: 36px;
+  font-weight: 800;
+  line-height: 40px;
+  color: #579aff;
+  padding: 0;
+}
+.lobos-body-wrapper .main-credibility__stat-label {
+  font-size: 14px;
+  font-weight: 300;
+  color: #b0b8c9;
+  padding: 0;
+  line-height: 18px;
+}
+
+.lobos-body-wrapper .main-testimonials {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 48px 16px;
+  max-width: 1080px;
+  margin: 0 auto;
+}
+.lobos-body-wrapper .main-testimonials__title {
+  font-size: 30px;
+  line-height: 34px;
+  font-weight: 600;
+  margin-bottom: 24px;
+}
+.lobos-body-wrapper .main-testimonials__container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 720px;
+  width: 100%;
+}
+.lobos-body-wrapper .main-testimonials__item {
+  text-align: left;
+  border-left: 4px solid #3a65fb;
+  padding: 20px 24px;
+  background-color: #f7f8fc;
+  border-radius: 0 12px 12px 0;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.lobos-body-wrapper .main-testimonials__item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+.lobos-body-wrapper .main-testimonials__quote {
+  font-size: 19px;
+  line-height: 26px;
+  font-style: italic;
+  font-weight: 400;
+  color: #333;
+  padding: 0 0 8px 0;
+}
+.lobos-body-wrapper .main-testimonials__author {
+  font-size: 15px;
+  line-height: 18px;
+  color: #666;
+  padding: 0;
+}
+
+.lobos-body-wrapper .main-plus {
+  max-width: 840px;
+  margin: 0 auto;
+  margin-top: 24px;
+}
+.lobos-body-wrapper .main-plus__process {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: black;
+  color: white;
+  padding: 24px 24px 12px 24px;
+  border-radius: 32px 32px 0px 0px;
+}
+.lobos-body-wrapper .main-plus__process-title {
+  font-size: 24px;
+  line-height: 28px;
+  font-weight: 600;
+}
+.lobos-body-wrapper .main-plus__process-description {
+  font-weight: 300;
+  text-align: left;
+}
+.lobos-body-wrapper .main-plus__process-itemsContainer {
+  max-width: 720px;
+}
+.lobos-body-wrapper .main-plus__process-item {
+  display: flex;
+  align-items: center;
+}
+.lobos-body-wrapper .main-plus__process-item__img {
+  width: 60px;
+}
+.lobos-body-wrapper .main-plus__process-item__description {
+  text-align: left;
+  padding-left: 8px;
+}
+.lobos-body-wrapper .blue-item {
+  color: #579aff;
+  font-weight: 700;
+}
+.lobos-body-wrapper .main-plus__process-space {
+  height: 72px;
+}
+.lobos-body-wrapper .main-plus__promise {
+  background-color: #292929;
+  color: white;
+  padding: 32px 12px 32px 12px;
+  margin-top: -50px;
+  border-radius: 36px;
+}
+.lobos-body-wrapper .main-plus__promise-title {
+  font-size: 22px;
+  font-weight: 600;
+  color: #29f43d;
+}
+.lobos-body-wrapper .main-plus__promise-description {
+  font-weight: 300;
+}
+.lobos-body-wrapper .promise-description-bold {
+  font-weight: 600;
+}
+
+.lobos-body-wrapper .main-why {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 40px 24px 24px 24px;
+}
+.lobos-body-wrapper .main-why__description {
+  font-size: 22px;
+}
+.lobos-body-wrapper .main-why__itemsContainer {
+  max-width: 720px;
+}
+.lobos-body-wrapper .main-why__item {
+  display: flex;
+  align-items: center;
+}
+.lobos-body-wrapper .main-why__item-img {
+  width: 32px;
+}
+.lobos-body-wrapper .main-why__item-description {
+  text-align: left;
+  padding-left: 8px;
+}
+.lobos-body-wrapper .main-why__ready {
+  font-size: 22px;
+}
+
+.lobos-body-wrapper .main-access {
+  background: black;
+  color: white;
+  padding: 48px 16px 48px 16px;
+  margin-top: 32px;
+}
+.lobos-body-wrapper .main-accessContainer {
+  max-width: 1240px;
+  margin: 0 auto;
+}
+.lobos-body-wrapper .main-access__description {
+  font-weight: 300;
+}
+.lobos-body-wrapper .main-access__img {
+  width: 100%;
+  max-width: 1000px;
+}
+
+.lobos-body-wrapper .main-packs {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: black;
+  color: white;
+  padding: 40px 0px 40px 0px;
+}
+.lobos-body-wrapper .main-packs-individual {
+  width: 92%;
+  max-width: 960px;
+  background-color: #1e2229;
+  border: 3px solid #3a65fb;
+  border-radius: 24px;
+  padding: 32px 0px 32px 0px;
+  margin: 32px 0 20px 0;
+}
+.lobos-body-wrapper .main-packs__title {
+  font-size: 30px;
+  line-height: 32px;
+  font-weight: 700;
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+}
+.lobos-body-wrapper .main-packs__price {
+  font-size: 30px;
+  font-weight: 700;
+  padding: 24px 0 24px 0;
+}
+.lobos-body-wrapper .main-packs__students {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+  border: 1px solid;
+  width: 140px;
+  height: 32px;
+  border-radius: 12px;
+  font-size: 17px;
+  font-weight: 300;
+}
+.lobos-body-wrapper .main-packs__text {
+  font-weight: 300;
+  padding: 24px 12px 24px 12px;
+  line-height: 26px;
+}
+.lobos-body-wrapper hr {
+  border-bottom: 0.5px solid;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  background: none;
+  height: auto;
+}
+.lobos-body-wrapper .main-packs__cuotes {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 260px;
+  height: 36px;
+  margin: 0 auto;
+  background-color: #292d34;
+  border-radius: 12px;
+}
+.lobos-body-wrapper .main-packs__cuotes-img {
+  width: 24px;
+}
+.lobos-body-wrapper .main-packs__cuotes-text {
+  padding-left: 8px;
+  font-size: 16px;
+  font-weight: 300;
+}
+.lobos-body-wrapper .main-packs__cuotes {
+  margin-top: 24px;
+  margin-bottom: 24px;
+}
+
+.lobos-body-wrapper .main-packs-teams {
+  width: 92%;
+  max-width: 960px;
+  background-color: #f6f8ff;
+  color: BLACK;
+  border: 3px solid #3a65fb;
+  border-radius: 24px;
+  padding: 32px 0px 40px 0px;
+  margin: 32px 0 44px 0;
+}
+.lobos-body-wrapper .students-team {
+  margin-top: 32px;
+  font-weight: 500;
+  width: 200px;
+}
+.lobos-body-wrapper .title-team {
+  padding: 0 12px 0 12px;
+}
+.lobos-body-wrapper .text-team {
+  font-weight: 400;
+}
+.lobos-body-wrapper .coutes-team {
+  color: white;
+}
+
+.lobos-body-wrapper .main-clients {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 48px 16px 48px 16px;
+  max-width: 1240px;
+  margin: 0 auto;
+}
+.lobos-body-wrapper .inclub {
+  width: 170px;
+  padding: 12px;
+}
+.lobos-body-wrapper .mpc {
+  width: 160px;
+  padding: 12px;
+}
+.lobos-body-wrapper .belcan {
+  width: 190px;
+  padding: 12px;
+}
+.lobos-body-wrapper .racser {
+  width: 190px;
+  padding: 12px;
+}
+.lobos-body-wrapper .century-21 {
+  width: 180px;
+  padding: 20px 12px 20px 12px;
+}
+.lobos-body-wrapper .ayni {
+  width: 170px;
+  padding: 12px;
+}
+.lobos-body-wrapper .tribu-real-state {
+  width: 84px;
+  padding: 12px;
+}
+.lobos-body-wrapper .top-x {
+  width: 320px;
+  padding: 12px;
+}
+
+.lobos-body-wrapper footer {
+  background-color: #1b1b1b !important;
+  color: white;
+  padding: 24px 0px 36px;
+}
+.lobos-body-wrapper .footer-img {
+  display: inline-block !important;
+  width: 90px;
+  padding: 0px 12px 0px 12px;
+}
+.lobos-body-wrapper .footer-copyright {
+  font-size: 14px;
+  line-height: 16px;
+  font-weight: 300;
+  padding: 12px;
+}
+.lobos-body-wrapper .footer-links {
+  font-size: 14px;
+  line-height: 16px;
+  font-weight: 300;
+  padding: 8px 12px 0px 12px;
+}
+
+.lobos-body-wrapper .negrita {
+  font-weight: 600;
+}
+.lobos-body-wrapper .subrayado {
+  text-decoration: underline;
+}
+.lobos-body-wrapper .blue-text {
+  color: #055ad9 !important;
+}
+
+/* Brand Logos Grid Fix */
+.lobos-body-wrapper .main-clients div {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+}
+.lobos-body-wrapper .main-clients img {
+  display: inline-block !important;
+  vertical-align: middle;
+}
+
+/* Gift/Bonus Card Styling */
+.lobos-body-wrapper .gift-bonus-card {
+  display: flex;
+  align-items: flex-start;
+  background-color: #f6f8ff;
+  border: 1px solid #dbeafe;
+  border-radius: 12px;
+  padding: 20px;
+  margin: 24px auto;
+  max-width: 720px;
+  text-align: left;
+  box-shadow: 0 4px 12px rgba(58, 101, 251, 0.05);
+}
+.lobos-body-wrapper .gift-bonus-card .gift-icon {
+  font-size: 28px;
+  margin-right: 16px;
+  line-height: 1;
+}
+.lobos-body-wrapper .gift-bonus-card .gift-content {
+  font-size: 16px;
+  line-height: 24px !important;
+  color: #1e293b;
+}
+.lobos-body-wrapper .gift-bonus-card .gift-content strong {
+  color: #1e3a8a;
+  font-weight: 700;
+}
+
+@media (min-width: 540px) {
+  .lobos-body-wrapper .header-front {
+    background: url("/subdomains/lobosdeventas/src/img/header-desktop.jpg");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    background-color: #10121e;
+    height: 70vh;
+  }
+
+  .lobos-body-wrapper .main-integralProgram__title {
+    padding: 40px 12px 32px 12px;
+  }
+
+  .lobos-body-wrapper .main-credibility__stats {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  .lobos-body-wrapper .main-credibility__stat-number {
+    font-size: 42px;
+  }
+  .lobos-body-wrapper .main-credibility__stat-label {
+    font-size: 16px;
+  }
+
+  .lobos-body-wrapper .main-testimonials__container {
+    flex-direction: row;
+  }
+
+  .lobos-body-wrapper .main-plus {
+    padding-top: 32px;
+    padding-bottom: 32px;
+  }
+  .lobos-body-wrapper .main-plus__process-item {
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+
+  .lobos-body-wrapper .main-access {
+    margin-top: 40px;
+  }
+  .lobos-body-wrapper .main-access__title {
+    padding-top: 32px;
+    padding-bottom: 12px;
+  }
+
+  .lobos-body-wrapper .main-clients {
+    padding-top: 48px;
+    padding-bottom: 44px;
+  }
+  .lobos-body-wrapper .main-clients__title {
+    padding-bottom: 20px;
+  }
+
+  .lobos-body-wrapper .inclub {
+    width: 300px;
+    padding: 12px;
+  }
+  .lobos-body-wrapper .mpc {
+    width: 260px;
+    padding: 12px;
+  }
+  .lobos-body-wrapper .belcan {
+    width: 280px;
+    padding: 12px;
+  }
+  .lobos-body-wrapper .racser {
+    width: 300px;
+    padding: 12px;
+  }
+  .lobos-body-wrapper .century-21 {
+    width: 300px;
+    padding: 32px 12px 32px 12px;
+  }
+  .lobos-body-wrapper .ayni {
+    width: 260px;
+    padding: 12px;
+  }
+  .lobos-body-wrapper .tribu-real-state {
+    width: 120px;
+    padding: 12px;
+  }
+  .lobos-body-wrapper .top-x {
+    width: 400px;
+    padding: 12px;
+  }
+
+  .lobos-body-wrapper .footer-img {
+    width: 180px;
+    padding: 0px 12px 0px 12px;
+  }
+}

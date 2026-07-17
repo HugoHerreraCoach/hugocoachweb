@@ -25,6 +25,21 @@
     "paths": {
       "@/*": [
         "./src/*"
+      ],
+      "@cerradorexperto/*": [
+        "./src/app/subdomains/cerradorexperto/*"
+      ],
+      "@liderexperto/*": [
+        "./src/app/subdomains/liderexperto/*"
+      ],
+      "@info/*": [
+        "./src/app/subdomains/info/*"
+      ],
+      "@lobosdeventas/*": [
+        "./src/app/subdomains/lobosdeventas/*"
+      ],
+      "@totalscript/*": [
+        "./src/app/subdomains/totalscript/*"
       ]
     }
   },

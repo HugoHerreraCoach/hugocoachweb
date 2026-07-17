@@ -11,6 +11,8 @@ import "./globals.css";
 import Menu from "@/components/layout/Menu";
 import Footer from "@/components/layout/Footer";
 
+import { headers } from "next/headers";
+
 // 2. Configura cada fuente para que use una variable CSS
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -47,19 +49,22 @@ export const metadata: Metadata = {
   description: "Sitio web de coaching profesional de Hugo Herrera",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const headersList = await headers();
+  const isSubdomain = headersList.get('x-is-subdomain') === 'true';
+
   return (
     <html lang="es">
       <body
         className={`${montserrat.variable} ${barlow.variable} ${barlowCondensed.variable} ${tangerine.variable} antialiased`}
       >
-        <Menu />
+        {!isSubdomain && <Menu />}
         <main>{children}</main>
-        <Footer />
+        {!isSubdomain && <Footer />}
       </body>
     </html>
   );
