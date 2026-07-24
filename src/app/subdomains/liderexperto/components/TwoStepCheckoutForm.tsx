@@ -16,6 +16,8 @@ import { CreditCard} from "lucide-react";
 import Image from "next/image";
 import clsx from "clsx";
 import BumpItem from "./BumpItem";
+import { StripePaymentForm } from "../../cerradorexperto/components/ui/StripePaymentForm";
+
 import {
   PaymentResult,
   FormData,
@@ -1369,81 +1371,23 @@ function Step2Form(props: Step2FormProps) {
         </div>
       </div>
 
-      <div className="mb-4">
-        <h3 className="font-semibold text-lg text-gray-800 mb-3">Selecciona tu método de pago:</h3>
-        <div className="grid grid-cols-2 gap-2">
-          <button
-            type="button"
-            onClick={() => setSelectedPaymentMethod("card")}
-            disabled={isProcessingPayment}
-            className={`flex items-center justify-center p-3 border rounded-lg transition-colors text-base cursor-pointer ${selectedPaymentMethod === "card"
-              ? "bg-blue-600 text-white border-blue-700"
-              : "bg-white text-black border-gray-300 hover:bg-gray-100"
-              }`}
-          >
-            <CreditCard className="mr-2 h-5 w-5" />
-            Tarjeta
-          </button>
-          <button
-            type="button"
-            onClick={() => setSelectedPaymentMethod("yape")}
-            disabled={isProcessingPayment}
-            className={`flex items-center justify-center p-3 border rounded-lg transition-colors text-base cursor-pointer ${selectedPaymentMethod === "yape"
-              ? "bg-purple-600 text-white border-blue-700"
-              : "bg-white text-black border-gray-300 hover:bg-gray-100"
-              }`}
-          >
-            <Image
-              src="/subdomains/liderexperto/venta/yape.png"
-              alt="Yape Logo"
-              width={200}
-              height={200}
-              className="w-[30px] mr-2"
-            />  
-            Yape
-          </button>
-        </div>
+      <div className="mb-6">
+        <StripePaymentForm
+          customerData={{
+            name: `${formData.firstName} ${formData.lastName}`.trim(),
+            email: formData.email,
+            countryCode: formData.address ? "PE" : "PE",
+          }}
+          offerDetails={{
+            amount: totalPrice,
+            currency: "PEN",
+          }}
+          showUpsell={false}
+          productId="liderexperto"
+          onSuccessRedirectTo="/subdomains/liderexperto/gracias"
+        />
       </div>
 
-      {selectedPaymentMethod === "card" && (
-        <CardPaymentForm
-          formData={formData}
-          errors={errors}
-          handleChange={handleChange}
-          handleExpiryChange={handleExpiryChange}
-          isProcessingPayment={isProcessingPayment}
-          savedTokens={savedTokens}
-          useSavedToken={useSavedToken}
-          setUseSavedToken={setUseSavedToken}
-          chosenTokenId={chosenTokenId}
-          setChosenTokenId={setChosenTokenId}
-          expiryInput={expiryInput}
-          setExpiryInput={setExpiryInput}
-          containerWidth={containerWidth}
-          currentCardLogo={currentCardLogo}
-          isVisible={isVisible}
-          identificationTypesPeru={identificationTypesPeru}
-          handleCardHolderNameChange={props.handleCardHolderNameChange}
-          handleCardHolderNameBlur={props.handleCardHolderNameBlur}
-          handleCardNumberBlur={props.handleCardNumberBlur}
-          handleExpiryBlur={props.handleExpiryBlur}
-          handleCVVBlur={props.handleCVVBlur}
-          handleIdentificationBlur={props.handleIdentificationBlur}
-        />
-      )}
-
-      {selectedPaymentMethod === "yape" && (
-        <YapePaymentForm
-          yapeNumber={yapeNumber}
-          yapeCode={yapeCode}
-          handleYapeNumberChange={handleYapeNumberChange}
-          handleYapeNumberBlur={handleYapeNumberBlur}
-          handleYapeCodeChange={handleYapeCodeChange}
-          handleYapeCodeBlur={handleYapeCodeBlur}
-          isProcessingPayment={isProcessingPayment}
-          errors={errors}
-        />
-      )}
 
       <div className="space-y-4 mb-6">
         <BumpItem

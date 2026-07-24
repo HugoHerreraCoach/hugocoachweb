@@ -27,7 +27,8 @@ type StripePaymentFormProps = {
     description?: string;
   };
   showUpsell?: boolean;
-  productId: ProductID;
+  productId: string;
+
   onSuccessRedirectTo: string;
 };
 
@@ -44,7 +45,8 @@ function CheckoutForm({
   customerEmail: string;
   totalAmount: number;
   currency: string;
-  productId: ProductID;
+  productId: string;
+
   onSuccessRedirectTo: string;
   includeBump: boolean;
 }) {
@@ -140,16 +142,29 @@ export function StripePaymentForm({
 }: StripePaymentFormProps) {
   const [name, setName] = useState(customerData?.name || "");
   const [email, setEmail] = useState(customerData?.email || "");
+  const [selectedCountry, setSelectedCountry] = useState(
+    customerData?.countryCode || "PE"
+  );
   const [includeBump, setIncludeBump] = useState(false);
   const [clientSecret, setClientSecret] = useState<string | null>(null);
   const [isLoadingSecret, setIsLoadingSecret] = useState(false);
 
-  const basePrice = offerDetails?.amount || (offerDetails?.currency === "USD" ? 7 : 25);
-  const bumpPrice = offerDetails?.currency === "USD" ? 15 : 50;
-  const currency = offerDetails?.currency || "USD";
-  const totalAmount = includeBump ? basePrice + bumpPrice : basePrice;
+  // Lógica de país y moneda:
+  // Si el país es Perú (PE): Moneda Soles (PEN - S/), Libro Digital S/ 25, Libro Físico Bump S/ 50.
+  // Si es otro país: Moneda Dólares (USD - $), Libro Digital $7 USD, Order Bump oculto.
+  const isPeru = selectedCountry === "PE";
+  const currency = isPeru ? "PEN" : "USD";
+  const currencySymbol = isPeru ? "S/" : "$";
 
-  // Crear PaymentIntent al cargar o al cambiar de datos
+  const basePrice = offerDetails?.amount || (isPeru ? 25 : 7);
+  const bumpPrice = 50; // S/ 50 para Perú
+
+  // El Order Bump de libro físico SOLO SE MUESTRA si el país seleccionado es Perú
+  const shouldShowBump = showUpsell && isPeru;
+  const effectiveIncludeBump = shouldShowBump ? includeBump : false;
+  const totalAmount = effectiveIncludeBump ? basePrice + bumpPrice : basePrice;
+
+  // Crear PaymentIntent al cargar o al cambiar de datos/país/bump
   useEffect(() => {
     if (!email || !name || name.trim().length < 3 || !email.includes("@")) {
       return;
@@ -166,10 +181,11 @@ export function StripePaymentForm({
             currency,
             email,
             name,
-            productId: includeBump ? `${productId}+libro-fisico` : productId,
-            description: includeBump
-              ? `Compra de ${productId} + Order Bump Libro Físico`
-              : `Compra de ${productId}`,
+            country: selectedCountry,
+            productId: effectiveIncludeBump ? `${productId}+libro-fisico` : productId,
+            description: effectiveIncludeBump
+              ? `Compra de ${productId} + Order Bump Libro Físico (Perú)`
+              : `Compra de ${productId} (${currency})`,
           }),
         });
 
@@ -188,7 +204,7 @@ export function StripePaymentForm({
     }, 400);
 
     return () => clearTimeout(timer);
-  }, [name, email, totalAmount, currency, productId, includeBump]);
+  }, [name, email, selectedCountry, totalAmount, currency, productId, effectiveIncludeBump]);
 
   return (
     <div className="w-full max-w-md mx-auto bg-white p-4 sm:p-6 rounded-xl shadow-sm border border-slate-200">
@@ -206,6 +222,7 @@ export function StripePaymentForm({
             required
           />
         </div>
+
         <div>
           <label className="block text-xs font-semibold text-slate-700 mb-1">
             Correo Electrónico
@@ -219,10 +236,37 @@ export function StripePaymentForm({
             required
           />
         </div>
+
+        <div>
+          <label className="block text-xs font-semibold text-slate-700 mb-1">
+            País de Residencia
+          </label>
+          <select
+            value={selectedCountry}
+            onChange={(e) => {
+              setSelectedCountry(e.target.value);
+              if (e.target.value !== "PE") {
+                setIncludeBump(false);
+              }
+            }}
+            className="w-full border border-slate-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none bg-white"
+          >
+            <option value="PE">Perú 🇵🇪 (Soles - S/)</option>
+            <option value="US">Estados Unidos 🇺🇸 (USD - $)</option>
+            <option value="MX">México 🇲🇽 (USD - $)</option>
+            <option value="CO">Colombia 🇨🇴 (USD - $)</option>
+            <option value="CL">Chile 🇨🇱 (USD - $)</option>
+            <option value="AR">Argentina 🇦🇷 (USD - $)</option>
+            <option value="ES">España 🇪🇸 (USD - $)</option>
+            <option value="EC">Ecuador 🇪🇨 (USD - $)</option>
+            <option value="BO">Bolivia 🇧🇴 (USD - $)</option>
+            <option value="OTHER">Otro País 🌐 (USD - $)</option>
+          </select>
+        </div>
       </div>
 
-      {/* Order Bump Option (Rich UI Component) */}
-      {showUpsell && (
+      {/* Order Bump Option (Solo visible si el país es Perú) */}
+      {shouldShowBump && (
         <div className="mb-4">
           <UpsellOffer
             offerId="addPhysicalBook"
@@ -230,7 +274,7 @@ export function StripePaymentForm({
             productTitle="El Libro Físico: El Sistema en tus Manos"
             description="Acceso inmediato. Cero distracciones."
             price={bumpPrice}
-            currencySymbol={currency === "USD" ? "$" : "S/"}
+            currencySymbol={currencySymbol}
             imageUrl="/subdomains/cerradorexperto/images/cerradorExperto.jpg"
             imageAlt="Edición impresa del libro Cerrador Experto"
             checked={includeBump}
@@ -259,6 +303,7 @@ export function StripePaymentForm({
           </UpsellOffer>
         </div>
       )}
+
 
 
       {/* Stripe Payment Element container */}
