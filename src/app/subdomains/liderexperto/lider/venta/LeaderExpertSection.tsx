@@ -9,7 +9,8 @@ import WaitingListForm from "@liderexperto/components/WaitingListForm"
 // Cambia este valor a `false` cuando se agote el stock de libros.
 // `true` = Muestra el formulario de compra.
 // `false` = Muestra el formulario de lista de espera.
-const hasStock = false
+const hasStock = true
+
 export default function LeaderExpertSection() {
     return (
         <section className="bg-white">
