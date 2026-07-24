@@ -2,6 +2,7 @@
 "use client";
 
 import { useState } from "react";
+import { StripePaymentForm } from './StripePaymentForm';
 import { CardPaymentForm } from './CardPaymentForm';
 import { YapePaymentForm } from './YapePaymentForm';
 import { PayPalPaymentForm } from './PayPalPaymentForm';
@@ -48,7 +49,7 @@ export function PaymentTabs({ customerData, offerDetails, showUpsell = true, pro
     const renderTabContent = () => {
         switch (activeTab) {
             case 'card':
-                return <CardPaymentForm customerData={customerWithCountry} offerDetails={offerDetails} showUpsell={showUpsell} productId={productId} onSuccessRedirectTo={onSuccessRedirectTo} />;
+                return <StripePaymentForm customerData={customerWithCountry} offerDetails={offerDetails} showUpsell={showUpsell} productId={productId} onSuccessRedirectTo={onSuccessRedirectTo} />;
             case 'yape':
                 return <YapePaymentForm customerData={customerWithCountry} offerDetails={penOffer} showUpsell={showUpsell} productId={productId} onSuccessRedirectTo={onSuccessRedirectTo}  />;
             case 'paypal':
@@ -57,6 +58,7 @@ export function PaymentTabs({ customerData, offerDetails, showUpsell = true, pro
                 return null;
         }
     };
+
 
     return (
         <div className="w-full bg-slate-100 rounded-lg p-1 sm:p-2">
