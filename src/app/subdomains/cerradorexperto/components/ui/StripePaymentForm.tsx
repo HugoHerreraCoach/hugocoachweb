@@ -9,8 +9,10 @@ import {
   useStripe,
   useElements,
 } from "@stripe/react-stripe-js";
-import { Lock, ShieldCheck, CreditCard, Sparkles } from "lucide-react";
+import { Lock, ShieldCheck, CreditCard, Sparkles, Check } from "lucide-react";
+import { UpsellOffer } from "./UpsellOffer";
 import type { ProductID } from "@cerradorexperto/lib/pricing";
+
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || ""
@@ -219,30 +221,45 @@ export function StripePaymentForm({
         </div>
       </div>
 
-      {/* Order Bump Option */}
+      {/* Order Bump Option (Rich UI Component) */}
       {showUpsell && (
-        <div className="mb-4 p-3 bg-amber-50 border-2 border-dashed border-amber-300 rounded-lg">
-          <label className="flex items-start gap-2 cursor-pointer">
-            <input
-              type="checkbox"
-              checked={includeBump}
-              onChange={(e) => setIncludeBump(e.target.checked)}
-              className="mt-1 h-4 w-4 text-emerald-600 rounded focus:ring-amber-500"
-            />
-            <div className="text-xs">
-              <span className="font-bold text-amber-900 flex items-center gap-1">
-                <Sparkles size={14} className="text-amber-600" />
-                ¡OFERTA ESPECIAL!: Agregar Libro Físico (+
-                {currency === "USD" ? `$${bumpPrice}` : `S/${bumpPrice}`})
-              </span>
-              <p className="text-amber-800 mt-0.5">
-                Recibe el libro impreso directamente en tu domicilio con envío
-                prioritario.
-              </p>
-            </div>
-          </label>
+        <div className="mb-4">
+          <UpsellOffer
+            offerId="addPhysicalBook"
+            offerHeadline="SÍ, añadir la versión impresa"
+            productTitle="El Libro Físico: El Sistema en tus Manos"
+            description="Acceso inmediato. Cero distracciones."
+            price={bumpPrice}
+            currencySymbol={currency === "USD" ? "$" : "S/"}
+            imageUrl="/subdomains/cerradorexperto/images/cerradorExperto.jpg"
+            imageAlt="Edición impresa del libro Cerrador Experto"
+            checked={includeBump}
+            onChange={setIncludeBump}
+          >
+            <ul className="space-y-2 text-slate-800 text-xs mt-3 bg-white p-3 rounded-lg border border-slate-200">
+              <li className="flex items-start gap-2">
+                <Check className="h-4 w-4 text-emerald-600 flex-shrink-0 mt-0.5" />
+                <span>
+                  <span className="font-bold">Respuesta Rápida:</span> El guion que necesitas, a la mano en segundos.
+                </span>
+              </li>
+              <li className="flex items-start gap-2">
+                <Check className="h-4 w-4 text-emerald-600 flex-shrink-0 mt-0.5" />
+                <span>
+                  <span className="font-bold">Dominio Acelerado:</span> Subraya y anota. Lo que se escribe, se aprende y no se olvida.
+                </span>
+              </li>
+              <li className="flex items-start gap-2">
+                <Check className="h-4 w-4 text-emerald-600 flex-shrink-0 mt-0.5" />
+                <span>
+                  <span className="font-bold">Herramienta de Equipo:</span> Compártela en llamadas de venta o reuniones presenciales.
+                </span>
+              </li>
+            </ul>
+          </UpsellOffer>
         </div>
       )}
+
 
       {/* Stripe Payment Element container */}
       {clientSecret ? (

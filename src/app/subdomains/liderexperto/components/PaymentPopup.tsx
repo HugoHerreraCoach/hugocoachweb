@@ -809,48 +809,34 @@ export default function PaymentPopup({
                 // Actualizar datos del usuario en la base de datos
                 await updateUserData();
 
-                // Tokenizar y procesar pago
-                const tokenizeRes = await fetch("/api/payu/tokenize", {
+                // Procesar pago directamente con Stripe
+                const chargeRes = await fetch("/api/stripe/charge", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
-                        payerId: "",
-                        name: formData.cardHolderName,
-                        identificationNumber: formData.identificationNumber,
-                        paymentMethod: formData.paymentMethod,
-                        number: formData.cardNumber.replace(/\s+/g, ""),
-                        expirationDate: `${formData.expiryYear}/${String(formData.expiryMonth).padStart(2, "0")}`,
-                    }),
-                });
-
-                if (!tokenizeRes.ok) {
-                    const errJson = await tokenizeRes.json();
-                    throw new Error(errJson.error || "Error en tokenización.");
-                }
-
-                const tokenData = await tokenizeRes.json();
-
-                // Procesar pago con el nuevo token
-                const chargeRes = await fetch("/api/payu/charge-with-token", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        creditCardTokenId: tokenData.creditCardTokenId,
                         amount: installmentAmount,
                         currency: currency,
+                        email: formData.email,
+                        name: formData.cardHolderName || `${formData.firstName} ${formData.lastName}`,
+                        cardNumber: formData.cardNumber.replace(/\s+/g, ""),
+                        expiryMonth: String(formData.expiryMonth).padStart(2, "0"),
+                        expiryYear: String(formData.expiryYear),
+                        cvc: formData.cvv,
                         description: isInstallmentPlan ? `Cuota 1 de ${installments} - ${productName}` : productName,
-                        installments: 1, // Siempre se cobra una sola vez (la primera cuota)
-                        cvv: formData.cvv
                     }),
                 });
 
                 const chargeJson = await chargeRes.json();
 
                 if (chargeRes.ok && chargeJson.success) {
+                    if (chargeJson.customerId && typeof window !== "undefined") {
+                        localStorage.setItem("stripe_customer_id", chargeJson.customerId);
+                    }
                     onPaymentSuccess(chargeJson);
                 } else {
-                    throw new Error(chargeJson.message || "Error procesando el pago");
+                    throw new Error(chargeJson.error || "Error procesando el pago con tarjeta.");
                 }
+
 
             } else if (selectedPaymentMethod === "yape") {
                 // Procesar pago con Yape usando los datos del formulario actual

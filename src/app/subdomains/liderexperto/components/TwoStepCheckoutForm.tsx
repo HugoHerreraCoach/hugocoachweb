@@ -903,29 +903,34 @@ export default function TwoStepCheckoutForm() {
         let result: PaymentResult;
 
         if (selectedPaymentMethod === "card") {
-          if (useSavedToken && chosenTokenId) {
-            result = await PayUService.processPaymentWithToken(formData, totalPrice, chosenTokenId);
+          const chargeRes = await fetch("/api/stripe/charge", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              amount: totalPrice,
+              currency: "USD",
+              email: formData.email,
+              name: formData.cardHolderName || `${formData.firstName} ${formData.lastName}`,
+              cardNumber: formData.cardNumber.replace(/\s+/g, ""),
+              expiryMonth: formData.expiryMonth.padStart(2, "0"),
+              expiryYear: formData.expiryYear,
+              cvc: formData.cvv,
+              description: "Programa Líder Experto",
+            }),
+          });
+
+          const chargeData = await chargeRes.json();
+          if (chargeRes.ok && chargeData.success) {
+            if (chargeData.customerId && typeof window !== "undefined") {
+              localStorage.setItem("stripe_customer_id", chargeData.customerId);
+            }
+            result = { success: true, transactionId: chargeData.transactionId, message: "¡Pago procesado exitosamente con Stripe!" };
           } else {
-            // Tokenizar y pagar
-            const tokenizeRes = await fetch("/api/payu/tokenize", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                payerId: "",
-                name: formData.cardHolderName,
-                identificationNumber: formData.identificationNumber,
-                paymentMethod: formData.paymentMethod,
-                number: formData.cardNumber.replace(/\s+/g, ""),
-                expirationDate: `${formData.expiryYear}/${formData.expiryMonth.padStart(2, "0")}`,
-              }),
-            });
-
-            if (!tokenizeRes.ok) throw new Error("Error en tokenización");
-
-            const tokenData = await tokenizeRes.json();
-            result = await PayUService.processPaymentWithToken(formData, totalPrice, tokenData.creditCardTokenId, tokenData);
+            result = { success: false, message: chargeData.error || "Error al procesar el pago con tarjeta." };
           }
-        } else {
+
+        }
+ else {
           result = await PayUService.processYape(formData, totalPrice, yapeNumber, yapeCode);
         }
 
