@@ -3,11 +3,19 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { createClient } from '@supabase/supabase-js';
 
-// Setup Supabase
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
-
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
+function getSupabaseClient() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
+  if (!supabaseUrl || !supabaseAnonKey) {
+    return null;
+  }
+  try {
+    return createClient(supabaseUrl, supabaseAnonKey);
+  } catch (err) {
+    console.error('Failed to initialize Supabase client:', err);
+    return null;
+  }
+}
 
 interface DataPromptInput {
   Email: string;
@@ -20,26 +28,29 @@ interface DataPromptInput {
 
 export async function savePromptAndGenerateScript(input: DataPromptInput, ticket: string, recommendation: string) {
   try {
-    // 1. Save data to Supabase
-    const { error: supabaseError } = await supabase
-      .from('DataPromt')
-      .insert([
-        {
-          Email: input.Email,
-          ProductOrService: input.ProductOrService,
-          Description: input.Description,
-          Price: input.Price,
-          offer: input.offer,
-          Company: input.Company,
-          created_at: new Date().toISOString()
-        }
-      ]);
+    // 1. Save data to Supabase (if configured)
+    const supabase = getSupabaseClient();
+    if (supabase) {
+      const { error: supabaseError } = await supabase
+        .from('DataPromt')
+        .insert([
+          {
+            Email: input.Email,
+            ProductOrService: input.ProductOrService,
+            Description: input.Description,
+            Price: input.Price,
+            offer: input.offer,
+            Company: input.Company,
+            created_at: new Date().toISOString()
+          }
+        ]);
 
-    if (supabaseError) {
-      console.error('Error inserting to Supabase:', supabaseError);
+      if (supabaseError) {
+        console.error('Error inserting to Supabase:', supabaseError);
+      }
     }
   } catch (err) {
-    console.error('Supabase connection failed:', err);
+    console.error('Supabase operation failed:', err);
   }
 
   // Build the prompt using the same logic as the original app
