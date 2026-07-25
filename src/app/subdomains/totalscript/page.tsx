@@ -1,7 +1,16 @@
 'use client';
 
-import { useState, ChangeEvent, FormEvent } from 'react';
+import { useState, ChangeEvent, FormEvent, useEffect } from 'react';
 import { savePromptAndGenerateScript } from './actions';
+
+const LOADING_STEPS = [
+  "Analizando los detalles de tu producto...",
+  "Evaluando el rango de precio y canal de venta...",
+  "Estructurando la secuencia de apertura y enganche...",
+  "Redactando objeciones comunes y técnicas de cierre...",
+  "Aplicando gatillos mentales y técnicas persuasivas...",
+  "Diseñando el guion experto final..."
+];
 
 export default function TotalScriptPage() {
   const [inicio, setInicio] = useState(true);
@@ -10,6 +19,8 @@ export default function TotalScriptPage() {
   const [emailScript, setEmailScript] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [respuesta, setRespuesta] = useState('');
+  const [copySuccess, setCopySuccess] = useState(false);
+  const [loadingStep, setLoadingStep] = useState(0);
   
   const [formData, setFormData] = useState({
     quest1: '',
@@ -21,6 +32,18 @@ export default function TotalScriptPage() {
 
   const [showPriceDialog, setShowPriceDialog] = useState(false);
   const [showEmailDialog, setShowEmailDialog] = useState(false);
+
+  // Efecto para cambiar el mensaje de carga cíclicamente
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (isLoading) {
+      setLoadingStep(0);
+      interval = setInterval(() => {
+        setLoadingStep((prev) => (prev < LOADING_STEPS.length - 1 ? prev + 1 : prev));
+      }, 2200);
+    }
+    return () => clearInterval(interval);
+  }, [isLoading]);
 
   const handleChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = event.target;
@@ -130,7 +153,10 @@ export default function TotalScriptPage() {
 
   const handleCopyClipboard = () => {
     navigator.clipboard.writeText(respuesta)
-      .then(() => alert('¡Guion copiado al portapapeles!'))
+      .then(() => {
+        setCopySuccess(true);
+        setTimeout(() => setCopySuccess(false), 2000);
+      })
       .catch((err) => console.error('Error al copiar:', err));
   };
 
@@ -201,9 +227,29 @@ export default function TotalScriptPage() {
               </div>
             </div>
 
-            <h2 className="text-2xl font-bold mb-8 text-center tracking-tight text-slate-900">
+            <h2 className="text-2xl font-bold mb-4 text-center tracking-tight text-slate-900">
               Personaliza tu Guion de Ventas
             </h2>
+
+            {/* Progress Bar */}
+            {(() => {
+              const answeredCount = Object.values(formData).filter(v => v.trim() !== '').length;
+              const progressPercentage = (answeredCount / 5) * 100;
+              return (
+                <div className="mb-8">
+                  <div className="flex justify-between text-xs font-semibold text-slate-500 mb-2">
+                    <span>Progreso del formulario</span>
+                    <span>{answeredCount} de 5 preguntas</span>
+                  </div>
+                  <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden shadow-inner">
+                    <div 
+                      className="bg-indigo-600 h-full transition-all duration-300 ease-out shadow-lg" 
+                      style={{ width: `${progressPercentage}%` }}
+                    />
+                  </div>
+                </div>
+              );
+            })()}
 
             <form onSubmit={handleOpenEmailDialog} className="space-y-6">
               <div>
@@ -217,7 +263,7 @@ export default function TotalScriptPage() {
                   value={formData.quest1}
                   onChange={handleChange}
                   placeholder="Ejemplo: Asesoría de Marketing Inmobiliario"
-                  className="w-full min-h-[80px] bg-slate-50 border border-slate-200 rounded-lg p-3 text-sm focus:outline-none focus:border-indigo-500 focus:bg-white placeholder:text-slate-400 transition-all"
+                  className="w-full min-h-[80px] bg-slate-50 border border-slate-200 rounded-lg p-3 text-sm focus:outline-none focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-500/20 placeholder:text-slate-400 transition-all shadow-sm"
                 />
               </div>
 
@@ -232,7 +278,7 @@ export default function TotalScriptPage() {
                   value={formData.quest2}
                   onChange={handleChange}
                   placeholder="Ejemplo: Es un programa completo de publicidad y captación de leads en redes sociales..."
-                  className="w-full min-h-[80px] bg-slate-50 border border-slate-200 rounded-lg p-3 text-sm focus:outline-none focus:border-indigo-500 focus:bg-white placeholder:text-slate-400 transition-all"
+                  className="w-full min-h-[80px] bg-slate-50 border border-slate-200 rounded-lg p-3 text-sm focus:outline-none focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-500/20 placeholder:text-slate-400 transition-all shadow-sm"
                 />
               </div>
 
@@ -249,7 +295,7 @@ export default function TotalScriptPage() {
                     value={formData.quest3}
                     onChange={handleChangePrice}
                     placeholder="Ejemplo: 300"
-                    className="w-full bg-slate-50 border border-slate-200 rounded-lg p-3 pr-12 text-sm focus:outline-none focus:border-indigo-500 focus:bg-white placeholder:text-slate-400 transition-all"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-lg p-3 pr-12 text-sm focus:outline-none focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-500/20 placeholder:text-slate-400 transition-all shadow-sm"
                   />
                   <span className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 font-semibold text-sm">USD</span>
                 </div>
@@ -266,7 +312,7 @@ export default function TotalScriptPage() {
                   value={formData.quest4}
                   onChange={handleChange}
                   placeholder="Ejemplo: 10% de descuento y plantilla de prospección gratis"
-                  className="w-full min-h-[80px] bg-slate-50 border border-slate-200 rounded-lg p-3 text-sm focus:outline-none focus:border-indigo-500 focus:bg-white placeholder:text-slate-400 transition-all"
+                  className="w-full min-h-[80px] bg-slate-50 border border-slate-200 rounded-lg p-3 text-sm focus:outline-none focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-500/20 placeholder:text-slate-400 transition-all shadow-sm"
                 />
               </div>
 
@@ -282,7 +328,7 @@ export default function TotalScriptPage() {
                   value={formData.quest5}
                   onChange={handleChange}
                   placeholder="Ejemplo: Belcan Enterprise"
-                  className="w-full bg-slate-50 border border-slate-200 rounded-lg p-3 text-sm focus:outline-none focus:border-indigo-500 focus:bg-white placeholder:text-slate-400 transition-all"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-lg p-3 text-sm focus:outline-none focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-500/20 placeholder:text-slate-400 transition-all shadow-sm"
                 />
               </div>
 
@@ -290,7 +336,7 @@ export default function TotalScriptPage() {
                 type="submit"
                 className="w-full py-4 bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-500 hover:to-indigo-600 text-white font-bold rounded-xl transition-all cursor-pointer shadow-md hover:shadow-lg active:scale-98"
               >
-                Crear Guion
+                Siguiente Paso
               </button>
             </form>
           </section>
@@ -298,37 +344,62 @@ export default function TotalScriptPage() {
 
         {/* LOADING ANIMATION */}
         {isLoading && (
-          <section className="w-full max-w-2xl bg-white border border-[#E5E7EB] p-10 rounded-2xl text-center shadow-xl my-6 animate-pulse">
-            <div className="flex justify-center mb-6">
-              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-600"></div>
+          <section className="w-full max-w-2xl bg-white border border-[#E5E7EB] p-10 rounded-2xl text-center shadow-xl my-6 flex flex-col items-center">
+            <div className="relative flex justify-center items-center mb-6">
+              <div className="animate-spin rounded-full h-16 w-16 border-4 border-indigo-100 border-t-indigo-600"></div>
+              <div className="absolute font-bold text-xs text-indigo-600 animate-pulse">IA</div>
             </div>
-            <p className="text-lg text-slate-800 font-medium">
-              Tu guion experto está siendo diseñado por la IA...
+            <p className="text-lg text-slate-800 font-semibold transition-all duration-300">
+              {LOADING_STEPS[loadingStep]}
             </p>
             <p className="text-sm text-slate-400 mt-2">
-              Esto tomará solo unos segundos.
+              Diseñando un guion de ventas personalizado de alto impacto.
             </p>
+            <div className="w-48 bg-slate-100 h-1.5 rounded-full mt-6 overflow-hidden">
+              <div 
+                className="bg-indigo-600 h-full transition-all duration-500 ease-out" 
+                style={{ width: `${((loadingStep + 1) / LOADING_STEPS.length) * 100}%` }}
+              />
+            </div>
           </section>
         )}
 
         {/* STEP 3: RESULT RESPONSE */}
         {respuesta && !isLoading && (
           <section className="w-full max-w-2xl bg-white border border-[#E5E7EB] p-8 rounded-2xl shadow-xl my-6 animate-fade-in">
-            <div className="flex justify-between items-center mb-6 border-b border-slate-100 pb-4">
-              <h3 className="text-xl font-bold text-indigo-600">Guion de Ventas Generado</h3>
-              <div className="flex gap-2">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 border-b border-slate-100 pb-4">
+              <div>
+                <h3 className="text-xl font-bold text-indigo-600">Guion de Ventas Generado</h3>
+                <p className="text-xs text-slate-400">Personalizado para tu negocio</p>
+              </div>
+              <div className="flex gap-2 w-full sm:w-auto">
                 <button
                   onClick={handleCopyClipboard}
-                  className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold rounded-lg flex items-center gap-1.5 transition-all cursor-pointer active:scale-95"
+                  className={`flex-1 sm:flex-none px-4 py-2 text-xs font-semibold rounded-lg flex items-center justify-center gap-1.5 transition-all cursor-pointer active:scale-95 border ${
+                    copySuccess 
+                      ? "bg-emerald-50 border-emerald-200 text-emerald-700" 
+                      : "bg-slate-100 hover:bg-slate-200 text-slate-800 border-transparent"
+                  }`}
                 >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
-                  </svg>
-                  Copiar Guion
+                  {copySuccess ? (
+                    <>
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M5 13l4 4L19 7" />
+                      </svg>
+                      <span>¡Copiado!</span>
+                    </>
+                  ) : (
+                    <>
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+                      </svg>
+                      <span>Copiar Guion</span>
+                    </>
+                  )}
                 </button>
                 <button
                   onClick={() => setInicio(false)}
-                  className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold rounded-lg flex items-center gap-1.5 transition-all cursor-pointer active:scale-95"
+                  className="flex-1 sm:flex-none px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold rounded-lg flex items-center justify-center gap-1.5 transition-all cursor-pointer active:scale-95 border border-transparent"
                 >
                   Regenerar
                 </button>
@@ -336,8 +407,67 @@ export default function TotalScriptPage() {
             </div>
 
             {/* Script Box */}
-            <div className="bg-slate-50 p-6 rounded-xl border border-slate-200/60 max-h-[450px] overflow-y-auto font-mono text-sm leading-relaxed text-slate-800 whitespace-pre-wrap">
-              {respuesta}
+            <div className="bg-slate-50/60 p-6 rounded-xl border border-slate-200/60 max-h-[500px] overflow-y-auto font-mono text-sm leading-relaxed text-slate-800 shadow-inner">
+              {(() => {
+                if (respuesta.includes("Lo sentimos") || respuesta.includes("Error al generar")) {
+                  return (
+                    <div className="text-red-600 text-sm p-4 bg-red-50 border border-red-100 rounded-lg flex items-start gap-2.5">
+                      <svg className="w-5 h-5 flex-shrink-0 text-red-500 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                      </svg>
+                      <div>
+                        <p className="font-bold">Error del Servicio</p>
+                        <p className="text-xs text-red-500 mt-0.5">{respuesta}</p>
+                      </div>
+                    </div>
+                  );
+                }
+                
+                return respuesta.split('\n').map((line, idx) => {
+                  const trimmed = line.trim();
+                  if (!trimmed) return <div key={idx} className="h-3" />;
+
+                  if (trimmed.startsWith('Asesor:')) {
+                    const content = trimmed.substring(7).trim();
+                    return (
+                      <div key={idx} className="flex gap-3 mb-4 items-start animate-fade-in">
+                        <div className="flex-shrink-0 w-8 h-8 rounded-full bg-indigo-600 text-white font-bold text-xs flex items-center justify-center shadow-md">
+                          AS
+                        </div>
+                        <div className="bg-indigo-50/70 border border-indigo-100 rounded-2xl rounded-tl-none p-3.5 text-sm text-slate-800 font-sans leading-relaxed shadow-sm max-w-[85%]">
+                          <p className="font-bold text-indigo-700 text-xs mb-1 uppercase tracking-wider">Asesor</p>
+                          {content}
+                        </div>
+                      </div>
+                    );
+                  } else if (trimmed.startsWith('Cliente:')) {
+                    const content = trimmed.substring(8).trim();
+                    return (
+                      <div key={idx} className="flex gap-3 mb-4 items-start justify-end animate-fade-in">
+                        <div className="bg-emerald-50/70 border border-emerald-100 rounded-2xl rounded-tr-none p-3.5 text-sm text-slate-800 font-sans leading-relaxed text-left shadow-sm order-1 max-w-[85%]">
+                          <p className="font-bold text-emerald-700 text-xs mb-1 uppercase tracking-wider">Cliente</p>
+                          {content}
+                        </div>
+                        <div className="flex-shrink-0 w-8 h-8 rounded-full bg-emerald-600 text-white font-bold text-xs flex items-center justify-center shadow-md order-2">
+                          CL
+                        </div>
+                      </div>
+                    );
+                  } else if (trimmed.startsWith('Asesor (si') || trimmed.startsWith('Asesor(') || trimmed.startsWith('Asesor (en')) {
+                    return (
+                      <div key={idx} className="my-3 px-4 py-2.5 bg-slate-100 border-l-4 border-slate-400 text-xs text-slate-600 font-sans rounded-r-lg italic">
+                        {trimmed}
+                      </div>
+                    );
+                  }
+
+                  return (
+                    <p key={idx} className="text-slate-700 font-sans text-sm mb-3 pl-11">
+                      {trimmed}
+                    </p>
+                  );
+                });
+              })()}
             </div>
 
             <div className="mt-8 text-center">
