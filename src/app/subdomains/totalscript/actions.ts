@@ -179,7 +179,7 @@ REGLAS IMPORTANTES:
   }
 
   // 2. Fallback: Mistral AI API
-  const mistralApiKey = process.env.MISTRAL_API_KEY || process.env.VITE_MISTRAL_API_KEY || '';
+  const mistralApiKey = process.env.MISTRAL_API_KEY || '';
   if (mistralApiKey) {
     try {
       const response = await fetch('https://api.mistral.ai/v1/chat/completions', {
