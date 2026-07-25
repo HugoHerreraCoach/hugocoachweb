@@ -42,20 +42,6 @@ export async function savePromptAndGenerateScript(input: DataPromptInput, ticket
     console.error('Supabase connection failed:', err);
   }
 
-  // 2. Generate with Gemini API
-  const geminiApiKey = process.env.GEMINI_API_KEY || '';
-  if (!geminiApiKey) {
-    console.error('GEMINI_API_KEY is not defined in environment variables.');
-    return 'Error: API key for AI script generator is missing.';
-  }
-
-  const genAI = new GoogleGenerativeAI(geminiApiKey);
-  const models = [
-    'gemini-2.0-flash',
-    'gemini-2.5-flash',
-    'gemini-flash-latest'
-  ];
-
   // Build the prompt using the same logic as the original app
   let textguia = '';
   if (recommendation.includes('Whatsapp')) {
@@ -153,12 +139,7 @@ Empresa: ${input.Company}
 Usa el siguiente texto para crear los guiones: ${textguia}
 `;
 
-  // Fallback loop over models
-  for (const modelName of models) {
-    try {
-      const model = genAI.getGenerativeModel({
-        model: modelName,
-        systemInstruction: `Eres un experto en ventas con más de 20 años de experiencia creando guiones de ventas efectivos. 
+  const systemInstruction = `Eres un experto en ventas con más de 20 años de experiencia creando guiones de ventas efectivos. 
 Tu trabajo es crear guiones de ventas profesionales y persuasivos.
 
 REGLAS IMPORTANTES:
@@ -167,18 +148,100 @@ REGLAS IMPORTANTES:
 - Mantén el formato de diálogo: "Cliente:" y "Asesor:" en líneas separadas.
 - Usa emojis tal como aparecen en el modelo.
 - No agregues pasos extras ni elimines pasos del modelo original.
-- El guion debe ser natural y persuasivo.`
+- El guion debe ser natural y persuasivo.`;
+
+  // 1. Try Gemini API
+
+  const geminiApiKey = process.env.GEMINI_API_KEY || '';
+  if (geminiApiKey) {
+    const genAI = new GoogleGenerativeAI(geminiApiKey);
+    const models = [
+      'gemini-flash-latest',
+      'gemini-2.0-flash',
+      'gemini-1.5-flash'
+    ];
+
+    for (const modelName of models) {
+      try {
+        const model = genAI.getGenerativeModel({
+          model: modelName,
+          systemInstruction: systemInstruction,
+        });
+
+        const result = await model.generateContent(query);
+        const text = result.response.text();
+        if (text) return text;
+      } catch (error: unknown) {
+        const errorMsg = error instanceof Error ? error.message : String(error);
+        console.warn(`Gemini model ${modelName} failed:`, errorMsg);
+      }
+    }
+  }
+
+  // 2. Fallback: Mistral AI API
+  const mistralApiKey = process.env.MISTRAL_API_KEY || process.env.VITE_MISTRAL_API_KEY || '';
+  if (mistralApiKey) {
+    try {
+      const response = await fetch('https://api.mistral.ai/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${mistralApiKey}`,
+        },
+        body: JSON.stringify({
+          model: 'mistral-small-latest',
+          messages: [
+            { role: 'system', content: systemInstruction },
+            { role: 'user', content: query },
+          ],
+        }),
       });
 
-      const result = await model.generateContent(query);
-      return result.response.text();
-    } catch (error: unknown) {
-      const errorMsg = error instanceof Error ? error.message : String(error);
-      console.warn(`Model ${modelName} failed:`, errorMsg);
-      // Continue to next model in loop
-      continue;
+      if (response.ok) {
+        const data = await response.json();
+        const content = data.choices?.[0]?.message?.content;
+        if (content) return content;
+      } else {
+        const errText = await response.text();
+        console.warn('Mistral API returned error status:', response.status, errText);
+      }
+    } catch (err) {
+      console.warn('Mistral API request failed:', err);
+    }
+  }
+
+  // 3. Fallback: Groq AI API
+  const groqApiKey = process.env.GROQ_API_KEY || '';
+  if (groqApiKey) {
+    try {
+      const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${groqApiKey}`,
+        },
+        body: JSON.stringify({
+          model: 'llama-3.3-70b-versatile',
+          messages: [
+            { role: 'system', content: systemInstruction },
+            { role: 'user', content: query },
+          ],
+        }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        const content = data.choices?.[0]?.message?.content;
+        if (content) return content;
+      } else {
+        const errText = await response.text();
+        console.warn('Groq API returned error status:', response.status, errText);
+      }
+    } catch (err) {
+      console.warn('Groq API request failed:', err);
     }
   }
 
   return 'Lo sentimos, el servicio de Inteligencia Artificial está experimentando alta demanda. Por favor intenta de nuevo en unos segundos.';
 }
+
