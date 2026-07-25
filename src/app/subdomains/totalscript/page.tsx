@@ -21,6 +21,7 @@ export default function TotalScriptPage() {
   const [respuesta, setRespuesta] = useState('');
   const [copySuccess, setCopySuccess] = useState(false);
   const [loadingStep, setLoadingStep] = useState(0);
+  const [isDownloadingPdf, setIsDownloadingPdf] = useState(false);
   
   const [formData, setFormData] = useState({
     quest1: '',
@@ -89,6 +90,9 @@ export default function TotalScriptPage() {
       quest5: '',
     });
     setRespuesta('');
+    if (typeof window !== 'undefined') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   };
 
   const handleOpenEmailDialog = (event: FormEvent) => {
@@ -128,6 +132,9 @@ export default function TotalScriptPage() {
     setShowEmailDialog(false);
     setIsLoading(true);
     setRespuesta('');
+    if (typeof window !== 'undefined') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
 
     try {
       const result = await savePromptAndGenerateScript(
@@ -158,6 +165,38 @@ export default function TotalScriptPage() {
         setTimeout(() => setCopySuccess(false), 2000);
       })
       .catch((err) => console.error('Error al copiar:', err));
+  };
+
+  const handleDownloadPDF = async () => {
+    if (!respuesta) return;
+    setIsDownloadingPdf(true);
+    try {
+      const response = await fetch('/api/totalscript/pdf', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          scriptText: respuesta,
+          company: formData.quest5,
+          product: formData.quest1
+        })
+      });
+
+      if (!response.ok) throw new Error('Error al generar el PDF en el servidor');
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `Guion_Ventas_${formData.quest5.replace(/\s+/g, '_') || 'TotalScript'}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    } catch (error) {
+      console.error(error);
+      alert('Hubo un error al generar y descargar tu PDF. Por favor, intenta de nuevo.');
+    } finally {
+      setIsDownloadingPdf(false);
+    }
   };
 
   return (
@@ -213,7 +252,7 @@ export default function TotalScriptPage() {
         )}
 
         {/* STEP 2: QUESTIONS FORM */}
-        {!inicio && (
+        {!inicio && !isLoading && !respuesta && (
           <section className="w-full max-w-2xl bg-white border border-[#E5E7EB] p-8 rounded-2xl shadow-xl animate-fade-in">
             <div className="flex justify-between items-center mb-6">
               <button 
@@ -372,7 +411,7 @@ export default function TotalScriptPage() {
                 <h3 className="text-xl font-bold text-indigo-600">Guion de Ventas Generado</h3>
                 <p className="text-xs text-slate-400">Personalizado para tu negocio</p>
               </div>
-              <div className="flex gap-2 w-full sm:w-auto">
+              <div className="flex flex-wrap gap-2 w-full sm:w-auto">
                 <button
                   onClick={handleCopyClipboard}
                   className={`flex-1 sm:flex-none px-4 py-2 text-xs font-semibold rounded-lg flex items-center justify-center gap-1.5 transition-all cursor-pointer active:scale-95 border ${
@@ -398,6 +437,25 @@ export default function TotalScriptPage() {
                   )}
                 </button>
                 <button
+                  onClick={handleDownloadPDF}
+                  disabled={isDownloadingPdf}
+                  className="flex-1 sm:flex-none px-4 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border-indigo-200 text-xs font-semibold rounded-lg flex items-center justify-center gap-1.5 transition-all cursor-pointer active:scale-95 border disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {isDownloadingPdf ? (
+                    <>
+                      <div className="w-3.5 h-3.5 border-2 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
+                      <span>Generando...</span>
+                    </>
+                  ) : (
+                    <>
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                      </svg>
+                      <span>Descargar PDF</span>
+                    </>
+                  )}
+                </button>
+                <button
                   onClick={() => setInicio(false)}
                   className="flex-1 sm:flex-none px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold rounded-lg flex items-center justify-center gap-1.5 transition-all cursor-pointer active:scale-95 border border-transparent"
                 >
@@ -407,7 +465,7 @@ export default function TotalScriptPage() {
             </div>
 
             {/* Script Box */}
-            <div className="bg-slate-50/60 p-6 rounded-xl border border-slate-200/60 max-h-[500px] overflow-y-auto font-mono text-sm leading-relaxed text-slate-800 shadow-inner">
+            <div className="bg-slate-50/60 p-6 rounded-xl border border-slate-200/60 font-mono text-sm leading-relaxed text-slate-800 shadow-inner">
               {(() => {
                 if (respuesta.includes("Lo sentimos") || respuesta.includes("Error al generar")) {
                   return (
