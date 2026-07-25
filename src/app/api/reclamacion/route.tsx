@@ -142,9 +142,83 @@ export async function POST(request: NextRequest) {
     // 2. Generar un código único
     const codigoReclamo = `REC-${Date.now()}`;
 
-    // 3. TODO: Guardar en tu Base de Datos
-    // (Este es el lugar donde deberías guardar 'data' y 'codigoReclamo' en tu DB)
-    console.log('Guardando en DB (simulado):', codigoReclamo, data);
+    // 3. Guardar datos en Brevo (Lista Reclamaciones y Evento de Reclamo)
+    const KEY_BREVO = process.env.BREVO_API_KEY;
+    const reclamacionesListId = Number(process.env.BREVO_RECLAMACIONES_LIST_ID || '15');
+
+    if (KEY_BREVO) {
+      try {
+        // Normalizar teléfono para evitar errores 400 en Brevo
+        let formattedPhone = data.telefono?.trim() || "";
+        if (formattedPhone && !formattedPhone.startsWith("+")) {
+          // Remover cualquier caracter no numérico
+          const cleanPhone = formattedPhone.replace(/\D/g, "");
+          if (cleanPhone.length === 9) {
+            formattedPhone = `+51${cleanPhone}`;
+          } else if (cleanPhone.length > 9) {
+            formattedPhone = `+${cleanPhone}`;
+          }
+        }
+
+        // 3.1. Añadir/Actualizar contacto en la lista "Reclamaciones"
+        await fetch("https://api.brevo.com/v3/contacts", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "api-key": KEY_BREVO,
+            "accept": "application/json",
+          },
+          body: JSON.stringify({
+            email: data.email,
+            attributes: {
+              NOMBRE: data.nombres,
+              APELLIDOS: `${data.apellidoPaterno} ${data.apellidoMaterno || ''}`.trim(),
+              SMS: formattedPhone || undefined,
+              DNI: data.numeroDocumento,
+              ADDRESS: data.domicilio,
+              CODIGO_RECLAMO: codigoReclamo,
+              TIPO_RECLAMACION: data.tipoReclamacion,
+              DETALLE_RECLAMO: data.detalleReclamo,
+              PEDIDO_RECLAMO: data.pedidoConsumidor,
+              TIPO_BIEN: data.tipoBien,
+              DESCRIPCION_BIEN: data.descripcionBien,
+              MONTO_RECLAMADO: data.montoReclamado ? String(data.montoReclamado) : '0',
+            },
+            listIds: [reclamacionesListId],
+            updateEnabled: true,
+          }),
+        });
+
+        // 3.2. Enviar evento de tracking "reclamacion_registrada"
+        await fetch("https://api.brevo.com/v3/events", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "api-key": KEY_BREVO,
+            "accept": "application/json",
+          },
+          body: JSON.stringify({
+            event_name: "reclamacion_registrada",
+            identifiers: { email_id: data.email },
+            event_properties: {
+              codigo_reclamo: codigoReclamo,
+              tipo_documento: data.tipoDocumento,
+              numero_documento: data.numeroDocumento,
+              tipo_bien: data.tipoBien,
+              descripcion_bien: data.descripcionBien,
+              monto_reclamado: data.montoReclamado || 0,
+              tipo_reclamacion: data.tipoReclamacion,
+              detalle_reclamo: data.detalleReclamo,
+              pedido_consumidor: data.pedidoConsumidor,
+            },
+            event_date: new Date().toISOString(),
+          }),
+        });
+        console.log(`[Reclamación] Datos de reclamo ${codigoReclamo} guardados en Brevo.`);
+      } catch (error) {
+        console.error("Error al registrar reclamo en Brevo:", error);
+      }
+    }
 
     // 4. Generar el PDF en Buffer
     // --- ESTA ES LA FORMA CORRECTA ---

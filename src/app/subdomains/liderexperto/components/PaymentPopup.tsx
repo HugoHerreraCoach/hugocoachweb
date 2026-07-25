@@ -1165,40 +1165,6 @@ export default function PaymentPopup({
                         </div>
                     )}
 
-                    {/* Métodos de pago */}
-                    <div className="mb-4">
-                        <h3 className="font-semibold text-gray-800 mb-3">
-                            Selecciona tu método de pago
-                        </h3>
-                        <div className="grid grid-cols-2 gap-2">
-                            <button
-                                type="button"
-                                onClick={() => setSelectedPaymentMethod("card")}
-                                disabled={isProcessing}
-                                className={`flex items-center justify-center p-3 border rounded-lg transition-colors text-sm cursor-pointer ${selectedPaymentMethod === "card"
-                                        ? "bg-blue-600 text-white border-blue-700"
-                                        : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
-                                    }`}
-                            >
-                                <CreditCard className="mr-2 h-5 w-5" />
-                                Tarjeta
-                            </button>
-
-                            <button
-                                type="button"
-                                onClick={() => setSelectedPaymentMethod("yape")}
-                                disabled={isProcessing}
-                                className={`flex items-center justify-center p-3 border rounded-lg transition-colors text-sm cursor-pointer ${selectedPaymentMethod === "yape"
-                                        ? "bg-purple-600 text-white border-purple-700"
-                                        : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
-                                    }`}
-                            >
-                                <Wallet className="mr-2 h-5 w-5" />
-                                Yape
-                            </button>
-                        </div>
-                    </div>
-
                     <form onSubmit={handleSubmit}>
                         {/* Formulario de tarjeta */}
                         {selectedPaymentMethod === "card" && (
@@ -1374,73 +1340,6 @@ export default function PaymentPopup({
                             </div>
                         )}
 
-                        {/* Formulario de Yape */}
-                        {selectedPaymentMethod === "yape" && (
-                            <div className="space-y-4">
-                                <div className="flex items-center mb-4">
-                                    <Image
-                                        src="/subdomains/liderexperto/venta/yape.png"
-                                        alt="Yape Logo"
-                                        className="h-12 w-12 mr-3 object-contain"
-                                        width={150}
-                                        height={150}
-                                    />
-                                    <h3 className="font-semibold text-lg text-gray-800">
-                                        Pagar con Yape
-                                    </h3>
-                                </div>
-
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                                        Celular con Yape
-                                    </label>
-                                    <input
-                                        type="tel"
-                                        value={yapeNumber}
-                                        onChange={handleYapeNumberChange}
-                                        onBlur={handleYapeNumberBlur}
-                                        placeholder="999 999 999"
-                                        maxLength={11}
-                                        disabled={isProcessing}
-                                        className={`w-full p-3 border rounded-lg text-black ${errors.yapeNumber ? "border-red-500" : "border-gray-300"
-                                            }`}
-                                    />
-                                    {errors.yapeNumber && (
-                                        <p className="text-red-500 text-xs mt-1">{errors.yapeNumber}</p>
-                                    )}
-                                </div>
-
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                                        Código de Aprobación
-                                    </label>
-                                    <div className="grid grid-cols-6 gap-2">
-                                        {yapeCode.map((data, index) => (
-                                            <input
-                                                key={index}
-                                                type="text"
-                                                inputMode="numeric"
-                                                pattern="[0-9]*"
-                                                value={data}
-                                                onChange={(e) => handleYapeCodeChange(e.target, index)}
-                                                onFocus={(e) => e.target.select()}
-                                                maxLength={1}
-                                                disabled={isProcessing}
-                                                className={`w-full h-12 text-center text-lg font-semibold border rounded-lg text-black ${errors.yapeCode ? "border-red-500" : "border-gray-300"
-                                                    }`}
-                                            />
-                                        ))}
-                                    </div>
-                                    {errors.yapeCode && (
-                                        <p className="text-red-500 text-xs mt-1">{errors.yapeCode}</p>
-                                    )}
-                                    <p className="text-xs text-gray-500 mt-2 text-center">
-                                        Encuéntralo en tu app Yape, sección &ldquo;Código de aprobación&rdquo;
-                                    </p>
-                                </div>
-                            </div>
-                        )}
-                        
                         {/* Botón de pago */}
                         <button
                             type="submit"

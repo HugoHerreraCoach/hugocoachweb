@@ -2,7 +2,6 @@
 "use client";
 import { useRouter } from 'next/navigation';
 
-
 import {
   useState,
   useEffect,
@@ -11,9 +10,7 @@ import {
   FormEvent,
   useRef,
 } from "react";
-import { FiChevronLeft, FiCreditCard, FiShield } from "react-icons/fi";
-import { CreditCard} from "lucide-react";
-import Image from "next/image";
+import { FiChevronLeft } from "react-icons/fi";
 import clsx from "clsx";
 import BumpItem from "./BumpItem";
 import { StripePaymentForm } from "../../cerradorexperto/components/ui/StripePaymentForm";
@@ -23,11 +20,8 @@ import {
   FormData,
   FormErrors,
   SelectedBumps,
-  SavedToken,
   Step1FormProps,
   Step2FormProps,
-  CardPaymentFormProps,
-  YapePaymentFormProps,
   InputFieldProps
 } from "../types/checkout";
 import {
@@ -37,18 +31,7 @@ import {
   paisesDireccion,
   departamentosPeru,
   codigosPaisCelular,
-  identificationTypesPeru,
-  CARD_LOGOS
 } from "../constants/checkout";
-import { PayUService } from "../services/PayUService";
-import {
-  detectCardType,
-  formatCardNumber,
-  validateCard,
-  validateCVV,
-  validateExpiry,
-  validateYape
-} from "../utils/validations";
 
 
 //Trakeo de Facebook (Meta)
@@ -85,16 +68,6 @@ const initialFormData: FormData = {
   city: "",
   postalCode: "",
   billingSameAsShipping: true,
-  cardNumber: "",
-  expiryMonth: "",
-  expiryYear: "",
-  cvv: "",
-  cardHolderName: "",
-  paymentMethod: "",
-  identificationType: identificationTypesPeru[0]?.code || "",
-  identificationNumber: "",
-  yapeNumber: "",
-  yapeCode: new Array(6).fill(""),
 };
 
 const initialSelectedBumps: SelectedBumps = {
@@ -105,23 +78,12 @@ const initialSelectedBumps: SelectedBumps = {
 export default function TwoStepCheckoutForm() {
   const [currentStep, setCurrentStep] = useState(1);
   const [showShippingInfo, setShowShippingInfo] = useState(false);
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("card");
   const [formData, setFormData] = useState<FormData>(initialFormData);
   const [selectedBumps, setSelectedBumps] = useState<SelectedBumps>(initialSelectedBumps);
   const [errors, setErrors] = useState<FormErrors>({});
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
-  const [paymentResult, setPaymentResult] = useState<PaymentResult | null>(null);
   const [containerWidth, setContainerWidth] = useState(0);
-  const [currentCardLogo, setCurrentCardLogo] = useState(0);
-  const [isVisible, setIsVisible] = useState(true);
-  const [savedTokens, setSavedTokens] = useState<SavedToken[]>([]);
-  const [useSavedToken, setUseSavedToken] = useState(false);
-  const [chosenTokenId, setChosenTokenId] = useState<string | null>(null);
   const router = useRouter();
-
-  // Estados específicos de Yape
-  const [yapeNumber, setYapeNumber] = useState("");
-  const [yapeCode, setYapeCode] = useState(new Array(6).fill(""));
 
   const formRef = useRef<HTMLFormElement>(null);
   const mainContainerRef = useRef<HTMLDivElement>(null);
@@ -144,448 +106,19 @@ export default function TwoStepCheckoutForm() {
     return () => observer.disconnect();
   }, []);
 
-  // Efecto para rotar logos de tarjetas
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setIsVisible(false);
-      setTimeout(() => {
-        setCurrentCardLogo((prev) => (prev + 1) % CARD_LOGOS.length);
-        setIsVisible(true);
-      }, 500);
-    }, 3000);
-
-    return () => clearInterval(interval);
-  }, []);
-
   // Efecto para hacer scroll al cambiar al paso 2
-  useEffect(() => {
-    if (currentStep === 2) {
-      mainContainerRef.current?.scrollIntoView({ behavior: 'smooth' });
-    }
-  }, [currentStep]);
-
-  // Cargar tokens guardados.
   useEffect(() => {
-    if (currentStep === 2 && selectedPaymentMethod === "card") {
-      fetch("/api/tokens")
-        .then(res => res.json())
-        .then(data => {
-          if (Array.isArray(data) && data.length > 0) {
-            setSavedTokens(data);
-            setChosenTokenId(data[0].tokenid);
-          }
-        })
-        .catch(console.error);
+    if (currentStep === 2) {
+      mainContainerRef.current?.scrollIntoView({ behavior: 'smooth' });
     }
-  }, [currentStep, selectedPaymentMethod]);
+  }, [currentStep]);
 
-  // Manejador de cambios genérico
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-
-    switch (name) {
-      case "cardNumber":
-        handleCardNumberChange(value);
-        break;
-      case "cvv":
-        handleCVVChange(value);
-        break;
-      case "expiry":
-        handleExpiryChange(value);
-        break;
-      case "identificationNumber":
-        handleIdentificationChange(value);
-        break;
-      default:
-        setFormData(prev => ({ ...prev, [name]: value }));
-    }
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  // Manejadores específicos
-  const handleCardNumberChange = (value: string) => {
-    const formattedValue = formatCardNumber(value);
-    const cleanValue = value.replace(/\s+/g, "");
-    const cardType = detectCardType(cleanValue);
 
-    setFormData(prev => ({
-      ...prev,
-      cardNumber: formattedValue,
-      paymentMethod: cardType.type,
-    }));
-
-    // Limpiar error si el campo queda vacío
-    if (cleanValue.length === 0) {
-      setErrors(prev => ({
-        ...prev,
-        cardNumber: undefined
-      }));
-      return;
-    }
-
-    // Definir longitudes esperadas para cada tipo de tarjeta
-    const expectedLengths: { [key: string]: number } = {
-      VISA: 16,
-      MASTERCARD: 16,
-      AMEX: 15,
-      DINERS: 14
-    };
-
-    const expectedLength = expectedLengths[cardType.type];
-
-    // Validación cuando se alcanza la longitud esperada para el tipo de tarjeta
-    if (expectedLength && cleanValue.length === expectedLength) {
-      if (validateCard(cleanValue)) {
-        // Si es válida, limpiar error y hacer auto-focus
-        setErrors(prev => ({
-          ...prev,
-          cardNumber: undefined
-        }));
-        const expiryField = document.querySelector('input[name="expiry"]') as HTMLInputElement;
-        if (expiryField) {
-          setTimeout(() => expiryField.focus(), 0);
-        }
-      } else {
-        // Si tiene la longitud correcta pero no es válida, mostrar error
-        setErrors(prev => ({
-          ...prev,
-          cardNumber: "Número de tarjeta inválido"
-        }));
-      }
-    } else {
-      // Si no ha alcanzado la longitud esperada, limpiar cualquier error previo
-      setErrors(prev => ({
-        ...prev,
-        cardNumber: undefined
-      }));
-    }
-  };
-
-  const handleCVVChange = (value: string) => {
-    const cardType = detectCardType(formData.cardNumber.replace(/\s+/g, ""));
-    const maxLength = cardType.type === "AMEX" ? 4 : 3;
-    const cleanValue = value.replace(/\D/g, "");
-
-    if (cleanValue.length <= maxLength) {
-      setFormData(prev => ({ ...prev, cvv: cleanValue }));
-
-      // Limpiar error si el campo queda vacío
-      if (cleanValue.length === 0) {
-        setErrors(prev => ({
-          ...prev,
-          cvv: undefined
-        }));
-      }
-
-      // Auto-focus al campo de número de documento cuando CVV está completo
-      if (cleanValue.length === maxLength) {
-        // Limpiar error cuando CVV está completo con la longitud correcta
-        setErrors(prev => ({
-          ...prev,
-          cvv: undefined
-        }));
-        
-        const identificationField = document.querySelector('input[name="identificationNumber"]') as HTMLInputElement;
-        if (identificationField) {
-          setTimeout(() => identificationField.focus(), 0);
-        }
-      }
-    }
-  };
-
-  const handleExpiryChange = (value: string): string => {
-    // Si el valor está vacío, permitir que se borre completamente
-    if (value === "") {
-      setFormData(prev => ({
-        ...prev,
-        expiryMonth: "",
-        expiryYear: "",
-      }));
-      return "";
-    }
-
-    // Solo permitir dígitos y /
-    const input = value.replace(/[^\d\/]/g, "");
-
-    // Remover cualquier / existente para procesar solo los dígitos
-    let digits = input.replace(/\//g, "");
-
-    // Limitar a máximo 4 dígitos
-    if (digits.length > 4) {
-      digits = digits.slice(0, 4);
-    }
-
-    let formatted = "";
-
-    // Lógica especial para auto-formateo del mes
-    if (digits.length === 1) {
-      const digit = parseInt(digits);
-      if (digit >= 3) {
-        // Si es 3-9, auto-completar con 0 y agregar /
-        formatted = "0" + digits + "/";
-      } else {
-        // Si es 0, 1 o 2, solo mostrar el dígito
-        formatted = digits;
-      }
-    } else if (digits.length === 2) {
-      const month = parseInt(digits);
-      if (month > 12) {
-        // Si el mes es mayor a 12, tomar el segundo dígito como primer dígito del año
-        formatted = "01/" + digits.charAt(1);
-      } else {
-        // Mes válido, agregar /
-        formatted = digits + "/";
-      }
-    } else if (digits.length >= 3) {
-      // Ya tiene más de 2 dígitos, formatear con /
-      const monthPart = digits.slice(0, 2);
-      const yearPart = digits.slice(2, 4);
-      formatted = monthPart + "/" + yearPart;
-    } else {
-      formatted = digits;
-    }
-
-    // Actualizar el estado del formData cuando tenemos un formato completo
-    if (formatted.length <= 5) {
-      const match = formatted.match(/^(\d{2})\/(\d{2})$/);
-      if (match) {
-        const month = match[1];
-        const year = `20${match[2]}`;
-        setFormData(prev => ({
-          ...prev,
-          expiryMonth: month,
-          expiryYear: year,
-        }));
-
-        const validation = validateExpiry(month, year);
-        setErrors(prev => ({
-          ...prev,
-          expiryMonth: validation.isValid ? undefined : validation.error
-        }));
-
-        // Auto-focus al campo CVV si la fecha es válida y completa
-        if (validation.isValid && formatted.length === 5) {
-          const cvvField = document.querySelector('input[name="cvv"]') as HTMLInputElement;
-          if (cvvField) {
-            setTimeout(() => cvvField.focus(), 0);
-          }
-        }
-      } else {
-        // Si no está completo, limpiar los datos del form
-        setFormData(prev => ({
-          ...prev,
-          expiryMonth: "",
-          expiryYear: "",
-        }));
-        setErrors(prev => ({
-          ...prev,
-          expiryMonth: undefined
-        }));
-      }
-    }
-
-    return formatted;
-  };
-
-  const handleIdentificationChange = (value: string) => {
-    const cleanValue = value.replace(/\D/g, '');
-    setFormData(prev => ({ ...prev, identificationNumber: cleanValue }));
-
-    // Limpiar error si el campo queda vacío
-    if (cleanValue.length === 0) {
-      setErrors(prev => ({
-        ...prev,
-        identificationNumber: undefined
-      }));
-    }
-  };
-
-  // Funciones de validación onBlur
-  const handleCardHolderNameBlur = () => {
-    const name = formData.cardHolderName.trim();
-    if (name.length > 0 && name.length < 3) {
-      setErrors(prev => ({
-        ...prev,
-        cardHolderName: "Nombre del titular debe tener al menos 3 caracteres"
-      }));
-    } else if (name.length === 0) {
-      setErrors(prev => ({
-        ...prev,
-        cardHolderName: undefined
-      }));
-    } else {
-      setErrors(prev => ({
-        ...prev,
-        cardHolderName: undefined
-      }));
-    }
-  };
-
-  // Manejador de cambio para el nombre del titular
-  const handleCardHolderNameChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setFormData(prev => ({ ...prev, cardHolderName: value }));
-
-    // Limpiar error si el campo queda vacío
-    if (value.trim().length === 0) {
-      setErrors(prev => ({
-        ...prev,
-        cardHolderName: undefined
-      }));
-    }
-  };
-
-  const handleCardNumberBlur = () => {
-    const cleanValue = formData.cardNumber.replace(/\s+/g, "");
-
-    if (cleanValue.length > 0 && !validateCard(cleanValue)) {
-      setErrors(prev => ({
-        ...prev,
-        cardNumber: "Número de tarjeta inválido"
-      }));
-    } else if (cleanValue.length > 0 && validateCard(cleanValue)) {
-      // Limpiar error si la tarjeta es válida
-      setErrors(prev => ({
-        ...prev,
-        cardNumber: undefined
-      }));
-    }
-  };
-
-  const handleExpiryBlur = () => {
-    const expiryInput = document.querySelector('input[name="expiry"]') as HTMLInputElement;
-    const inputValue = expiryInput?.value || "";
-
-    // Si el campo tiene contenido pero está incompleto
-    if (inputValue.length > 0 && inputValue.length < 5) {
-      setErrors(prev => ({
-        ...prev,
-        expiryMonth: "Fecha incompleta (formato: MM/AA)"
-      }));
-    } else if (formData.expiryMonth && formData.expiryYear) {
-      const validation = validateExpiry(formData.expiryMonth, formData.expiryYear);
-      if (!validation.isValid) {
-        setErrors(prev => ({
-          ...prev,
-          expiryMonth: validation.error
-        }));
-      } else {
-        // Limpiar error si la fecha es válida
-        setErrors(prev => ({
-          ...prev,
-          expiryMonth: undefined
-        }));
-      }
-    } else if (inputValue.length === 0) {
-      // Limpiar error si el campo está vacío
-      setErrors(prev => ({
-        ...prev,
-        expiryMonth: undefined
-      }));
-    }
-  };
-
-  const handleCVVBlur = () => {
-    if (formData.cvv.length > 0 && !validateCVV(formData.cvv, formData.paymentMethod)) {
-      setErrors(prev => ({
-        ...prev,
-        cvv: "CVV inválido"
-      }));
-    }
-  };
-
-  const handleIdentificationBlur = () => {
-    const value = formData.identificationNumber.trim();
-    if (value.length > 0) {
-      if (formData.identificationType === "DNI" && value.length !== 8) {
-        setErrors(prev => ({
-          ...prev,
-          identificationNumber: 'El DNI debe tener 8 dígitos'
-        }));
-      } else {
-        setErrors(prev => ({
-          ...prev,
-          identificationNumber: undefined
-        }));
-      }
-    }
-  };
-
-  const handleYapeNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let value = e.target.value.replace(/\D/g, "");
-
-    if (value.length > 0 && value[0] !== "9") return;
-    if (value.length > 9) value = value.slice(0, 9);
-
-    const formattedValue = value.replace(/(\d{3})(?=\d)/g, "$1 ");
-    setYapeNumber(formattedValue);
-    setFormData(prev => ({ ...prev, yapeNumber: value }));
-
-    // Limpiar error si el campo está vacío
-    if (value.length === 0) {
-      setErrors(prev => ({ ...prev, yapeNumber: undefined }));
-    }
-
-    // Auto-focus al código de aprobación cuando tiene 9 dígitos
-    if (value.length === 9) {
-      setErrors(prev => ({ ...prev, yapeNumber: undefined }));
-      const firstCodeInput = document.querySelector('input[inputMode="numeric"]') as HTMLInputElement;
-      if (firstCodeInput) {
-        setTimeout(() => firstCodeInput.focus(), 100);
-      }
-    }
-  };
-
-  const handleYapeNumberBlur = () => {
-    const cleanValue = formData.yapeNumber.replace(/\s+/g, "");
-
-    if (cleanValue.length > 0 && cleanValue.length < 9) {
-      setErrors(prev => ({
-        ...prev,
-        yapeNumber: "Número incompleto. Debe tener 9 dígitos."
-      }));
-    } else if (cleanValue.length === 9) {
-      setErrors(prev => ({
-        ...prev,
-        yapeNumber: undefined
-      }));
-    } else if (cleanValue.length === 0) {
-      setErrors(prev => ({
-        ...prev,
-        yapeNumber: undefined
-      }));
-    }
-  };
-
-  const handleYapeCodeChange = (element: HTMLInputElement, index: number) => {
-    const value = element.value;
-
-    if (!/^[0-9]$/.test(value) && value !== "") {
-      element.value = "";
-      return false;
-    }
-
-    const newCode = [...yapeCode];
-    newCode[index] = value;
-    setYapeCode(newCode);
-    setFormData(prev => ({ ...prev, yapeCode: newCode }));
-
-    // Limpiar error si algún campo se está llenando
-    if (newCode.join("").length > 0 && errors.yapeCode) {
-      setErrors(prev => ({ ...prev, yapeCode: undefined }));
-    }
-
-    // Auto-focus siguiente
-    if (element.nextSibling && value) {
-      (element.nextSibling as HTMLInputElement).focus();
-    }
-
-    return true;
-  };
-
-  const handleYapeCodeBlur = () => {
-    // No validar en tiempo real para evitar distraer al usuario
-    // La validación se hará solo al intentar enviar el formulario
-  };
 
   // Validaciones unificadas
   const validateForm = (step: number, section?: 'basic' | 'shipping'): boolean => {
@@ -650,39 +183,6 @@ export default function TwoStepCheckoutForm() {
           }
         });
       }
-    } else if (step === 2) {
-      if (selectedPaymentMethod === "card" && !useSavedToken) {
-        // Validaciones de tarjeta
-        if (!formData.cardHolderName.trim() || formData.cardHolderName.trim().length < 3) {
-          newErrors.cardHolderName = "Nombre del titular inválido.";
-          isValid = false;
-        }
-        if (!validateCard(formData.cardNumber)) {
-          newErrors.cardNumber = "Número de tarjeta inválido.";
-          isValid = false;
-        }
-        const expiryValidation = validateExpiry(formData.expiryMonth, formData.expiryYear);
-        if (!expiryValidation.isValid) {
-          newErrors.expiryMonth = expiryValidation.error;
-          isValid = false;
-        }
-        if (!validateCVV(formData.cvv, formData.paymentMethod)) {
-          newErrors.cvv = "CVV inválido.";
-          isValid = false;
-        }
-      } else if (selectedPaymentMethod === "yape") {
-        isValid = validateYape(yapeNumber, yapeCode, setErrors);
-        return isValid;
-      }
-
-      // Validación de documento
-      if (!formData.identificationNumber.trim()) {
-        newErrors.identificationNumber = "Documento requerido.";
-        isValid = false;
-      } else if (formData.identificationType === "DNI" && formData.identificationNumber.length !== 8) {
-        newErrors.identificationNumber = "DNI debe tener 8 dígitos.";
-        isValid = false;
-      }
     }
 
     setErrors(newErrors);
@@ -690,41 +190,22 @@ export default function TwoStepCheckoutForm() {
   };
 
   // Guardar datos del usuario
-  const saveUserData = async (step: number) => {
+  const saveUserData = async () => {
     try {
-      let dataToSend;
-      if (step === 1) {
-        // Paso 1: Datos completos incluyendo información de envío
-        dataToSend = {
-          firstName: formData.firstName,
-          lastName: formData.lastName,
-          email: formData.email,
-          phoneCountryCode: formData.phoneCountryCode,
-          phoneNumber: formData.phoneNumber,
-          address: formData.address,
-          reference: formData.reference,
-          country: formData.country,
-          department: formData.department,
-          city: formData.city,
-          postalCode: formData.postalCode,
-          billingSameAsShipping: formData.billingSameAsShipping,
-          cardNumber: formData.cardNumber,
-          expiryMonth: formData.expiryMonth,
-          expiryYear: formData.expiryYear,
-          cvv: formData.cvv,
-          cardHolderName: formData.cardHolderName,
-          paymentMethod: formData.paymentMethod,
-          yapeNumber: formData.yapeNumber,
-          yapeCode: formData.yapeCode,
-        };
-      } else {
-        // Paso 2: Incluir todos los datos
-        dataToSend = {
-          ...formData,
-          phoneNumber: formData.phoneNumber,
-        };
-      }
-      // console.log(`Guardando datos del paso ${step}:`, dataToSend);
+      const dataToSend = {
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        email: formData.email,
+        phoneCountryCode: formData.phoneCountryCode,
+        phoneNumber: formData.phoneNumber,
+        address: formData.address,
+        reference: formData.reference,
+        country: formData.country,
+        department: formData.department,
+        city: formData.city,
+        postalCode: formData.postalCode,
+        billingSameAsShipping: formData.billingSameAsShipping,
+      };
       const response = await fetch("/api/user/save", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -735,10 +216,9 @@ export default function TwoStepCheckoutForm() {
         throw new Error(errorData.error || "Error al guardar datos");
       }
       const result = await response.json();
-      // console.log(`Datos del paso ${step} guardados exitosamente:`, result);
       return result;
     } catch (error) {
-      console.error(`Error guardando datos del paso ${step}:`, error);
+      console.error("Error guardando datos:", error);
       throw error;
     }
   };
@@ -811,19 +291,19 @@ export default function TwoStepCheckoutForm() {
     }
 
     if (!validateForm(currentStep)) return;
-
+ 
     if (currentStep === 1) {
       // Segunda fase del paso 1: guardar datos completos en base de datos
       setIsProcessingPayment(true);
       try {
         // Guardar datos completos en la base de datos
         try {
-          await saveUserData(1);
+          await saveUserData();
         } catch (error) {
           console.error("Error al guardar en base de datos:", error);
           // No detener la lógica si falla
         }
-
+ 
         // Enviar datos completos a Brevo (SIN DNI)
         try {
           await fetch("/api/subscribe", {
@@ -846,7 +326,7 @@ export default function TwoStepCheckoutForm() {
         } catch (error) {
           console.error("Error al enviar datos completos a Brevo:", error);
         }
-
+ 
         // Enviar evento AddToCart a Meta
         try {
           // 1. Píxel de Meta
@@ -880,13 +360,7 @@ export default function TwoStepCheckoutForm() {
         } catch (error) {
           console.error("Error al enviar evento AddToCart a Meta:", error);
         }
-
-        // Configurar nombre del titular de tarjeta
-        setFormData(prev => ({
-          ...prev,
-          cardHolderName: prev.cardHolderName || `${prev.firstName} ${prev.lastName}`.trim(),
-        }));
-        
+ 
         // Avanzar al paso 2
         setCurrentStep(2);
       } catch (error) {
@@ -896,150 +370,8 @@ export default function TwoStepCheckoutForm() {
       } finally {
         setIsProcessingPayment(false);
       }
-    } else {
-      // Paso 2: Procesar pago
-      setIsProcessingPayment(true);
-      try {
-        await saveUserData(2);
-
-        let result: PaymentResult;
-
-        if (selectedPaymentMethod === "card") {
-          const chargeRes = await fetch("/api/stripe/charge", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              amount: totalPrice,
-              currency: "USD",
-              email: formData.email,
-              name: formData.cardHolderName || `${formData.firstName} ${formData.lastName}`,
-              cardNumber: formData.cardNumber.replace(/\s+/g, ""),
-              expiryMonth: formData.expiryMonth.padStart(2, "0"),
-              expiryYear: formData.expiryYear,
-              cvc: formData.cvv,
-              description: "Programa Líder Experto",
-            }),
-          });
-
-          const chargeData = await chargeRes.json();
-          if (chargeRes.ok && chargeData.success) {
-            if (chargeData.customerId && typeof window !== "undefined") {
-              localStorage.setItem("stripe_customer_id", chargeData.customerId);
-            }
-            result = { success: true, transactionId: chargeData.transactionId, message: "¡Pago procesado exitosamente con Stripe!" };
-          } else {
-            result = { success: false, message: chargeData.error || "Error al procesar el pago con tarjeta." };
-          }
-
-        }
- else {
-          result = await PayUService.processYape(formData, totalPrice, yapeNumber, yapeCode);
-        }
-
-        setPaymentResult(result);
-      } catch (error) {
-        setPaymentResult({
-          success: false,
-          message: error instanceof Error ? error.message : "Error desconocido",
-        });
-      } finally {
-        setIsProcessingPayment(false);
-      }
     }
   };
-
-  // Efecto para manejar el resultado del pago
-  useEffect(() => {
-    if (paymentResult?.success) {
-      // Enviar evento de compra a Meta
-      const trackPurchase = async () => {
-        try {
-          // 1. Píxel de Meta
-          trackEvent('Purchase', {
-            content_name: 'Compra Libro Líder Experto',
-            value: totalPrice,
-            currency: 'PEN',
-            transaction_id: paymentResult.transactionId,
-          });
-
-          // 2. API de Conversiones de Meta
-          await fetch('/api/meta/events', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              eventName: 'Purchase',
-              userData: {
-                fn: formData.firstName,
-                ln: formData.lastName,
-                em: formData.email,
-                ph: formData.phoneNumber,
-              },
-              customData: {
-                value: totalPrice,
-                currency: 'PEN',
-              },
-              eventSourceUrl: window.location.href,
-              fbp: document.cookie.match(/fbp=([^;]*)/)?.[1] || null,
-              fbc: document.cookie.match(/fbc=([^;]*)/)?.[1] || null,
-            }),
-          });
-        } catch (error) {
-          console.error("Error al enviar evento Purchase a Meta:", error);
-        }
-      };
-
-      trackPurchase();
-
-      // 1. Mover a la lista de compradores en Brevo
-      const moveToBuyerList = async () => {
-        try {
-          await fetch('/api/convert-to-buyer', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              email: formData.email,
-              dni: formData.identificationNumber,
-            }),
-          });
-        } catch (conversionError) {
-          console.error('Error al intentar mover al contacto a la lista de compradores:', conversionError);
-        }
-      };
-      moveToBuyerList();
-
-      // 2. Redirigir a la página de gracias
-      router.push('/lobos');
-    }
-  }, [paymentResult, router, formData, totalPrice]);
-
-  // Resultado del pago
-  if (paymentResult) {
-    return (
-      <div className="bg-gray-100 min-h-screen py-8 px-4 flex items-center justify-center">
-        <div className="max-w-md mx-auto bg-white rounded-lg shadow-lg p-6">
-          <div className={`text-center ${paymentResult.success ? "text-green-600" : "text-red-600"}`}>
-            <div className={`mx-auto w-16 h-16 rounded-full flex items-center justify-center mb-4 ${paymentResult.success ? "bg-green-100" : "bg-red-100"
-              }`}>
-              <span className="text-2xl font-bold">{paymentResult.success ? "✓" : "✗"}</span>
-            </div>
-            <h3 className="text-lg font-semibold mb-2">
-              {paymentResult.success ? "¡Pago Exitoso!" : "Pago Fallido"}
-            </h3>
-            <p className="text-gray-600 mb-4">{paymentResult.message}</p>
-            <button
-              onClick={() => setPaymentResult(null)}
-              className={`px-6 py-2 rounded transition-colors ${paymentResult.success
-                ? "bg-green-600 text-white hover:bg-green-700"
-                : "bg-red-600 text-white hover:bg-red-700"
-                }`}
-            >
-              {paymentResult.success ? "Nueva Compra" : "Intentar Nuevamente"}
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   // Formulario principal
   return (
@@ -1095,36 +427,12 @@ export default function TwoStepCheckoutForm() {
               formData={formData}
               errors={errors}
               handleChange={handleChange}
-              handleExpiryChange={handleExpiryChange}
               handlePrevStep={() => setCurrentStep(1)}
               isProcessingPayment={isProcessingPayment}
-              selectedPaymentMethod={selectedPaymentMethod}
-              setSelectedPaymentMethod={setSelectedPaymentMethod}
-              savedTokens={savedTokens}
-              useSavedToken={useSavedToken}
-              setUseSavedToken={setUseSavedToken}
-              chosenTokenId={chosenTokenId}
-              setChosenTokenId={setChosenTokenId}
-              yapeNumber={yapeNumber}
-              yapeCode={yapeCode}
-              handleYapeNumberChange={handleYapeNumberChange}
-              handleYapeNumberBlur={handleYapeNumberBlur}
-              handleYapeCodeChange={handleYapeCodeChange}
-              handleYapeCodeBlur={handleYapeCodeBlur}
               selectedBumps={selectedBumps}
               setSelectedBumps={setSelectedBumps}
               totalPrice={totalPrice}
               containerWidth={containerWidth}
-              currentCardLogo={currentCardLogo}
-              isVisible={isVisible}
-              identificationTypesPeru={identificationTypesPeru}
-              handleCardHolderNameChange={handleCardHolderNameChange}
-              handleCardHolderNameBlur={handleCardHolderNameBlur}
-              handleCardNumberBlur={handleCardNumberBlur}
-              handleExpiryBlur={handleExpiryBlur}
-              handleCVVBlur={handleCVVBlur}
-              handleIdentificationBlur={handleIdentificationBlur}
-              
             />
           )}
         </form>
@@ -1319,27 +627,9 @@ function Step1Form({ formData, errors, handleChange, isSubmitting, codigosPaisCe
 // Componente Step 2
 function Step2Form(props: Step2FormProps) {
   const {
-    formData, errors, handleChange, handleExpiryChange, handlePrevStep, isProcessingPayment,
-    selectedPaymentMethod, setSelectedPaymentMethod, savedTokens,
-    useSavedToken, setUseSavedToken, chosenTokenId, setChosenTokenId,
-    yapeNumber, yapeCode, handleYapeNumberChange, handleYapeNumberBlur, handleYapeCodeChange, handleYapeCodeBlur,
-    selectedBumps, setSelectedBumps, totalPrice, containerWidth,
-    currentCardLogo, isVisible, identificationTypesPeru
+    formData, errors, handleChange, handlePrevStep, isProcessingPayment,
+    selectedBumps, setSelectedBumps, totalPrice, containerWidth
   } = props;
-
-  const [expiryInput, setExpiryInput] = useState("");
-  const [showGuaranteeTooltip, setShowGuaranteeTooltip] = useState(false);
-
-  useEffect(() => {
-    if (formData.expiryMonth && formData.expiryYear) {
-      setExpiryInput(
-        `${formData.expiryMonth.padStart(2, "0")}/${formData.expiryYear.length === 4 ? formData.expiryYear.slice(2) : formData.expiryYear
-        }`
-      );
-    } else if (!formData.expiryMonth && !formData.expiryYear) {
-      setExpiryInput("");
-    }
-  }, [formData.expiryMonth, formData.expiryYear]);
 
   return (
     <div className="p-4 md:p-8">
@@ -1387,7 +677,6 @@ function Step2Form(props: Step2FormProps) {
           onSuccessRedirectTo="/subdomains/liderexperto/gracias"
         />
       </div>
-
 
       <div className="space-y-4 mb-6">
         <BumpItem
@@ -1441,56 +730,6 @@ function Step2Form(props: Step2FormProps) {
         </div>
       </div>
 
-      <div className="relative">
-        <button
-          type="submit"
-          disabled={isProcessingPayment}
-          onMouseEnter={() => window.innerWidth >= 1024 && setShowGuaranteeTooltip(true)}
-          onMouseLeave={() => setShowGuaranteeTooltip(false)}
-          className={`w-full py-4 rounded-lg font-bold text-2xl lg:text-3xl cursor-pointer text-white leading-[1] transition-colors ${isProcessingPayment ? "bg-gray-400 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700"
-            }`}
-        >
-          {isProcessingPayment ? (
-            <div className="flex items-center justify-center">
-              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-              Procesando Pago...
-            </div>
-          ) : (
-            <>
-              ¡Obtener Oferta!<br />
-              <span className="text-base font-normal leading-none">¡Sí! ¡Quiero Hacer Crecer mi Negocio!</span>
-            </>
-          )}
-        </button>
-
-        {/* Tooltip de Garantía */}
-        {showGuaranteeTooltip && (
-          <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-full max-w-[100%] bg-white border-2 border-blue-600 rounded-lg shadow-xl z-50 animate-fade-in">
-            {/* Flecha apuntando hacia abajo */}
-            <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-[10px] border-r-[10px] border-t-[10px] border-l-transparent border-r-transparent border-t-blue-600"></div>
-            
-            <div className="p-4">
-              {/* Header rojo */}
-              <div className="bg-blue-600 text-white text-center py-2 px-4 rounded-t-md -mx-4 -mt-4 mb-3">
-                <h3 className="font-bold text-lg leading-[1.2]">Tendrás acceso a todo lo que necesitas</h3>
-              </div>
-              
-              {/* Contenido */}
-              <div className="text-center">
-                <p className="text-black text-lg mb-3 leading-[1.2]">
-                  Genera ventas<span className="font-bold"> PREDECIBLES </span>y construye un equipo que funcione sin ti, usando la metodología que ha transformado empresas en toda Latinoamérica.
-                </p>
-                
-                <p className="text-black font-semibold bg-gray-300 text-lg leading-[1.2] p-1">
-                  Respaldado por una garantía de devolución de dinero de 30 días
-                </p>
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
-
-
       <p className="text-sm text-gray-500 mt-3 text-center leading-[1.3]">
         *Líder Experto se vende por 24.95 USD, pero hoy es gratis para ti. Solo cubres S/19 de envío y recibes el sistema completo que ha transformado empresas en todo Latinoamérica.
         Tu información está 100% protegida.
@@ -1499,330 +738,6 @@ function Step2Form(props: Step2FormProps) {
   );
 }
 
-// Componente de tarjeta
-function CardPaymentForm(props: CardPaymentFormProps) {
-  const { formData, errors, handleChange, handleExpiryChange, isProcessingPayment, savedTokens,
-    useSavedToken, setUseSavedToken, chosenTokenId, setChosenTokenId,
-    expiryInput, setExpiryInput, containerWidth, currentCardLogo,
-    isVisible, identificationTypesPeru, handleCardHolderNameChange,
-    handleCardHolderNameBlur, handleCardNumberBlur, handleExpiryBlur,
-    handleCVVBlur, handleIdentificationBlur } = props;
-
-  const handleExpiryKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    const input = e.currentTarget;
-    const cursorPosition = input.selectionStart || 0;
-    const currentValue = input.value;
-
-    // Solo manejar la tecla backspace
-    if (e.key === 'Backspace') {
-      // Si el cursor está justo después de "/" (posición 3)
-      if (cursorPosition === 3 && currentValue.includes('/')) {
-        e.preventDefault();
-        // Borrar todo hasta la barra (incluyéndola)
-        const newValue = currentValue.slice(0, 2);
-        const formattedValue = props.handleExpiryChange(newValue);
-        props.setExpiryInput(formattedValue);
-        // Posicionar el cursor al final del nuevo valor
-        setTimeout(() => {
-          input.setSelectionRange(2, 2);
-        }, 0);
-      }
-      // Si el cursor está en la posición de la "/" (posición 2)
-      else if (cursorPosition === 2 && currentValue[2] === '/') {
-        e.preventDefault();
-        // Borrar el último dígito del mes
-        const newValue = currentValue.slice(0, 1) + currentValue.slice(3);
-        const formattedValue = props.handleExpiryChange(newValue);
-        props.setExpiryInput(formattedValue);
-        // Posicionar el cursor después del primer dígito
-        setTimeout(() => {
-          input.setSelectionRange(1, 1);
-        }, 0);
-      }
-    }
-  };
-
-  return (
-    <div className="mb-6 animate-fade-in">
-      <div className="bg-gradient-to-r from-teal-500 to-teal-600 p-4 text-white rounded-t-lg">
-        <div className="flex items-center justify-between">
-          <h3 className="font-semibold text-lg flex items-center">
-            <FiCreditCard className="mr-2" />Pago Seguro
-          </h3>
-          <FiShield className="w-6 h-6" />
-        </div>
-        <p className="text-teal-100 text-sm mt-1">Tus datos están protegidos con encriptación SSL</p>
-      </div>
-
-      {savedTokens.length > 0 && (
-        <div className="mb-4 p-4 border rounded-md bg-gray-50">
-          <h4 className="font-semibold">Usar tarjeta guardada</h4>
-          <label className="flex items-center mt-2">
-            <input
-              type="checkbox"
-              checked={useSavedToken}
-              onChange={(e) => {
-                setUseSavedToken(e.target.checked);
-                if (!e.target.checked) setChosenTokenId(null);
-              }}
-              className="mr-2"
-            />
-            Prefiero pagar con una tarjeta que ya guardé
-          </label>
-          {useSavedToken && (
-            <select
-              value={chosenTokenId ?? ""}
-              onChange={(e) => setChosenTokenId(e.target.value)}
-              className="border rounded-md p-2 w-full text-sm mt-2"
-            >
-              <option value="" disabled>-- Elige una tarjeta --</option>
-              {savedTokens.map((tok) => (
-                <option key={tok.tokenid} value={tok.tokenid}>
-                  {tok.masked_number} ({tok.payment_method} — exp: {tok.expiration_date})
-                </option>
-              ))}
-            </select>
-          )}
-        </div>
-      )}
-
-      {!useSavedToken && (
-        <div className="bg-white border border-gray-200 rounded-b-lg p-4 space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Nombre en la Tarjeta</label>
-            <input
-              type="text"
-              name="cardHolderName"
-              value={formData.cardHolderName}
-              onChange={handleCardHolderNameChange}
-              onBlur={handleCardHolderNameBlur}
-              placeholder="Nombre completo como aparece en la tarjeta"
-              disabled={isProcessingPayment}
-              className={`w-full p-3 border rounded-lg text-black ${errors.cardHolderName ? "border-red-500" : "border-gray-300"
-                } focus:outline-none focus:ring-2 focus:ring-teal-500`}
-            />
-            {errors.cardHolderName && <p className="text-red-500 text-xs mt-1">{errors.cardHolderName}</p>}
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Número de Tarjeta</label>
-            <div className="relative">
-              <input
-                type="text"
-                name="cardNumber"
-                value={formData.cardNumber}
-                onChange={handleChange}
-                onBlur={handleCardNumberBlur}
-                placeholder="1234 1234 1234 1234"
-                maxLength={formData.paymentMethod === "AMEX" ? 17 : 19}
-                className={`w-full px-3 py-2 text-black border rounded-md ${errors.cardNumber ? "border-red-300" : "border-gray-300"
-                  }`}
-              />
-              <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-2">
-                {formData.paymentMethod ? (
-                  <Image
-                    src={`/venta/${formData.paymentMethod.toLowerCase()}Icon.jpg`}
-                    alt={formData.paymentMethod}
-                    width={32}
-                    height={20}
-                    className="h-6 w-auto"
-                  />
-                ) : containerWidth >= 460 ? (
-                  <div className="flex gap-1 justify-end">
-                    {CARD_LOGOS.map((logo, index: number) => (
-                      <Image
-                        key={index}
-                        src={logo.path}
-                        alt={logo.type}
-                        width={32}
-                        height={20}
-                        className="h-6 w-auto"
-                      />
-                    ))}
-                  </div>
-                ) : (
-                  <Image
-                    key={currentCardLogo}
-                    src={CARD_LOGOS[currentCardLogo].path}
-                    alt={CARD_LOGOS[currentCardLogo].type}
-                    width={32}
-                    height={20}
-                    className={`h-6 w-auto transition-opacity duration-500 ${isVisible ? "opacity-100" : "opacity-0"}`}
-                  />
-                )}
-              </div>
-            </div>
-            {errors.cardNumber && <p className="mt-1 text-sm text-red-600">{errors.cardNumber}</p>}
-          </div>
-
-          <div className="flex flex-col md:flex-row gap-2">
-            <div className="relative">
-              <label className="block text-sm font-medium text-gray-700 mb-1">Fecha de caducidad</label>
-              <input
-                type="text"
-                name="expiry"
-                value={expiryInput}
-                onChange={(e) => {
-                  const formattedValue = handleExpiryChange(e.target.value);
-                  setExpiryInput(formattedValue);
-                }}
-                onKeyDown={handleExpiryKeyDown}
-                onBlur={handleExpiryBlur}
-                maxLength={5}
-                placeholder="MM/AA"
-                className={`w-full px-3 py-2 border text-black rounded-md ${errors.expiryMonth ? "border-red-300" : "border-gray-300"
-                  }`}
-              />
-              {errors.expiryMonth && <p className="mt-1 text-sm text-red-600">{errors.expiryMonth}</p>}
-            </div>
-
-            <div className="relative">
-              <label className="block text-sm font-medium text-gray-700 mb-1">Código de seguridad</label>
-              <input
-                type="text"
-                name="cvv"
-                value={formData.cvv}
-                onChange={handleChange}
-                onBlur={handleCVVBlur}
-                maxLength={formData.paymentMethod === "AMEX" ? 4 : 3}
-                placeholder="CVC"
-                className={`w-full px-3 py-2 border text-black rounded-md pr-12 ${errors.cvv ? "border-red-300" : "border-gray-300"
-                  }`}
-              />
-              <div className="absolute right-1 bottom-[8px] pointer-events-none">
-                <Image
-                  src={formData.paymentMethod === "AMEX" ? "/subdomains/liderexperto/venta/cvc.png" : "/subdomains/liderexperto/venta/cvv.png"}
-                  alt="CVV Icon"
-                  width={36}
-                  height={27}
-                  className="w-[36px]"
-                />
-              </div>
-              {errors.cvv && <p className="mt-1 text-sm text-red-600">{errors.cvv}</p>}
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Tipo de Documento</label>
-              <select
-                name="identificationType"
-                value={formData.identificationType}
-                onChange={handleChange}
-                disabled={isProcessingPayment}
-                className={`w-full p-3 border rounded-lg text-black ${errors.identificationType ? "border-red-500" : "border-gray-300"
-                  }`}
-              >
-                {identificationTypesPeru.map((type) => (
-                  <option key={type.code} value={type.code}>{type.name}</option>
-                ))}
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Número de Documento</label>
-              <input
-                type="text"
-                name="identificationNumber"
-                value={formData.identificationNumber}
-                onChange={handleChange}
-                onBlur={handleIdentificationBlur}
-                placeholder={formData.identificationType === "DNI" ? "12345678" : "Número de documento"}
-                disabled={isProcessingPayment}
-                maxLength={formData.identificationType === "DNI" ? 8 : 12}
-                className={`w-full p-3 border rounded-lg text-black ${errors.identificationNumber ? "border-red-500" : "border-gray-300"
-                  }`}
-              />
-              {errors.identificationNumber && <p className="text-red-500 text-xs mt-1">{errors.identificationNumber}</p>}
-            </div>
-          </div>
-
-          <div className="bg-green-50 border border-green-200 rounded-lg p-3">
-            <div className="flex items-center text-green-700">
-              <FiShield className="w-4 h-4 mr-2" />
-              <span className="text-sm font-medium">Pago 100% seguro</span>
-            </div>
-            <p className="text-green-600 text-xs mt-1">Utilizamos encriptación SSL de 256 bits para proteger tu información</p>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
-
-// Componente de Yape
-function YapePaymentForm({ yapeNumber, yapeCode, handleYapeNumberChange, handleYapeCodeChange, handleYapeNumberBlur, handleYapeCodeBlur, isProcessingPayment, errors }: YapePaymentFormProps) {
-  return (
-    <div className="mb-6 p-4 border border-gray-200 rounded-lg bg-gray-50 animate-fade-in">
-      <div className="flex items-center mb-4">
-        <Image
-          src="/subdomains/liderexperto/venta/yape.png"
-          alt="Yape Logo"
-          className="h-12 w-12 mr-3 object-contain"
-          width={48}
-          height={48}
-        />
-        <h3 className="font-semibold text-lg text-gray-800">Pagar con Yape</h3>
-      </div>
-
-      <div className="bg-green-50 border border-green-200 rounded-lg p-3 my-4">
-        <div className="flex items-center text-green-700">
-          <FiShield className="w-4 h-4 mr-2" />
-          <span className="text-sm font-medium">Pago 100% seguro</span>
-        </div>
-        <p className="text-green-600 text-xs mt-1">Utilizamos encriptación SSL de 256 bits para proteger tu información</p>
-      </div>
-
-      <div className="mb-6">
-        <label className="block text-base font-medium text-black mb-1">Ingresa tu celular Yape</label>
-        <input
-          type="tel"
-          value={yapeNumber}
-          onChange={handleYapeNumberChange}
-          onBlur={handleYapeNumberBlur} 
-          placeholder="999 999 999"
-          maxLength={11}
-          disabled={isProcessingPayment}
-          className={`w-full p-3 border rounded-lg text-black bg-white focus:outline-none focus:ring-2 focus:ring-purple-500 ${
-            errors.yapeNumber ? "border-red-500" : "border-gray-300"
-          }`}
-        />
-        {errors.yapeNumber && (
-          <p className="text-red-500 text-xs mt-1">{errors.yapeNumber}</p>
-        )}
-      </div>
-
-      <div>
-        <label className="block text-base font-medium text-black mb-2">Código de aprobación</label>
-        <div className="grid grid-cols-6 gap-2">
-          {yapeCode.map((data: string, index: number) => (
-            <input
-              key={index}
-              type="text"
-              inputMode="numeric"
-              pattern="[0-9]*"
-              value={data}
-              onChange={(e) => handleYapeCodeChange(e.target, index)}
-              onFocus={(e) => e.target.select()}
-              onBlur={handleYapeCodeBlur}
-              maxLength={1}
-              disabled={isProcessingPayment}
-              className={`w-full h-12 md:h-14 text-center text-lg font-semibold border rounded-lg text-black bg-white focus:outline-none focus:ring-2 focus:ring-purple-500 ${
-                errors.yapeCode ? "border-red-500" : "border-gray-300"
-              }`}
-            />
-          ))}
-        </div>
-        {errors.yapeCode && (
-          <p className="text-red-500 text-xs mt-1">{errors.yapeCode}</p>
-        )}
-        <p className="text-base text-gray-500 mt-2 text-center">
-          Encuéntralo en el menú de Yape, en la sección &ldquo;Código de aprobación&rdquo;.
-        </p>
-      </div>
-    </div>
-  );
-}
 
 // Componente Input reutilizable
 function InputField({ name, label, value, onChange, error, disabled, type = "text", className = "", ...props }: InputFieldProps) {

@@ -1,21 +1,7 @@
 'use server';
 
 import { GoogleGenerativeAI } from '@google/generative-ai';
-import { createClient } from '@supabase/supabase-js';
 
-function getSupabaseClient() {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
-  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
-  if (!supabaseUrl || !supabaseAnonKey) {
-    return null;
-  }
-  try {
-    return createClient(supabaseUrl, supabaseAnonKey);
-  } catch (err) {
-    console.error('Failed to initialize Supabase client:', err);
-    return null;
-  }
-}
 
 interface DataPromptInput {
   Email: string;
@@ -27,30 +13,57 @@ interface DataPromptInput {
 }
 
 export async function savePromptAndGenerateScript(input: DataPromptInput, ticket: string, recommendation: string) {
-  try {
-    // 1. Save data to Supabase (if configured)
-    const supabase = getSupabaseClient();
-    if (supabase) {
-      const { error: supabaseError } = await supabase
-        .from('DataPromt')
-        .insert([
-          {
-            Email: input.Email,
-            ProductOrService: input.ProductOrService,
-            Description: input.Description,
-            Price: input.Price,
-            offer: input.offer,
-            Company: input.Company,
-            created_at: new Date().toISOString()
-          }
-        ]);
+  // Guardar datos en Brevo en lugar de Supabase
+  const brevoApiKey = process.env.BREVO_API_KEY;
+  const totalscriptListId = Number(process.env.BREVO_TOTALSCRIPT_LIST_ID || '12');
 
-      if (supabaseError) {
-        console.error('Error inserting to Supabase:', supabaseError);
-      }
+  if (brevoApiKey) {
+    try {
+      // 1. Crear o actualizar contacto en Brevo
+      await fetch("https://api.brevo.com/v3/contacts", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "api-key": brevoApiKey,
+          "accept": "application/json",
+        },
+        body: JSON.stringify({
+          email: input.Email,
+          attributes: {
+            NOMBRE: input.Company || "Usuario TotalScript",
+          },
+          listIds: [totalscriptListId],
+          updateEnabled: true,
+        }),
+      });
+
+      // 2. Enviar evento de script generado con los detalles del prompt a Brevo
+      await fetch("https://api.brevo.com/v3/events", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "api-key": brevoApiKey,
+          "accept": "application/json",
+        },
+        body: JSON.stringify({
+          event_name: "totalscript_generado",
+          identifiers: { email_id: input.Email },
+          event_properties: {
+            producto_o_servicio: input.ProductOrService,
+            descripcion: input.Description,
+            precio: input.Price,
+            oferta: input.offer,
+            empresa: input.Company,
+            recomendacion: recommendation,
+            ticket: ticket,
+          },
+          event_date: new Date().toISOString(),
+        }),
+      });
+      console.log(`[TotalScript] Lead ${input.Email} y evento guardados en Brevo.`);
+    } catch (error) {
+      console.error("Error al guardar datos del prompt en Brevo:", error);
     }
-  } catch (err) {
-    console.error('Supabase operation failed:', err);
   }
 
   // Build the prompt using the same logic as the original app

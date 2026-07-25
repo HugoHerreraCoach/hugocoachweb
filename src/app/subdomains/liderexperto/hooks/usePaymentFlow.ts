@@ -83,22 +83,22 @@ export const usePaymentFlow = ({
 }: UsePaymentFlowProps) => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
-  const [hasTokens, setHasTokens] = useState<boolean | null>(null);
+  const [hasTokens] = useState<boolean>(false);
   const [hasUserData, setHasUserData] = useState<boolean | null>(null);
-  const [savedTokens, setSavedTokens] = useState<SavedToken[]>([]);
+  const [savedTokens] = useState<SavedToken[]>([]);
   const [userData, setUserData] = useState<UserData | null>(null);
-  const [showCVVInput, setShowCVVInput] = useState(false);
+  const [showCVVInput] = useState(false);
   const [showCVVPopup, setShowCVVPopup] = useState(false);
-  const [cvv, setCvv] = useState("");
-  const [selectedToken, setSelectedToken] = useState<SavedToken | null>(null);
+  const [cvv] = useState("");
+  const [selectedToken] = useState<SavedToken | null>(null);
   const [showPaymentPopup, setShowPaymentPopup] = useState(false);
 
-  // Cargar datos del usuario y tokens al montar
+  // Cargar datos del usuario al montar
   useEffect(() => {
-    loadUserDataAndTokens();
+    loadUserData();
   }, []);
 
-  const loadUserDataAndTokens = async () => {
+  const loadUserData = async () => {
     try {
       // Cargar datos del usuario
       const userDataRes = await fetch("/api/user/data");
@@ -111,34 +111,10 @@ export const usePaymentFlow = ({
         console.log("❌ No se encontraron datos del usuario");
         setHasUserData(false);
       }
-
-      // Cargar tokens guardados
-      const tokensRes = await fetch("/api/tokens");
-      if (tokensRes.ok) {
-        const tokens = await tokensRes.json();
-        if (Array.isArray(tokens) && tokens.length > 0) {
-          setSavedTokens(tokens);
-          setSelectedToken(tokens[0]);
-          setHasTokens(true);
-          console.log("✅ Tokens cargados:", tokens);
-        } else {
-          setHasTokens(false);
-        }
-      } else {
-        setHasTokens(false);
-      }
     } catch (error) {
       console.error("Error cargando datos:", error);
       setHasUserData(false);
-      setHasTokens(false);
     }
-  };
-
-  const validateCVV = (cvv: string, cardType: string): boolean => {
-    if (cardType === "AMEX") {
-      return /^\d{4}$/.test(cvv);
-    }
-    return /^\d{3}$/.test(cvv);
   };
 
   // Manejar pago exitoso
@@ -203,149 +179,29 @@ export const usePaymentFlow = ({
     }, 3000);
   }, [productName, productPrice, currency, redirectUrl, onSuccess, installments, userData]);
 
-  // Procesar el pago con token
-  const processTokenPayment = async (cvvValue: string) => {
-    if (!selectedToken) return;
-    
-    setIsProcessing(true);
-    const paymentMessage = installments > 1 
-      ? `Procesando tu pago en ${installments} cuotas...`
-      : "Procesando tu pago...";
-    setMessage(paymentMessage);
-    
-    try {
-      const chargeRes = await fetch("/api/payu/charge-with-token", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          creditCardTokenId: selectedToken.tokenid,
-          amount: productPrice,
-          currency: currency,
-          description: productName,
-          cvv: cvvValue,
-          installments: installments
-        }),
-      });
-      
-      const chargeJson = await chargeRes.json();
-      
-      if (!chargeRes.ok) {
-        const isInsufficientFunds = 
-          chargeJson.error?.includes("INSUFFICIENT_FUNDS") || 
-          chargeJson.message?.includes("fondos insuficientes") ||
-          chargeJson.error?.includes("DECLINED") ||
-          chargeJson.code === "INSUFFICIENT_FUNDS" ||
-          chargeRes.status === 400;
-
-        if (isInsufficientFunds) {
-          setShowCVVPopup(false);
-          setShowCVVInput(false);
-          setCvv("");
-          setMessage("Tu tarjeta no tiene fondos suficientes. Te ayudamos con otro método de pago.");
-          
-          setTimeout(() => {
-            setShowPaymentPopup(true);
-          }, 2000);
-          return;
-        }
-        
-        const errMsg = chargeJson.error || chargeJson.message || "Error al procesar el pago.";
-        setMessage(errMsg);
-        return;
-      }
-      
-      if (chargeJson.success) {
-        handleSuccessfulPayment(chargeJson.transactionId);
-      } else {
-        setMessage(chargeJson.message || "El pago no pudo completarse.");
-      }
-    } catch (err) {
-      console.error("Error en pago con token:", err);
-      const error = err as PaymentError;
-      setMessage(
-        error.message ||
-        error.response?.data?.message ||
-        "Error inesperado al intentar el pago."
-      );
-    } finally {
-      setIsProcessing(false);
-    }
-  };
-
-  // Manejar CVV del popup
+  // Manejar CVV del popup (Legacy / No-op)
   const handleCVVPayment = async (cvvValue: string) => {
-    setCvv(cvvValue);
     setShowCVVPopup(false);
-    setShowCVVInput(true);
-    await processTokenPayment(cvvValue);
   };
 
-  // Manejar pago con otro método
+  // Manejar pago con otro método (Legacy / No-op)
   const handlePayWithOtherMethod = () => {
     setShowCVVPopup(false);
-    setShowCVVInput(false);
-    setCvv("");
-    setMessage("Configurando otro método de pago...");
     setShowPaymentPopup(true);
-  };
-
-  // Intentar pago con token guardado
-  const attemptTokenPayment = async () => {
-    if (!selectedToken) return;
-    
-    if (!showCVVInput) {
-      setShowCVVPopup(true);
-      setMessage("Por seguridad, confirma el código CVV de tu tarjeta para continuar.");
-      return;
-    }
-    
-    if (cvv && validateCVV(cvv, selectedToken.payment_method)) {
-      await processTokenPayment(cvv);
-    }
   };
 
   // Función principal que maneja el flujo de pago
   const handleOneClickPurchase = async () => {
     if (isProcessing) return;
     
-    // FLUJO 1: Si hay tokens guardados Y datos de usuario
-    if (hasTokens && savedTokens.length > 0 && hasUserData) {
-      console.log("🔄 Flujo: Pago directo con token guardado");
-      await attemptTokenPayment();
-      return;
-    }
-    
-    // FLUJO 2: Si hay datos de usuario pero NO tokens
-    if (hasUserData && !hasTokens) {
-      console.log("🔄 Flujo: Datos guardados + nueva tarjeta");
-      setMessage("Configurando tu método de pago...");
-      setShowPaymentPopup(true);
-      return;
-    }
-    
-    // FLUJO 3: Si NO hay datos ni tokens
-    if (!hasUserData && !hasTokens) {
-      console.log("🔄 Flujo: Usuario nuevo");
-      setMessage("Completando información de pago...");
-      setShowPaymentPopup(true);
-      return;
-    }
-    
-    // FLUJO 4: Si solo hay tokens pero NO datos de usuario
-    if (hasTokens && !hasUserData) {
-      console.log("🔄 Flujo: Tokens sin datos de usuario");
-      setMessage("Completando información de envío...");
-      setShowPaymentPopup(true);
-      return;
-    }
-    
+    // Abrir popup de pago con Stripe
     setShowPaymentPopup(true);
   };
 
   // Manejar éxito del popup de pago
   const handlePaymentSuccess = async (result: PaymentResult) => {
     setShowPaymentPopup(false);
-    await loadUserDataAndTokens();
+    await loadUserData();
     handleSuccessfulPayment(result.transactionId);
   };
 
