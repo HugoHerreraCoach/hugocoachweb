@@ -485,8 +485,11 @@ export default function TotalScriptPage() {
                   const trimmed = line.trim();
                   if (!trimmed) return <div key={idx} className="h-3" />;
 
-                  if (trimmed.startsWith('Asesor:')) {
-                    const content = trimmed.substring(7).trim();
+                  // Limpiar de asteriscos para el chequeo de la burbuja
+                  const cleanLine = trimmed.replace(/\*/g, '').trim();
+
+                  if (cleanLine.startsWith('Asesor:')) {
+                    const content = cleanLine.substring(7).trim();
                     return (
                       <div key={idx} className="flex gap-3 mb-4 items-start animate-fade-in">
                         <div className="flex-shrink-0 w-8 h-8 rounded-full bg-indigo-600 text-white font-bold text-xs flex items-center justify-center shadow-md">
@@ -498,8 +501,8 @@ export default function TotalScriptPage() {
                         </div>
                       </div>
                     );
-                  } else if (trimmed.startsWith('Cliente:')) {
-                    const content = trimmed.substring(8).trim();
+                  } else if (cleanLine.startsWith('Cliente:')) {
+                    const content = cleanLine.substring(8).trim();
                     return (
                       <div key={idx} className="flex gap-3 mb-4 items-start justify-end animate-fade-in">
                         <div className="bg-emerald-50/70 border border-emerald-100 rounded-2xl rounded-tr-none p-3.5 text-sm text-slate-800 font-sans leading-relaxed text-left shadow-sm order-1 max-w-[85%]">
@@ -511,10 +514,10 @@ export default function TotalScriptPage() {
                         </div>
                       </div>
                     );
-                  } else if (trimmed.startsWith('Asesor (si') || trimmed.startsWith('Asesor(') || trimmed.startsWith('Asesor (en')) {
+                  } else if (cleanLine.startsWith('Asesor (si') || cleanLine.startsWith('Asesor(') || cleanLine.startsWith('Asesor (en')) {
                     return (
                       <div key={idx} className="my-3 px-4 py-2.5 bg-slate-100 border-l-4 border-slate-400 text-xs text-slate-600 font-sans rounded-r-lg italic">
-                        {trimmed}
+                        {cleanLine}
                       </div>
                     );
                   }

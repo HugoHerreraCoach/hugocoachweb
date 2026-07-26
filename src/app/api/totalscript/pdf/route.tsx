@@ -233,16 +233,19 @@ const ScriptPdfDocument = ({
             const trimmed = line.trim();
             if (!trimmed) return null;
 
-            if (trimmed.startsWith('Asesor:')) {
-              const content = trimmed.substring(7).trim();
+            // Limpiar de asteriscos para el chequeo del rol en PDF
+            const cleanLine = trimmed.replace(/\*/g, '').trim();
+
+            if (cleanLine.startsWith('Asesor:')) {
+              const content = cleanLine.substring(7).trim();
               return (
                 <View key={idx} style={styles.advisorBlock} wrap={false}>
                   <Text style={[styles.roleLabel, styles.roleLabelAdvisor]}>Asesor</Text>
                   <Text>{content}</Text>
                 </View>
               );
-            } else if (trimmed.startsWith('Cliente:')) {
-              const content = trimmed.substring(8).trim();
+            } else if (cleanLine.startsWith('Cliente:')) {
+              const content = cleanLine.substring(8).trim();
               return (
                 <View key={idx} style={styles.clientBlock} wrap={false}>
                   <Text style={[styles.roleLabel, styles.roleLabelClient]}>Cliente</Text>
@@ -250,13 +253,13 @@ const ScriptPdfDocument = ({
                 </View>
               );
             } else if (
-              trimmed.startsWith('Asesor (si') ||
-              trimmed.startsWith('Asesor(') ||
-              trimmed.startsWith('Asesor (en')
+              cleanLine.startsWith('Asesor (si') ||
+              cleanLine.startsWith('Asesor(') ||
+              cleanLine.startsWith('Asesor (en')
             ) {
               return (
                 <View key={idx} style={styles.noteBlock} wrap={false}>
-                  <Text>{trimmed}</Text>
+                  <Text>{cleanLine}</Text>
                 </View>
               );
             }
