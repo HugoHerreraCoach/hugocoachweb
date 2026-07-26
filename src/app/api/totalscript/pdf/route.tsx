@@ -15,55 +15,82 @@ import {
 
 const styles = StyleSheet.create({
   page: {
-    paddingTop: 30,
-    paddingBottom: 50,
-    paddingHorizontal: 40,
+    paddingTop: 45,
+    paddingBottom: 60,
+    paddingHorizontal: 45,
     fontFamily: 'Helvetica',
-    fontSize: 10,
+    fontSize: 9.5,
     color: '#334155',
-    lineHeight: 1.5,
+    lineHeight: 1.6,
   },
   header: {
-    borderBottomWidth: 1.5,
-    borderBottomColor: '#6366f1',
+    borderBottomWidth: 2,
+    borderBottomColor: '#4f46e5',
     borderBottomStyle: 'solid',
-    paddingBottom: 12,
-    marginBottom: 20,
+    paddingBottom: 15,
+    marginBottom: 25,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
+    alignItems: 'flex-end',
   },
   logoContainer: {
-    width: 140,
+    width: 160,
   },
   logoImage: {
-    width: 120,
+    width: 140,
     height: 'auto',
   },
   logoFallbackText: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: 'bold',
     color: '#4f46e5',
+    letterSpacing: 0.5,
   },
   tagline: {
-    fontSize: 8,
+    fontSize: 7.5,
     color: '#64748b',
+    marginTop: 4,
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+  },
+  headerMeta: {
+    alignItems: 'flex-end',
+  },
+  headerDate: {
+    fontSize: 8,
+    color: '#94a3b8',
+    fontWeight: 'bold',
+  },
+  headerUrl: {
+    fontSize: 8,
+    color: '#4f46e5',
     marginTop: 2,
+    textDecoration: 'none',
   },
   docTitle: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: 'bold',
     color: '#1e1b4b',
     textAlign: 'center',
-    marginBottom: 10,
+    marginBottom: 6,
+    letterSpacing: 0.5,
+  },
+  docSubtitle: {
+    fontSize: 9,
+    color: '#6366f1',
+    textAlign: 'center',
+    marginBottom: 25,
+    textTransform: 'uppercase',
+    letterSpacing: 1.5,
+    fontWeight: 'bold',
   },
   metaContainer: {
-    backgroundColor: '#f8fafc',
+    backgroundColor: '#faf5ff',
     borderWidth: 1,
-    borderColor: '#e2e8f0',
+    borderColor: '#e9d5ff',
     borderRadius: 8,
-    padding: 12,
-    marginBottom: 20,
+    padding: 14,
+    marginBottom: 25,
   },
   metaRow: {
     flexDirection: 'row',
@@ -71,107 +98,130 @@ const styles = StyleSheet.create({
   },
   metaLabel: {
     fontWeight: 'bold',
-    width: 85,
-    color: '#475569',
+    width: 90,
+    color: '#6b21a8',
+    fontSize: 9,
   },
   metaValue: {
     flex: 1,
-    color: '#0f172a',
+    color: '#1e1b4b',
+    fontSize: 9,
+  },
+  introText: {
+    fontSize: 10,
+    color: '#475569',
+    fontStyle: 'italic',
+    marginBottom: 20,
+    paddingHorizontal: 5,
+    lineHeight: 1.5,
   },
   dialogContainer: {
     marginTop: 10,
   },
   advisorBlock: {
-    backgroundColor: '#eff6ff',
-    borderLeftWidth: 3,
-    borderLeftColor: '#3b82f6',
+    backgroundColor: '#f0f9ff',
+    borderLeftWidth: 4,
+    borderLeftColor: '#0284c7',
     borderLeftStyle: 'solid',
-    padding: 10,
-    borderRadius: 4,
-    marginBottom: 12,
+    paddingVertical: 10,
+    paddingHorizontal: 14,
+    borderRadius: 6,
+    marginBottom: 14,
   },
   clientBlock: {
-    backgroundColor: '#ecfdf5',
-    borderLeftWidth: 3,
-    borderLeftColor: '#10b981',
+    backgroundColor: '#f0fdf4',
+    borderLeftWidth: 4,
+    borderLeftColor: '#16a34a',
     borderLeftStyle: 'solid',
-    padding: 10,
-    borderRadius: 4,
-    marginBottom: 12,
+    paddingVertical: 10,
+    paddingHorizontal: 14,
+    borderRadius: 6,
+    marginBottom: 14,
   },
   noteBlock: {
-    backgroundColor: '#f1f5f9',
-    borderLeftWidth: 3,
-    borderLeftColor: '#94a3b8',
+    backgroundColor: '#fafaf9',
+    borderLeftWidth: 4,
+    borderLeftColor: '#78716c',
     borderLeftStyle: 'solid',
-    padding: 8,
-    borderRadius: 4,
-    marginBottom: 12,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 6,
+    marginBottom: 14,
     fontStyle: 'italic',
-    fontSize: 9,
+    fontSize: 8.5,
+    color: '#57534e',
   },
   generalText: {
-    marginBottom: 8,
-    paddingLeft: 10,
+    marginBottom: 12,
+    paddingHorizontal: 5,
+    fontSize: 9.5,
+    color: '#475569',
   },
   roleLabel: {
     fontWeight: 'bold',
-    fontSize: 9,
+    fontSize: 8.5,
     textTransform: 'uppercase',
-    letterSpacing: 0.5,
-    marginBottom: 2,
+    letterSpacing: 0.8,
+    marginBottom: 4,
   },
   roleLabelAdvisor: {
-    color: '#2563eb',
+    color: '#0369a1',
   },
   roleLabelClient: {
-    color: '#059669',
+    color: '#15803d',
+  },
+  dialogContent: {
+    fontSize: 9.5,
+    color: '#1e293b',
+    lineHeight: 1.5,
   },
   ctaContainer: {
-    marginTop: 25,
-    padding: 15,
-    backgroundColor: '#f5f3ff',
-    borderWidth: 1,
-    borderColor: '#ddd6fe',
-    borderRadius: 8,
+    marginTop: 35,
+    padding: 20,
+    backgroundColor: '#e0e7ff',
+    borderWidth: 2,
+    borderColor: '#c7d2fe',
+    borderStyle: 'dashed',
+    borderRadius: 10,
     alignItems: 'center',
     textAlign: 'center',
   },
   ctaTitle: {
-    fontSize: 11,
+    fontSize: 13,
     fontWeight: 'bold',
-    color: '#6d28d9',
-    marginBottom: 4,
+    color: '#3730a3',
+    marginBottom: 6,
+    letterSpacing: 0.5,
   },
   ctaText: {
-    fontSize: 8.5,
-    color: '#4c1d95',
-    marginBottom: 10,
+    fontSize: 9,
+    color: '#4338ca',
+    marginBottom: 12,
     maxWidth: '90%',
-    lineHeight: 1.4,
+    lineHeight: 1.5,
   },
   ctaButton: {
-    backgroundColor: '#7c3aed',
-    paddingVertical: 7,
-    paddingHorizontal: 18,
+    backgroundColor: '#4f46e5',
+    paddingVertical: 8,
+    paddingHorizontal: 22,
     borderRadius: 6,
     textDecoration: 'none',
   },
   ctaButtonText: {
     color: '#ffffff',
     fontWeight: 'bold',
-    fontSize: 9,
+    fontSize: 9.5,
   },
   footer: {
     position: 'absolute',
     bottom: 25,
-    left: 40,
-    right: 40,
+    left: 45,
+    right: 45,
     textAlign: 'center',
     borderTopWidth: 1,
-    borderTopColor: '#f1f5f9',
-    paddingTop: 10,
-    fontSize: 8,
+    borderTopColor: '#e2e8f0',
+    paddingTop: 12,
+    fontSize: 7.5,
     color: '#94a3b8',
   },
 });
@@ -189,6 +239,9 @@ const ScriptPdfDocument = ({
 }) => {
   const lines = scriptText.split('\n');
 
+  // Determinar si una línea es parte de la introducción antes del primer diálogo
+  let hasDialogStarted = false;
+
   return (
     <Document>
       <Page size="A4" style={styles.page}>
@@ -202,18 +255,19 @@ const ScriptPdfDocument = ({
             )}
             <Text style={styles.tagline}>TotalScript &bull; Mentor de Ventas</Text>
           </View>
-          <View style={{ alignItems: 'flex-end' }}>
-            <Text style={{ fontSize: 8, color: '#94a3b8' }}>
-              Fecha: {new Date().toLocaleDateString('es-PE')}
+          <View style={styles.headerMeta}>
+            <Text style={styles.headerDate}>
+              FECHA: {new Date().toLocaleDateString('es-PE')}
             </Text>
-            <Text style={{ fontSize: 8, color: '#94a3b8', marginTop: 2 }}>
+            <Link src="https://hugoherreracoach.com" style={styles.headerUrl}>
               hugoherreracoach.com
-            </Text>
+            </Link>
           </View>
         </View>
 
         {/* Title */}
-        <Text style={styles.docTitle}>Guion de Ventas Persuasivo</Text>
+        <Text style={styles.docTitle}>Guion de Ventas de Alto Impacto</Text>
+        <Text style={styles.docSubtitle}>Workbook de Prospección y Cierre</Text>
 
         {/* Metadata */}
         <View style={styles.metaContainer}>
@@ -222,7 +276,7 @@ const ScriptPdfDocument = ({
             <Text style={styles.metaValue}>{company || 'N/A'}</Text>
           </View>
           <View style={styles.metaRow}>
-            <Text style={styles.metaLabel}>Producto/Serv:</Text>
+            <Text style={styles.metaLabel}>Producto/Servicio:</Text>
             <Text style={styles.metaValue}>{product || 'N/A'}</Text>
           </View>
         </View>
@@ -237,19 +291,21 @@ const ScriptPdfDocument = ({
             const cleanLine = trimmed.replace(/\*/g, '').trim();
 
             if (cleanLine.startsWith('Asesor:')) {
+              hasDialogStarted = true;
               const content = cleanLine.substring(7).trim();
               return (
                 <View key={idx} style={styles.advisorBlock} wrap={false}>
                   <Text style={[styles.roleLabel, styles.roleLabelAdvisor]}>Asesor</Text>
-                  <Text>{content}</Text>
+                  <Text style={styles.dialogContent}>{content}</Text>
                 </View>
               );
             } else if (cleanLine.startsWith('Cliente:')) {
+              hasDialogStarted = true;
               const content = cleanLine.substring(8).trim();
               return (
                 <View key={idx} style={styles.clientBlock} wrap={false}>
                   <Text style={[styles.roleLabel, styles.roleLabelClient]}>Cliente</Text>
-                  <Text>{content}</Text>
+                  <Text style={styles.dialogContent}>{content}</Text>
                 </View>
               );
             } else if (
@@ -257,16 +313,18 @@ const ScriptPdfDocument = ({
               cleanLine.startsWith('Asesor(') ||
               cleanLine.startsWith('Asesor (en')
             ) {
+              hasDialogStarted = true;
               return (
                 <View key={idx} style={styles.noteBlock} wrap={false}>
-                  <Text>{cleanLine}</Text>
+                  <Text style={styles.dialogContent}>{cleanLine}</Text>
                 </View>
               );
             }
 
+            // Si es texto antes del diálogo, darle formato de introducción
             return (
-              <Text key={idx} style={styles.generalText}>
-                {trimmed}
+              <Text key={idx} style={hasDialogStarted ? styles.generalText : styles.introText}>
+                {cleanLine}
               </Text>
             );
           })}
@@ -274,18 +332,18 @@ const ScriptPdfDocument = ({
 
         {/* Call to Action for Training */}
         <View style={styles.ctaContainer} wrap={false}>
-          <Text style={styles.ctaTitle}>¿Quieres aprender a cerrar el 80% de tus ventas?</Text>
+          <Text style={styles.ctaTitle}>¿Quieres aprender a cerrar el 80% de tus llamadas?</Text>
           <Text style={styles.ctaText}>
-            Accede a nuestro entrenamiento comercial gratuito y descubre la metodología exacta de prospección y cierre que Hugo Herrera utiliza para escalar negocios.
+            Accede a nuestro entrenamiento comercial exclusivo y descubre la metodología exacta de prospección, calificación y cierre que Hugo Herrera utiliza para escalar negocios de servicios y High Ticket.
           </Text>
           <Link src="https://hugoherreracoach.com/recursos/capacitacion" style={styles.ctaButton}>
-            <Text style={styles.ctaButtonText}>Ver Clase Gratuita</Text>
+            <Text style={styles.ctaButtonText}>Ver Clase Gratuita Ahora</Text>
           </Link>
         </View>
 
         {/* Footer */}
         <Text style={styles.footer}>
-          Documento generado por TotalScript de Hugo Herrera Coach. Reservados todos los derechos.
+          Documento exclusivo para clientes de Hugo Herrera Coach. Prohibida su reproducción.
         </Text>
       </Page>
     </Document>
