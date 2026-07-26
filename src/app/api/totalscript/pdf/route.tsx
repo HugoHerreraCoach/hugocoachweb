@@ -330,14 +330,14 @@ const ScriptPdfDocument = ({
           })}
         </View>
 
-        {/* Call to Action for Training */}
+        {/* Call to Action for Cerrador Experto Book */}
         <View style={styles.ctaContainer} wrap={false}>
-          <Text style={styles.ctaTitle}>¿Quieres aprender a cerrar el 80% de tus llamadas?</Text>
+          <Text style={styles.ctaTitle}>¿Quieres dominar objeciones y cerrar el 80% de tus ventas?</Text>
           <Text style={styles.ctaText}>
-            Accede a nuestro entrenamiento comercial exclusivo y descubre la metodología exacta de prospección, calificación y cierre que Hugo Herrera utiliza para escalar negocios de servicios y High Ticket.
+            Consigue nuestro libro digital "Cerrador Experto" por solo $7 USD. Aprende las 139 respuestas exactas y probadas ante objeciones difíciles como "Está caro", "Déjame pensarlo" o "No tengo tiempo".
           </Text>
-          <Link src="https://hugoherreracoach.com/recursos/capacitacion" style={styles.ctaButton}>
-            <Text style={styles.ctaButtonText}>Ver Clase Gratuita Ahora</Text>
+          <Link src="https://cerradorexperto.hugoherreracoach.com/" style={styles.ctaButton}>
+            <Text style={styles.ctaButtonText}>Obtener Libro por Solo $7 USD</Text>
           </Link>
         </View>
 
