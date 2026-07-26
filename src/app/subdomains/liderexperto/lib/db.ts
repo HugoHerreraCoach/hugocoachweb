@@ -52,8 +52,22 @@ async function initializeDatabase() {
   }
 }
 
-// Inicializar la base de datos al importar el módulo
-initializeDatabase().catch(console.error);
+let isInitialized = false;
+let initPromise: Promise<void> | null = null;
+
+export async function ensureDbInitialized() {
+  if (isInitialized) return;
+  if (!initPromise) {
+    initPromise = initializeDatabase().then(() => {
+      isInitialized = true;
+    }).catch(err => {
+      console.error("❌ Lazy DB Init error:", err);
+      initPromise = null;
+      throw err;
+    });
+  }
+  return initPromise;
+}
 
 /**
  * Inserta (o actualiza si ya existe) un token en la tabla `tokens`.
@@ -70,6 +84,7 @@ export async function saveTokenToDB(args: {
   paymentMethod: string;
   expirationDate: string;
 }) {
+  await ensureDbInitialized();
   const {
     sessionId,
     creditCardTokenId,
@@ -111,6 +126,7 @@ export async function saveTokenToDB(args: {
  * @param sessionId
  */
 export async function getTokensBySession(sessionId: string) {
+  await ensureDbInitialized();
   const rows = await sql<{
     tokenid: string;
     masked_number: string;
@@ -145,6 +161,7 @@ export async function saveUserDataToDB(args: {
   identificationType?: string;
   identificationNumber?: string;
 }) {
+  await ensureDbInitialized();
   const {
     sessionId,
     firstName,
@@ -378,6 +395,7 @@ export async function saveUserDataToDB(args: {
  * Versión mejorada de getUserDataBySession con logging completo
  */
 export async function getUserDataBySession(sessionId: string) {
+  await ensureDbInitialized();
   console.log("🔍 getUserDataBySession - Buscando datos para sessionId:", sessionId);
 
   if (!sessionId || sessionId.trim() === '') {
@@ -450,6 +468,7 @@ export async function getUserDataBySession(sessionId: string) {
  * Función de utilidad para verificar la estructura de la tabla
  */
 export async function verifyTableStructure() {
+  await ensureDbInitialized();
   try {
     console.log("🔍 Verificando estructura de la tabla user_data...");
     
@@ -483,6 +502,7 @@ export async function verifyTableStructure() {
  * Función de utilidad para limpiar y verificar datos
  */
 export async function debugUserData(sessionId: string) {
+  await ensureDbInitialized();
   try {
     console.log("🔧 DEBUG: Analizando datos para sessionId:", sessionId);
 
