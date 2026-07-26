@@ -148,6 +148,9 @@ Asesor: Genial, este producto se adapta perfectamente a lo que buscas. Te ayudar
 Cliente: Sí/ ¿Cuál es el precio? / ¿Dónde están ubicados?
 Asesor (si hay dudas resolverlas y continuar con el guion): Ok, te comento que el precio de este producto es de [Precio], pero esta semana estamos en promoción, la promoción consiste en [Promoción] Entonces ¿Te parece bien si agendamos una videollamada de 20min, donde pueda explicarte todos los beneficios del producto, con imágenes? 
 Cliente: Claro
+Asesor: ¡Excelente! Te comparto por WhatsApp el enlace de mi calendario para que elijas la fecha y hora que mejor te acomode. ¿Prefieres agendar de una vez o te lo envío para que lo hagas en un momento?
+Cliente: Mándamelo por WhatsApp y agendo en unos minutos.
+Asesor: Perfecto Juan, ya te lo envié. Quedo súper atento a tu confirmación. ¡Nos vemos en la videollamada y que tengas un excelente día!
 
 Debes completar lo que está entre [] con la información:
 `;
