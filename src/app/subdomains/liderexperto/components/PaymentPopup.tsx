@@ -818,11 +818,16 @@ export default function PaymentPopup({
                         currency: currency,
                         email: formData.email,
                         name: formData.cardHolderName || `${formData.firstName} ${formData.lastName}`,
+                        phone: `${formData.phoneCountryCode || ''} ${formData.phoneNumber || ''}`.trim(),
+                        country: formData.country,
+                        address: formData.address,
+                        city: formData.city,
                         cardNumber: formData.cardNumber.replace(/\s+/g, ""),
                         expiryMonth: String(formData.expiryMonth).padStart(2, "0"),
                         expiryYear: String(formData.expiryYear),
                         cvc: formData.cvv,
                         description: isInstallmentPlan ? `Cuota 1 de ${installments} - ${productName}` : productName,
+                        productId: isInstallmentPlan ? `liderexperto-cuota1-${installments}` : 'liderexperto-completo',
                     }),
                 });
 

@@ -4,7 +4,17 @@ import { stripe } from '@/lib/stripe';
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { amount, currency = 'USD', email, name, productId, description } = body;
+    const {
+      amount,
+      currency = 'USD',
+      email,
+      name,
+      phone,
+      country,
+      address,
+      productId,
+      description,
+    } = body;
 
     if (!amount || amount <= 0) {
       return NextResponse.json({ error: 'Monto inválido.' }, { status: 400 });
@@ -24,7 +34,8 @@ export async function POST(req: NextRequest) {
         const newCustomer = await stripe.customers.create({
           email,
           name: name || undefined,
-          metadata: { source: 'hugoherreracoach' },
+          phone: phone || undefined,
+          metadata: { source: 'hugoherreracoach', country: country || '' },
         });
         customerId = newCustomer.id;
       }
@@ -44,6 +55,10 @@ export async function POST(req: NextRequest) {
         productId: productId || 'custom',
         email: email || '',
         name: name || '',
+        phone: phone || '',
+        country: country || '',
+        address: address || '',
+        description: description || '',
       },
       automatic_payment_methods: {
         enabled: true,

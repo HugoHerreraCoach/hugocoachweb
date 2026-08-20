@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { stripe } from '@/lib/stripe';
+import { sendPurchaseNotificationToAdmin } from '@/lib/sendPurchaseNotification';
 
 export async function POST(req: NextRequest) {
   try {
@@ -9,11 +10,16 @@ export async function POST(req: NextRequest) {
       currency = 'USD',
       email,
       name,
+      phone,
+      country,
+      address,
+      city,
       cardNumber,
       expiryMonth,
       expiryYear,
       cvc,
       description,
+      productId,
     } = body;
 
     if (!amount || amount <= 0) {
@@ -30,6 +36,8 @@ export async function POST(req: NextRequest) {
         const newCustomer = await stripe.customers.create({
           email,
           name: name || undefined,
+          phone: phone || undefined,
+          metadata: { source: 'hugoherreracoach', country: country || '' },
         });
         customerId = newCustomer.id;
       }
@@ -47,6 +55,7 @@ export async function POST(req: NextRequest) {
       billing_details: {
         name: name || undefined,
         email: email || undefined,
+        phone: phone || undefined,
       },
     });
 
@@ -56,6 +65,7 @@ export async function POST(req: NextRequest) {
     }
 
     const unitAmount = Math.round(amount * 100);
+    const productTitle = description || 'Compra de Programa Líder Experto';
 
     // 4. Crear y confirmar PaymentIntent
     const paymentIntent = await stripe.paymentIntents.create({
@@ -66,14 +76,42 @@ export async function POST(req: NextRequest) {
       off_session: true,
       confirm: true,
       setup_future_usage: 'off_session',
-      description: description || 'Compra de Programa Líder Experto',
+      description: productTitle,
       metadata: {
         email: email || '',
         name: name || '',
+        phone: phone || '',
+        country: country || '',
+        address: address || '',
+        city: city || '',
+        productId: productId || 'liderexperto',
       },
     });
 
     if (paymentIntent.status === 'succeeded') {
+      // Enviar notificación a Admin por Brevo
+      try {
+        await sendPurchaseNotificationToAdmin({
+          customerName: name || 'Cliente',
+          customerEmail: email || 'Sin email',
+          customerPhone: phone || undefined,
+          customerCountry: country || undefined,
+          customerAddress: address || undefined,
+          customerCity: city || undefined,
+          productName: productTitle,
+          amount: amount,
+          currency: currency.toUpperCase(),
+          transactionId: paymentIntent.id,
+          paymentMethod: 'Stripe (Tarjeta)',
+          additionalDetails: {
+            'ID Producto': productId || 'liderexperto',
+            'Estado': 'Completado',
+          },
+        });
+      } catch (notifyErr) {
+        console.error('[Stripe Charge] Error enviando email de notificación Brevo:', notifyErr);
+      }
+
       return NextResponse.json({
         success: true,
         transactionId: paymentIntent.id,

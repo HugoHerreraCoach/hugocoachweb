@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { stripe } from '@/lib/stripe';
 import * as Brevo from '@getbrevo/brevo';
+import { sendPurchaseNotificationToAdmin } from '@/lib/sendPurchaseNotification';
 
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
@@ -44,14 +45,42 @@ export async function POST(req: NextRequest) {
   switch (event.type) {
     case 'payment_intent.succeeded': {
       const paymentIntent = event.data.object;
-      const { email, name, productId } = paymentIntent.metadata || {};
-      const customerEmail = email || paymentIntent.receipt_email;
+      const metadata = paymentIntent.metadata || {};
+      const { email, name, productId, phone, country, address, description, isUpsell } = metadata;
+      const customerEmail = email || paymentIntent.receipt_email || paymentIntent.customer_email || 'Sin email';
       const customerName = name || 'Cliente';
+      const rawAmount = (paymentIntent.amount_received || paymentIntent.amount || 0) / 100;
+      const currency = (paymentIntent.currency || 'USD').toUpperCase();
+      const productName = description || (productId ? `Producto: ${productId}` : 'Compra en Hugo Herrera Coach');
 
-      console.log(`[Stripe Webhook] Pago exitoso para ${customerEmail} (${productId || 'Producto'})`);
+      console.log(`[Stripe Webhook] Pago exitoso para ${customerEmail} (${productName}) - Monto: ${currency} ${rawAmount}`);
 
-      if (customerEmail) {
-        if (productId === 'libro-digital') {
+      // 1. Enviar notificación detallada por correo al administrador vía Brevo
+      try {
+        await sendPurchaseNotificationToAdmin({
+          customerName,
+          customerEmail,
+          customerPhone: phone || undefined,
+          customerCountry: country || undefined,
+          customerAddress: address || undefined,
+          productName: isUpsell === 'true' ? `[1-CLICK UPSELL] ${productName}` : productName,
+          amount: rawAmount,
+          currency,
+          transactionId: paymentIntent.id,
+          paymentMethod: 'Stripe (Tarjeta)',
+          additionalDetails: {
+            'ID Producto': productId || 'N/A',
+            'Tipo de Pago': isUpsell === 'true' ? '1-Click Upsell' : 'Checkout Regular',
+            'Estado': paymentIntent.status,
+          },
+        });
+      } catch (notifyErr) {
+        console.error('[Stripe Webhook] Error al enviar email de notificación:', notifyErr);
+      }
+
+      // 2. Añadir a lista de Brevo si corresponde
+      if (customerEmail && customerEmail !== 'Sin email') {
+        if (productId === 'libro-digital' || productId?.includes('libro-digital')) {
           await addContactToBrevo(customerEmail, customerName, 13);
         }
       }
