@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { stripe } from '@/lib/stripe';
-import { sendPurchaseNotificationToAdmin } from '@/lib/sendPurchaseNotification';
 
 export async function POST(req: NextRequest) {
   try {
@@ -31,15 +30,13 @@ export async function POST(req: NextRequest) {
       console.warn('No se pudo obtener datos del cliente para upsell:', cErr);
     }
 
-    // Buscar método de pago registrado del cliente
-    const paymentMethods = await stripe.paymentMethods.list({
-      customer: customerId,
-      type: 'card',
-    });
+    // Sin filtro de tipo: en Perú mucha gente paga con Link, y buscar solo
+    // 'card' dejaba fuera a esos clientes con un "no hay tarjeta guardada".
+    const paymentMethods = await stripe.paymentMethods.list({ customer: customerId });
 
     if (!paymentMethods.data || paymentMethods.data.length === 0) {
       return NextResponse.json(
-        { error: 'No se encontró una tarjeta guardada para este cliente.' },
+        { error: 'No se encontró un método de pago guardado para este cliente.' },
         { status: 400 }
       );
     }
@@ -60,31 +57,14 @@ export async function POST(req: NextRequest) {
       metadata: {
         productId,
         isUpsell: 'true',
-        customerEmail,
-        customerName,
+        email: customerEmail,
+        name: customerName,
       },
     });
 
     if (paymentIntent.status === 'succeeded') {
-      try {
-        await sendPurchaseNotificationToAdmin({
-          customerName,
-          customerEmail,
-          productName: `[1-CLICK UPSELL] ${productTitle}`,
-          amount,
-          currency: currency.toUpperCase(),
-          transactionId: paymentIntent.id,
-          paymentMethod: 'Stripe (1-Click Guardado)',
-          additionalDetails: {
-            'ID Producto': productId,
-            'Tipo de Venta': '1-Click Upsell Inmediato',
-            'Customer ID': customerId,
-          },
-        });
-      } catch (notifyErr) {
-        console.error('[Upsell Brevo Notification] Error:', notifyErr);
-      }
-
+      // La entrega al comprador y el aviso al admin los dispara
+      // /api/webhooks/stripe con el evento payment_intent.succeeded.
       return NextResponse.json({
         success: true,
         paymentIntentId: paymentIntent.id,

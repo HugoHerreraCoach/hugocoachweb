@@ -11,7 +11,7 @@ import {
 } from "@stripe/react-stripe-js";
 import { Lock, ShieldCheck, CreditCard, Sparkles, Check } from "lucide-react";
 import { UpsellOffer } from "./UpsellOffer";
-import type { ProductID } from "@cerradorexperto/lib/pricing";
+import { esPlanEnCuotas, getPlanEnCuotas, type ProductID } from "@cerradorexperto/lib/pricing";
 
 
 const stripePromise = loadStripe(
@@ -54,6 +54,9 @@ function CheckoutForm({
   const elements = useElements();
   const [isProcessing, setIsProcessing] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  const plan = getPlanEnCuotas(productId);
+  const simbolo = currency === "USD" ? "$" : "S/";
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -121,9 +124,25 @@ function CheckoutForm({
         <span>
           {isProcessing
             ? "Procesando pago seguro..."
-            : `PAGAR AHORA (${currency === "USD" ? "$" : "S/"}${totalAmount.toFixed(2)})`}
+            : plan
+              ? `PAGAR PRIMERA CUOTA (${simbolo}${totalAmount.toFixed(2)})`
+              : `PAGAR AHORA (${simbolo}${totalAmount.toFixed(2)})`}
         </span>
       </button>
+
+      {plan && (
+        <p className="text-xs text-slate-600 bg-slate-50 border border-slate-200 rounded-md p-3 leading-relaxed">
+          Al pagar autorizas <strong>{plan.cuotas} cobros mensuales</strong> de{" "}
+          <strong>
+            {simbolo}
+            {totalAmount.toFixed(2)}
+          </strong>{" "}
+          ({simbolo}
+          {(totalAmount * plan.cuotas).toFixed(2)} en total). El primero se cobra hoy y los{" "}
+          {plan.cuotas - 1} restantes cada 30 días. El cobro se detiene solo al completar la
+          última cuota.
+        </p>
+      )}
 
       <div className="flex justify-center items-center gap-2 text-xs text-slate-500 mt-2">
         <ShieldCheck size={14} className="text-emerald-600" />
@@ -164,7 +183,10 @@ export function StripePaymentForm({
   const effectiveIncludeBump = shouldShowBump ? includeBump : false;
   const totalAmount = effectiveIncludeBump ? basePrice + bumpPrice : basePrice;
 
-  // Crear PaymentIntent al cargar o al cambiar de datos/país/bump
+  const enCuotas = esPlanEnCuotas(productId);
+  const plan = getPlanEnCuotas(productId);
+
+  // Crear PaymentIntent (o suscripción) al cargar o al cambiar de datos/país/bump
   useEffect(() => {
     if (!email || !name || name.trim().length < 3 || !email.includes("@")) {
       return;
@@ -173,21 +195,29 @@ export function StripePaymentForm({
     const timer = setTimeout(async () => {
       setIsLoadingSecret(true);
       try {
-        const res = await fetch("/api/stripe/create-payment-intent", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            amount: totalAmount,
-            currency,
-            email,
-            name,
-            country: selectedCountry,
-            productId: effectiveIncludeBump ? `${productId}+libro-fisico` : productId,
-            description: effectiveIncludeBump
-              ? `Compra de ${productId} + Order Bump Libro Físico (Perú)`
-              : `Compra de ${productId} (${currency})`,
-          }),
-        });
+        // Los planes en cuotas crean una suscripción, no un cobro suelto:
+        // así Stripe cobra las siguientes cuotas solo.
+        const res = enCuotas
+          ? await fetch("/api/stripe/subscription", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ productId, currency, email, name, country: selectedCountry }),
+            })
+          : await fetch("/api/stripe/create-payment-intent", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                amount: totalAmount,
+                currency,
+                email,
+                name,
+                country: selectedCountry,
+                productId: effectiveIncludeBump ? `${productId}+libro-fisico` : productId,
+                description: effectiveIncludeBump
+                  ? `Compra de ${productId} + Order Bump Libro Físico (Perú)`
+                  : `Compra de ${productId} (${currency})`,
+              }),
+            });
 
         const data = await res.json();
         if (data.clientSecret) {
@@ -204,7 +234,7 @@ export function StripePaymentForm({
     }, 400);
 
     return () => clearTimeout(timer);
-  }, [name, email, selectedCountry, totalAmount, currency, productId, effectiveIncludeBump]);
+  }, [name, email, selectedCountry, totalAmount, currency, productId, effectiveIncludeBump, enCuotas]);
 
   return (
     <div className="w-full max-w-md mx-auto bg-white p-4 sm:p-6 rounded-xl shadow-sm border border-slate-200">

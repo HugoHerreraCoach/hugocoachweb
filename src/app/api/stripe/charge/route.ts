@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { stripe } from '@/lib/stripe';
-import { sendPurchaseNotificationToAdmin } from '@/lib/sendPurchaseNotification';
 
 export async function POST(req: NextRequest) {
   try {
@@ -89,29 +88,8 @@ export async function POST(req: NextRequest) {
     });
 
     if (paymentIntent.status === 'succeeded') {
-      // Enviar notificación a Admin por Brevo
-      try {
-        await sendPurchaseNotificationToAdmin({
-          customerName: name || 'Cliente',
-          customerEmail: email || 'Sin email',
-          customerPhone: phone || undefined,
-          customerCountry: country || undefined,
-          customerAddress: address || undefined,
-          customerCity: city || undefined,
-          productName: productTitle,
-          amount: amount,
-          currency: currency.toUpperCase(),
-          transactionId: paymentIntent.id,
-          paymentMethod: 'Stripe (Tarjeta)',
-          additionalDetails: {
-            'ID Producto': productId || 'liderexperto',
-            'Estado': 'Completado',
-          },
-        });
-      } catch (notifyErr) {
-        console.error('[Stripe Charge] Error enviando email de notificación Brevo:', notifyErr);
-      }
-
+      // La entrega al comprador y el aviso al admin los dispara
+      // /api/webhooks/stripe con el evento payment_intent.succeeded.
       return NextResponse.json({
         success: true,
         transactionId: paymentIntent.id,

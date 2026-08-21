@@ -57,3 +57,26 @@ export function getVerifiedPrice(
   const product = getProductDetails(productId);
   return product?.prices[currency];
 }
+
+/**
+ * Productos que se cobran en cuotas mediante una suscripción de Stripe.
+ * Stripe cobra cada cuota solo, reintenta las que fallan y se detiene
+ * al llegar al número de cuotas indicado.
+ */
+export const PLANES_EN_CUOTAS: Partial<
+  Record<ProductID, { cuotas: number; intervalo: "month"; programa: ProductID }>
+> = {
+  "comunidad-lobos-cuota-inicial": {
+    cuotas: 5,
+    intervalo: "month",
+    programa: "comunidad-lobos",
+  },
+};
+
+export function esPlanEnCuotas(productId: string): boolean {
+  return productId in PLANES_EN_CUOTAS;
+}
+
+export function getPlanEnCuotas(productId: string) {
+  return PLANES_EN_CUOTAS[productId as ProductID];
+}

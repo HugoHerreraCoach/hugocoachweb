@@ -7,7 +7,7 @@ import { LoaderCircle, AlertTriangle, CheckCircle, AlertCircle } from 'lucide-re
 import { Modal } from '@cerradorexperto/components/ui/Modal';
 import { PaymentTabs } from '@cerradorexperto/components/ui/PaymentTabs';
 import Link from 'next/link';
-import type { ProductID } from '@cerradorexperto/lib/pricing';
+import { getPlanEnCuotas, type ProductID } from '@cerradorexperto/lib/pricing';
 
 
 type OfferProps = {
@@ -24,6 +24,9 @@ type OfferProps = {
 };
 
 export function OfferComponent({ details, declineUrl, productId, onSuccessRedirectTo }: OfferProps) {
+    const plan = getPlanEnCuotas(productId);
+    const simbolo = details.currency === 'USD' ? '$' : 'S/';
+
     const [status, setStatus] = useState<'idle' | 'loading'>('idle');
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [statusMessage, setStatusMessage] = useState<{
@@ -45,21 +48,28 @@ export function OfferComponent({ details, declineUrl, productId, onSuccessRedire
         }
 
         try {
-            const res = await fetch('/api/stripe/one-click-upsell', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    customerId,
-                    productId,
-                    amount: details.amount,
-                    currency: details.currency,
-                    description: details.description,
-                }),
-            });
+            const res = plan
+                ? await fetch('/api/stripe/subscription', {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({ customerId, productId, currency: details.currency }),
+                  })
+                : await fetch('/api/stripe/one-click-upsell', {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({
+                          customerId,
+                          productId,
+                          amount: details.amount,
+                          currency: details.currency,
+                          description: details.description,
+                      }),
+                  });
 
             const data = await res.json();
+            const cobroOk = plan ? data.cobradoDeInmediato : data.success;
 
-            if (res.ok && data.success) {
+            if (res.ok && cobroOk) {
                 setStatusMessage({
                     type: 'success',
                     text: '¡Oferta añadida con éxito! Redirigiendo...',
@@ -117,6 +127,14 @@ export function OfferComponent({ details, declineUrl, productId, onSuccessRedire
                 {isLoading && <LoaderCircle className="animate-spin h-8 w-8" />}
                 <span>{mainButtonText}</span>
             </button>
+
+            {plan && (
+                <p className="mt-4 w-full text-center text-sm text-slate-400 leading-relaxed">
+                    Al continuar autorizas <strong className="text-slate-300">{plan.cuotas} cobros mensuales</strong> de{' '}
+                    <strong className="text-slate-300">{simbolo}{details.amount.toFixed(2)}</strong> ({simbolo}
+                    {(details.amount * plan.cuotas).toFixed(2)} en total). El primero se cobra hoy.
+                </p>
+            )}
 
             <Link
                 href={declineUrl}
