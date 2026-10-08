@@ -37,13 +37,10 @@ export default function LobosDeVentasPage() {
             <span className="blue-text">COMO UN PROFESIONAL</span>
           </h2>
           <p className="main-integralProgram__description">
-            El sistema probado que ya utilizan los mejores equipos de ventas en
-            Latinoamérica para convertir vendedores promedio en cerradores de
-            alto rendimiento... en solo 30 días.
+            El sistema probado que ya usan equipos de ventas en Perú y la región para convertir vendedores promedio en cerradores más seguros en 30 días.
           </p>
           <p className="main-integralProgram__description">
-            Más de 12 módulos prácticos donde Hugo Herrera se convierte en tu
-            coach personal — disponible para ti las 24 horas, los 7 días de la semana.
+            Más de 12 módulos prácticos donde Hugo Herrera es tu coach, con las lecciones disponibles las 24 horas, los 7 días de la semana.
           </p>
         </section>
 

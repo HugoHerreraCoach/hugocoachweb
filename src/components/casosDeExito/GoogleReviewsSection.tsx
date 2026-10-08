@@ -50,10 +50,10 @@ const GoogleReviewsSection: React.FC = () => {
         <section className="bg-slate-50 py-20 lg:py-28">
             <div className="container mx-auto max-w-8xl px-4 text-center">
                 <h2 className="text-4xl font-bold tracking-tight text-slate-900 lg:text-5xl text-balance">
-                    No Creas en mi Palabra. Cree en los Datos.
+                    Más de 180 personas me calificaron en Google.
                 </h2>
                 <p className="mt-6 text-xl lg:text-2xl text-slate-600 mx-auto text-balance">
-                    Un caso de éxito puede ser suerte. Dos pueden ser coincidencia. Más de 180 es la prueba irrefutable de un sistema que funciona de manera consistente.
+                    Un caso puede ser suerte. Más de 180 ya no. Las reseñas son públicas y las puedes revisar en Google.
                 </p>
 
                 <div className="mt-12 lg:mt-16">

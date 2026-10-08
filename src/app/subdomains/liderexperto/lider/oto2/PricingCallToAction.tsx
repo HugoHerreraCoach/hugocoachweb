@@ -5,6 +5,7 @@ import dynamic from 'next/dynamic';
 import CVVConfirmationPopup from '@liderexperto/components/CVVConfirmationPopup';
 import PaymentButton from '@liderexperto/components/PaymentButton';
 import { usePaymentFlow } from '@liderexperto/hooks/usePaymentFlow';
+import { PRODUCTOS_LE } from "@liderexperto/lib/productos";
 
 // Importar dinámicamente el componente de payment retry popup.
 const PaymentRetryPopup = dynamic(() => import('@liderexperto/components/PaymentPopup'), {
@@ -129,6 +130,7 @@ export default function PricingCallToAction() {
           onClose={handlePaymentClose}
           onPaymentSuccess={handlePaymentSuccess}
           productName="Programa Pricing de poder (Oferta especial)"
+          productId={PRODUCTOS_LE.PRICING}
           productPrice={750}
           userEmail={userData?.email}
           prefillData={userData}

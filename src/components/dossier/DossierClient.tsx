@@ -20,6 +20,13 @@ import {
   Rocket,
 } from 'lucide-react';
 
+import {
+  PRECIOS,
+  VALOR_PROGRAMA_ACELERACION,
+  VALOR_TOTAL_PROGRAMA_ACELERACION,
+  formatUsd,
+} from '@/lib/precios-servicios';
+
 const CALENDLY_URL = 'https://calendly.com/hugoherrera-coach/agendar-videollamada';
 
 interface Props {
@@ -27,27 +34,17 @@ interface Props {
 }
 
 /* ─── Value Stack ─── */
-interface ValueItem {
-  label: string;
-  value: string;
-}
-
-const valueStack: ValueItem[] = [
-  { label: 'Auditoría de proceso comercial y propuesta de valor', value: '$1,500' },
-  { label: 'Bootcamp In-House de 8 horas con tu equipo', value: '$3,000' },
-  { label: '4 sesiones de asesoría directiva (2h cada una)', value: '$2,000' },
-  { label: '3 meses de calibración mensual con el equipo', value: '$4,500' },
-  { label: 'Acceso corporativo a Lobos de Ventas (+350 videos)', value: '$1,500' },
-  { label: 'Programa Líder Experto (libro + curso en video)', value: '$500' },
-  { label: 'Bono: Diseño de asistente IA para WhatsApp', value: '$2,000' },
-];
+const valueStack = VALOR_PROGRAMA_ACELERACION.map((item) => ({
+  label: item.label,
+  value: formatUsd(item.valor),
+}));
 
 /* ─── Credentials ─── */
 const credentials = [
   { icon: Users, value: '25', label: 'Personas en equipo' },
   { icon: BookOpen, value: '2', label: 'Libros publicados' },
   { icon: Tv, value: '+350', label: 'Lecciones en video' },
-  { icon: Building2, value: '+7,000', label: 'Asistentes a eventos' },
+  { icon: Building2, value: '+10,000', label: 'Asistentes a eventos' },
   { icon: Code, value: '5', label: 'Software creados' },
 ];
 
@@ -256,8 +253,8 @@ export function DossierClient({ empresa }: Props) {
                 {
                   icon: Users,
                   phase: 'Fase 02',
-                  title: 'Inmersión In-House (8 horas)',
-                  desc: 'Bootcamp intensivo con tu equipo de ventas. Estandarizamos guiones, manejo de objeciones y técnicas de cierre con el sistema Lobos de Ventas.',
+                  title: 'Inmersión In-House (5 días)',
+                  desc: 'Cinco días en tu empresa. Días 1 y 2 con tus líderes de ventas; días 3 y 4 con tus vendedores, con práctica y llamadas reales en vivo; día 5 medición y plan de 90 días. Estandarizamos guiones, manejo de objeciones y técnicas de cierre con el sistema Lobos de Ventas.',
                 },
                 {
                   icon: ShieldCheck,
@@ -326,13 +323,13 @@ export function DossierClient({ empresa }: Props) {
 
             {/* Price summary */}
             <div className="mt-6 rounded-xl border border-[#0a4afc]/30 bg-gradient-to-br from-slate-900 to-slate-950 p-6 lg:p-8 text-center">
-              <p className="text-slate-400 dossier-muted">Valor total si contrataras cada servicio por separado</p>
-              <p className="text-3xl lg:text-4xl font-bold text-slate-500 line-through mt-2">$15,000 USD</p>
+              <p className="text-slate-400 dossier-muted">Valor de referencia de cada parte (precio de lista)</p>
+              <p className="text-3xl lg:text-4xl font-bold text-slate-500 line-through mt-2">{formatUsd(VALOR_TOTAL_PROGRAMA_ACELERACION)}</p>
               <p className="mt-4 text-sm font-bold tracking-widest uppercase text-[#4d8bff] dossier-accent">
                 Tu inversión total
               </p>
               <p className="text-5xl lg:text-6xl font-black bg-gradient-to-r from-[#4d8bff] to-[#0a4afc] bg-clip-text text-transparent dossier-accent mt-1">
-                $5,000 USD
+                {formatUsd(PRECIOS.programaAceleracion)}
               </p>
               <p className="mt-3 text-sm text-slate-500 dossier-muted">
                 Incluye viáticos, hospedaje y traslados. Sin costos ocultos.
@@ -355,18 +352,15 @@ export function DossierClient({ empresa }: Props) {
             <div className="text-lg lg:text-xl leading-[1.6] text-slate-300 dossier-muted space-y-3 max-w-2xl mx-auto">
               <p>
                 Te garantizo un aumento mínimo del{' '}
-                <span className="font-bold text-white">20% en tu facturación en 90 días</span>.
+                <span className="font-bold text-white">10% en la facturación de tu equipo comercial, medido en los 90 días después de la inmersión</span>.
               </p>
               <p>
-                Si no lo logramos, <span className="font-bold text-white">sigo trabajando gratis</span>{' '}
-                con tu equipo hasta lograrlo.
-                Si después de 6 meses no hay resultados, te devuelvo el{' '}
-                <span className="font-bold text-white">100% de tu inversión + un 20% extra</span>.
+                Si no lo logramos, <span className="font-bold text-white">te devuelvo el 100% de lo que pagaste por el programa</span>.
               </p>
             </div>
 
             <p className="mt-6 text-sm text-slate-500 dossier-muted italic">
-              *Firmado por contrato. Aplica tras sesión de validación.
+              *Firmado por contrato. Se mide sobre la facturación acordada el día 0. Aplica si tu equipo asiste a las jornadas y llena el reporte semanal.
             </p>
           </div>
         </section>
@@ -402,7 +396,7 @@ export function DossierClient({ empresa }: Props) {
                 <p className="text-base lg:text-lg leading-[1.6] text-slate-300 dossier-muted">
                   A los 27 años dirijo una empresa de <span className="font-semibold text-white">más de 25 personas</span>, desarrollo{' '}
                   <span className="font-semibold text-white">mis propios CRMs y ERPs</span>,
-                  y soy creador de <span className="font-semibold text-white">los eventos educativos de ventas y negocios más grandes de Perú</span>.
+                  y organizo <span className="font-semibold text-white">eventos de ventas y negocios con miles de asistentes</span>.
                   Enseño lo que aplico todos los días.
                 </p>
 

@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { CircleCheck } from 'lucide-react';
+import { LLAMADA_GRATIS_URL } from '@/lib/servicios';
 
 export const CtaSection = () => {
     return (
@@ -22,10 +23,10 @@ export const CtaSection = () => {
             {/* Contenido */}
             <div className="relative z-10 mx-auto max-w-7xl px-6 text-center">
                 <h2 className="text-4xl font-bold tracking-tight lg:text-5xl text-balance">
-                    Tu Plan de Ejecución Comienza Aquí.
+                    Empieza con una llamada gratis de 20 minutos.
                 </h2>
                 <p className="mt-6 text-xl lg:text-2xl leading-[1.4] text-slate-200 text-balance">
-                    La &quot;Sesión Estratégica&quot; es la Fase 1. No es una llamada de ventas, es una sesión de trabajo. Te irás con:
+                    Un asesor de mi equipo habla contigo sobre tu equipo y lo que necesita. Te vas con:
                 </p>
 
                 {/* Entregables de la llamada */}
@@ -33,33 +34,33 @@ export const CtaSection = () => {
                     <li className="flex items-start gap-x-4">
                         <CircleCheck className="h-6 w-6 text-[#0a4afc] mt-1 flex-shrink-0" />
                         <span className="text-xl lg:text-2xl leading-[1.4] text-slate-200">
-                            <span className="font-semibold text-white">El Diagnóstico:</span> La causa raíz de tu problema de ventas.
+                            <span className="font-semibold text-white">Qué falla:</span> la causa real de tus ventas flojas.
                         </span>
                     </li>
                     <li className="flex items-start gap-x-4">
                         <CircleCheck className="h-6 w-6 text-[#0a4afc] mt-1 flex-shrink-0" />
                         <span className="text-xl lg:text-2xl leading-[1.4] text-slate-200">
-                            <span className="font-semibold text-white">El Plan:</span> La hoja de ruta para tu equipo.
+                            <span className="font-semibold text-white">Qué hacer:</span> los pasos para tu equipo.
                         </span>
                     </li>
                     <li className="flex items-start gap-x-4">
                         <CircleCheck className="h-6 w-6 text-[#0a4afc] mt-1 flex-shrink-0" />
                         <span className="text-xl lg:text-2xl leading-[1.4] text-slate-200">
-                            <span className="font-semibold text-white">El Retorno:</span> La proyección del ROI del sistema.
+                            <span className="font-semibold text-white">Cuánto cuesta:</span> el precio y qué puedes esperar.
                         </span>
                     </li>
                 </ul>
 
                 <div className="mt-10">
                     <Link
-                        href="https://calendly.com/hugoherrerateam/sesion-estrategica"
+                        href={LLAMADA_GRATIS_URL}
                         target="_blank"
                         className="rounded-md bg-gradient-to-b from-[#0a4afc] to-[#153eb5] px-4 py-3 text-xl lg:text-2xl font-semibold leading-[1.2] text-white shadow-sm transition-colors duration-500 ease-in-out hover:from-[#153eb5] hover:to-[#0a4afc]"
                     >
-                        Agendar Sesión
+                        Agendar llamada gratis
                     </Link>
                     <p className="mt-4 text-lg lg:text-xl lg:mt-6 text-slate-400">
-                        Cero compromiso. 100% estrategia.
+                        Gratis y sin compromiso.
                     </p>
                 </div>
             </div>

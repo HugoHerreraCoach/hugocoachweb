@@ -2,227 +2,271 @@
 
 "use client";
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { Menu, X, ChevronDown } from 'lucide-react';
+import { usePathname } from 'next/navigation';
+import { ArrowRight, ArrowUpRight, ChevronDown, Menu as MenuIcon } from 'lucide-react';
+import { LLAMADA_GRATIS_URL } from '@/lib/servicios';
+import { navPrincipal, type ColumnaMenu, type EnlaceNav, type ItemNav } from '@/lib/navegacion';
+import MenuMovil from '@/components/layout/MenuMovil';
 
-// --- DEFINICIONES DE TIPOS ---
+/** Tiempo de gracia al sacar el mouse, para poder cruzar en diagonal hacia el panel. */
+const RETRASO_CIERRE_MS = 150;
 
-interface SubMenuItemType {
-  label: string;
-  href: string;
-  description: string;
-  isExternal?: boolean;
+// --- Una fila de enlace: nombre y, si hay, una línea de apoyo. El destacado lleva barra y fondo azul. ---
+
+interface FilaEnlaceProps {
+  enlace: EnlaceNav;
+  onNavegar: () => void;
 }
 
-interface MegaMenuSection {
-  sectionTitle: string;
-  items: SubMenuItemType[];
-}
-
-interface NavItem {
-  label:string;
-  href?: string;
-  isMegaMenu?: boolean;
-  content?: MegaMenuSection[];
-  subMenu?: SubMenuItemType[];
-}
-
-// --- CONFIGURACIÓN DE LA NAVEGACIÓN (ACTUALIZADA) ---
-
-const navConfig: NavItem[] = [
-  {
-    label: 'Soluciones',
-    isMegaMenu: true,
-    content: [
-      {
-        sectionTitle: 'PARA VENDEDORES',
-        items: [
-          { label: 'Libro: Cerrador Experto', href: 'https://cerradorexperto.hugoherreracoach.com/', isExternal: true, description: '139 maneras de resolver objeciones y cerrar ventas con éxito.' },
-          { label: 'Programa Lobos de Ventas', href: 'https://lobosdeventas.hugoherreracoach.com/', isExternal: true, description: 'Formación de alto rendimiento en 30 días.' },
-          { label: 'Coaching 1:1', href: '/servicios/coaching', description: 'Sesiones personales para potenciar tus ventas' },
-        ]
-      },
-      {
-        sectionTitle: 'PARA LÍDERES Y EMPRESAS',
-        items: [
-          { label: 'Libro: Líder Experto', href: 'https://liderexperto.hugoherreracoach.com/', isExternal: true, description: 'Construye equipos de élite que venden más y mejor.' },
-          { label: 'Aceleración Comercial', href: '/servicios/aceleracion-comercial', description: 'Instalamos un sistema de ventas integral en tu empresa. +20% facturación en 90 días.' },
-          { label: 'Software y Embudos de venta', href: '/servicios/desarrollo-software', description: 'Infraestructura digital para crecer.' },
-          { label: 'Conferencias', href: '/servicios/conferencias', description: 'Contrata un arquitecto, no un motivador.' },
-        ]
-      }
-    ]
-  },
-  {
-    label: 'Recursos',
-    subMenu: [
-      { label: 'Blog de Ventas', href: '/blog', description: 'Estrategias y guías para dominar las ventas.' },
-      { label: 'Recursos Gratuitos', href: '/recursos', description: 'Herramientas y plantillas para aplicar hoy.' },
-      { label: 'App con IA: TotalScript', href: 'https://totalscript.hugoherreracoach.com/', isExternal: true, description: 'Genera guiones de venta en segundos.' },
-    ]
-  },
-  {
-    label: 'Sobre Mí',
-    subMenu: [
-        { label: 'Mi Historia', href: '/mi-historia', description: 'Conoce la trayectoria y filosofía de Hugo.' },
-        { label: 'Casos de Éxito', href: '/casos-de-exito', description: 'Resultados reales de nuestros clientes.' },
-    ]
-  },
-];
-
-
-export default function OptimizedMenu() {
-  const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
-  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
-
-  const toggleDropdown = (label: string): void => {
-    setOpenDropdown(openDropdown === label ? null : label);
-  };
-
-  const handleLinkClick = (): void => {
-    setIsMenuOpen(false);
-    setOpenDropdown(null);
-  };
-
-  // Componente reutilizable para los enlaces del submenú
-  const SubMenuItem = ({ item }: { item: SubMenuItemType }) => (
+function FilaEnlace({ enlace, onNavegar }: FilaEnlaceProps) {
+  return (
     <Link
-      href={item.href}
-      target={item.isExternal ? '_blank' : '_self'}
-      rel={item.isExternal ? 'noopener noreferrer' : undefined}
-      className="group/subitem block p-3 transition-colors rounded-lg hover:bg-gray-800"
-      onClick={handleLinkClick}
+      href={enlace.href}
+      target={enlace.externo ? '_blank' : undefined}
+      rel={enlace.externo ? 'noopener noreferrer' : undefined}
+      onClick={onNavegar}
+      className={`group/fila block rounded-lg border-l-2 transition-colors focus-visible:bg-white/5 ${
+        enlace.destacado
+          ? 'border-[#0a4afc] bg-[#0a4afc]/10 hover:bg-[#0a4afc]/15'
+          : 'border-transparent hover:bg-white/5'
+      } px-3 py-2.5`}
     >
-      <p className="font-semibold text-white">{item.label}</p>
-      <p className="text-sm text-gray-400 group-hover/subitem:text-gray-300">{item.description}</p>
+      <span className="flex items-center gap-1.5 font-semibold text-white">
+        {enlace.etiqueta}
+        {enlace.externo && <ArrowUpRight size={14} className="text-slate-500 group-hover/fila:text-[#4d8bff]" aria-hidden="true" />}
+      </span>
+      {enlace.descripcion && <span className="mt-0.5 block text-sm leading-snug text-slate-400">{enlace.descripcion}</span>}
     </Link>
   );
+}
+
+// --- Una columna de desplegable de escritorio: título, filas y un enlace discreto al final ---
+
+interface PanelColumnaProps {
+  columna: ColumnaMenu;
+  onNavegar: () => void;
+  /** Primera columna de un panel de dos: lleva el enlace de cierre en azul. */
+  principal?: boolean;
+  /** Segunda columna: fondo apenas más claro y línea divisoria a la izquierda. */
+  secundaria?: boolean;
+}
+
+function PanelColumna({ columna, onNavegar, principal = true, secundaria = false }: PanelColumnaProps) {
+  return (
+    <div className={`p-2 ${secundaria ? 'border-l border-slate-800 bg-slate-950' : ''}`}>
+      {columna.titulo && (
+        <p className="px-3 pb-1 pt-2 text-xs font-semibold uppercase tracking-widest text-slate-500">{columna.titulo}</p>
+      )}
+      <ul className="space-y-0.5">
+        {columna.enlaces.map((enlace) => (
+          <li key={enlace.etiqueta}>
+            <FilaEnlace enlace={enlace} onNavegar={onNavegar} />
+          </li>
+        ))}
+      </ul>
+      {columna.pie && (
+        <div className="mt-2 border-t border-slate-800 pt-2">
+          <Link
+            href={columna.pie.href}
+            onClick={onNavegar}
+            className={`group/pie flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-semibold transition-colors hover:bg-white/5 ${
+              principal ? 'text-[#4d8bff] hover:text-white' : 'text-slate-400 hover:text-white'
+            }`}
+          >
+            {columna.pie.etiqueta}
+            <ArrowRight size={14} className="transition-transform group-hover/pie:translate-x-0.5" aria-hidden="true" />
+          </Link>
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default function Menu() {
+  const pathname = usePathname();
+  const [abierto, setAbierto] = useState<string | null>(null);
+  const [movilAbierto, setMovilAbierto] = useState<boolean>(false);
+  const botonMenuRef = useRef<HTMLButtonElement>(null);
+  const headerRef = useRef<HTMLElement>(null);
+  const ultimoPuntero = useRef<string>('mouse');
+  const temporizador = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const limpiarTemporizador = (): void => {
+    if (temporizador.current) {
+      clearTimeout(temporizador.current);
+      temporizador.current = null;
+    }
+  };
+
+  const abrir = (etiqueta: string): void => {
+    limpiarTemporizador();
+    setAbierto(etiqueta);
+  };
+
+  const cerrarConRetraso = (): void => {
+    limpiarTemporizador();
+    temporizador.current = setTimeout(() => setAbierto(null), RETRASO_CIERRE_MS);
+  };
+
+  const cerrarTodo = (): void => {
+    limpiarTemporizador();
+    setAbierto(null);
+    setMovilAbierto(false);
+  };
+
+  // Escape cierra; un clic fuera del encabezado cierra los paneles de escritorio.
+  useEffect(() => {
+    const alTeclear = (e: KeyboardEvent): void => {
+      if (e.key === 'Escape') {
+        setAbierto(null);
+        setMovilAbierto(false);
+      }
+    };
+    const alHacerClic = (e: MouseEvent): void => {
+      if (headerRef.current && !headerRef.current.contains(e.target as Node)) setAbierto(null);
+    };
+    document.addEventListener('keydown', alTeclear);
+    document.addEventListener('mousedown', alHacerClic);
+    return () => {
+      document.removeEventListener('keydown', alTeclear);
+      document.removeEventListener('mousedown', alHacerClic);
+      if (temporizador.current) clearTimeout(temporizador.current);
+    };
+  }, []);
+
+  // Con el menú móvil abierto, la página de atrás no se desplaza.
+  useEffect(() => {
+    document.body.style.overflow = movilAbierto ? 'hidden' : '';
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [movilAbierto]);
+
+  const estaActivo = (item: ItemNav): boolean =>
+    (item.activoEn ?? []).some((ruta) => pathname === ruta || pathname.startsWith(`${ruta}/`));
+
+  const alTocarDisparador = (etiqueta: string): void => {
+    // Con mouse el panel ya se abre al pasar; con toque, el segundo toque lo cierra.
+    setAbierto((actual) => (actual === etiqueta && ultimoPuntero.current !== 'mouse' ? null : etiqueta));
+  };
 
   return (
-    <header className="relative bg-black text-white p-4 lg:px-8 z-50 shadow-md shadow-gray-900/50">
-      <div className="container mx-auto flex items-center justify-between">
-        <Link href="/" className="text-xl lg:text-2xl font-bold uppercase tracking-wider" onClick={handleLinkClick}>
+    <header ref={headerRef} className="sticky top-0 z-50 border-b border-slate-800 bg-black text-white">
+      <div className="container mx-auto flex h-16 items-stretch justify-between px-4 lg:h-[72px] lg:px-8">
+        <Link href="/" className="flex items-center text-xl font-bold uppercase tracking-wider lg:text-2xl" onClick={cerrarTodo}>
           HUGO HERRERA
         </Link>
 
-        {/* --- MENÚ DE ESCRITORIO CON MEGamenú --- */}
-        <nav className="hidden lg:flex items-center space-x-8 text-base font-semibold">
-          {navConfig.map((item) => (
-            <div key={item.label} className="group relative">
-              <div className="flex items-center space-x-1 cursor-pointer py-4">
-                {item.href ? (
-                  <Link href={item.href}><span>{item.label}</span></Link>
-                ) : (
-                  <span>{item.label}</span>
-                )}
-                {(item.subMenu || item.isMegaMenu) && <ChevronDown size={16} className="mt-1 transition-transform group-hover:rotate-180" />}
-              </div>
+        {/* --- ESCRITORIO --- */}
+        <nav className="hidden items-stretch lg:flex" aria-label="Principal">
+          {navPrincipal.map((item) => {
+            const activo = estaActivo(item);
+            const estiloBase = `flex h-full items-center gap-1.5 border-b-2 px-3 text-[15px] font-medium transition-colors xl:px-4 ${
+              activo ? 'border-[#0a4afc] text-white' : 'border-transparent text-slate-300 hover:text-white'
+            }`;
 
-              {/* Menú Desplegable Normal */}
-              {item.subMenu && (
-                <div className="absolute top-full left-1/2 -translate-x-1/2 w-80 hidden group-hover:block pt-3">
-                  <div className="bg-black border border-gray-800 rounded-lg shadow-2xl p-2 space-y-1">
-                    {item.subMenu.map((subItem) => <SubMenuItem key={subItem.label} item={subItem} />)}
-                  </div>
-                </div>
-              )}
+            if (item.tipo === 'enlace' && item.href) {
+              return (
+                <Link
+                  key={item.etiqueta}
+                  href={item.href}
+                  target={item.externo ? '_blank' : undefined}
+                  rel={item.externo ? 'noopener noreferrer' : undefined}
+                  aria-current={activo ? 'page' : undefined}
+                  className={estiloBase}
+                >
+                  {item.etiqueta}
+                  {item.externo && <ArrowUpRight size={13} className="text-slate-500" aria-hidden="true" />}
+                </Link>
+              );
+            }
 
-              {/* Mega Menú para "Soluciones" */}
-              {item.isMegaMenu && item.content && (
-                <div className="absolute top-full left-1/2 -translate-x-1/2 w-[40rem] hidden group-hover:block pt-3">
-                  <div className="bg-black border border-gray-800 rounded-lg shadow-2xl p-6">
-                    <div className="grid grid-cols-2 gap-x-8">
-                      {item.content.map(section => (
-                        <div key={section.sectionTitle}>
-                          <h3 className="text-sm font-bold tracking-widest uppercase text-gray-500 mb-4">{section.sectionTitle}</h3>
-                          <div className="space-y-1">
-                            {section.items.map(subItem => <SubMenuItem key={subItem.label} item={subItem} />)}
-                          </div>
-                        </div>
+            const estaAbierto = abierto === item.etiqueta;
+            const columnas = item.columnas ?? [];
+            const dosColumnas = columnas.length > 1;
+
+            return (
+              <div
+                key={item.etiqueta}
+                className="relative flex"
+                onPointerEnter={(e) => e.pointerType === 'mouse' && abrir(item.etiqueta)}
+                onPointerLeave={(e) => e.pointerType === 'mouse' && cerrarConRetraso()}
+                onBlur={(e) => {
+                  if (!e.currentTarget.contains(e.relatedTarget as Node | null)) {
+                    setAbierto((actual) => (actual === item.etiqueta ? null : actual));
+                  }
+                }}
+              >
+                <button
+                  type="button"
+                  aria-expanded={estaAbierto}
+                  aria-haspopup="true"
+                  onPointerDown={(e) => (ultimoPuntero.current = e.pointerType)}
+                  onClick={() => alTocarDisparador(item.etiqueta)}
+                  className={estiloBase}
+                >
+                  {item.etiqueta}
+                  <ChevronDown size={15} className={`transition-transform ${estaAbierto ? 'rotate-180' : ''}`} aria-hidden="true" />
+                </button>
+
+                {estaAbierto && columnas.length > 0 && (
+                  <div
+                    className={`menu-in absolute top-full ${item.alineacion === 'derecha' ? 'right-0' : 'left-0'} ${
+                      dosColumnas ? 'w-[40rem] xl:w-[46rem]' : 'w-[24rem]'
+                    }`}
+                  >
+                    <div
+                      className={`grid overflow-hidden rounded-b-xl border border-t-0 border-slate-800 bg-black shadow-2xl shadow-black/70 ${
+                        dosColumnas ? 'grid-cols-2' : ''
+                      }`}
+                    >
+                      {columnas.map((columna, indice) => (
+                        <PanelColumna
+                          key={columna.titulo ?? item.etiqueta}
+                          columna={columna}
+                          onNavegar={cerrarTodo}
+                          principal={indice === 0}
+                          secundaria={indice > 0}
+                        />
                       ))}
                     </div>
                   </div>
-                </div>
-              )}
-            </div>
-          ))}
+                )}
+              </div>
+            );
+          })}
         </nav>
 
-        <div className="hidden lg:flex items-center space-x-6">
-          <Link href="https://calendly.com/hugoherrera-coach/agendar-videollamada" target="_blank" rel="noopener noreferrer" className="bg-white text-black font-bold py-2.5 px-6 rounded-full hover:bg-gray-200 transition-transform hover:scale-105 text-base">
-            AGENDAR LLAMADA
+        <div className="hidden items-center lg:flex">
+          <Link
+            href={LLAMADA_GRATIS_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="whitespace-nowrap rounded-lg bg-[#0a4afc] px-4 py-2.5 text-[15px] font-semibold text-white transition-colors hover:bg-[#0b3ccf] active:scale-[0.98] xl:px-5"
+          >
+            Llamada gratis<span className="hidden xl:inline"> de 20 min</span>
           </Link>
         </div>
 
-        <div className="lg:hidden">
-          <button onClick={() => setIsMenuOpen(true)} aria-label="Abrir menú">
-            <Menu size={28} />
+        <div className="flex items-center lg:hidden">
+          <button
+            ref={botonMenuRef}
+            type="button"
+            onClick={() => setMovilAbierto(true)}
+            aria-label="Abrir menú"
+            aria-expanded={movilAbierto}
+            aria-controls="menu-movil"
+            aria-haspopup="dialog"
+            className="-mr-2 flex h-11 w-11 items-center justify-center"
+          >
+            <MenuIcon size={28} />
           </button>
         </div>
       </div>
 
-      {/* --- MENÚ OVERLAY PARA MÓVIL --- */}
-      <div className={`fixed inset-0 bg-black text-white transform ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'} transition-transform duration-300 ease-in-out lg:hidden`}>
-        <div className="flex flex-col h-full">
-          <div className="flex items-center justify-between p-4 border-b border-gray-800">
-            <Link href="/" className="text-xl font-bold uppercase tracking-wider" onClick={handleLinkClick}>
-              HUGO HERRERA
-            </Link>
-            <button onClick={() => setIsMenuOpen(false)} aria-label="Cerrar menú">
-              <X size={28} />
-            </button>
-          </div>
-
-          <div className="flex-grow overflow-y-auto p-4">
-            <nav>
-              <ul>
-                {navConfig.map((item) => (
-                  <li key={item.label} className="border-b border-gray-800">
-                    <div className="flex items-center justify-between w-full py-4 text-lg" onClick={() => (item.subMenu || item.isMegaMenu) ? toggleDropdown(item.label) : undefined}>
-                      {item.href ? (
-                        <Link href={item.href} className="flex-grow" onClick={handleLinkClick}>
-                          {item.label}
-                        </Link>
-                      ) : (
-                        <span className="flex-grow">{item.label}</span>
-                      )}
-                      {(item.subMenu || item.isMegaMenu) && <ChevronDown size={24} className={`transition-transform ${openDropdown === item.label ? 'rotate-180' : ''}`} />}
-                    </div>
-
-                    {/* Lógica para desplegables en móvil */}
-                    {openDropdown === item.label && (
-                      <div className="pl-4 pb-2 space-y-2">
-                        {item.subMenu?.map((subItem) => (
-                          <Link key={subItem.label} href={subItem.href} target={subItem.isExternal ? '_blank' : '_self'} rel={subItem.isExternal ? 'noopener noreferrer' : undefined} className="block py-2 text-gray-400" onClick={handleLinkClick}>
-                            {subItem.label}
-                          </Link>
-                        ))}
-                        {item.isMegaMenu && item.content?.map(section => (
-                          <div key={section.sectionTitle} className="pt-2">
-                            <h3 className="text-sm font-bold tracking-widest uppercase text-gray-500 mb-2">{section.sectionTitle}</h3>
-                            {section.items.map(subItem => (
-                              <Link key={subItem.label} href={subItem.href} target={subItem.isExternal ? '_blank' : '_self'} rel={subItem.isExternal ? 'noopener noreferrer' : undefined} className="block py-2 text-gray-400 pl-2" onClick={handleLinkClick}>
-                                {subItem.label}
-                              </Link>
-                            ))}
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </li>
-                ))}
-              </ul>
-            </nav>
-          </div>
-
-          <div className="p-4 border-t border-gray-800">
-            <Link href="https://calendly.com/hugoherrera-coach/agendar-videollamada" target="_blank" rel="noopener noreferrer" className="block w-full text-center bg-white text-black font-bold py-3 px-5 rounded-full hover:bg-gray-200 transition-colors text-base" onClick={handleLinkClick}>
-              AGENDAR LLAMADA
-            </Link>
-          </div>
-        </div>
-      </div>
+      <MenuMovil abierto={movilAbierto} onCerrar={() => setMovilAbierto(false)} disparadorRef={botonMenuRef} />
     </header>
   );
 }

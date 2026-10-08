@@ -13,7 +13,7 @@ export default function WarrantySection() {
       {/* Titulo */}
       <div className="flex w-[70%] h-0.5 bg-red-600 mx-auto mb-2"></div>
       <h2 className="font-inter font-extrabold text-3xl text-center md:text-4xl text-black leading-[1] mb-3 px-8">
-        Garantía total. Cero riesgos. Solo resultados.
+        Garantía total. Pruébalo sin riesgo.
       </h2>
       <div className="w-[70%] h-0.5 bg-red-600 mx-auto mb-6 lg:mb-0"></div>
 

@@ -30,7 +30,7 @@ export default function HeroSection() {
 
                 {/* Subtítulo: Expande la promesa y se dirige al avatar */}
                 <p className="mt-6 text-xl md:text-2xl leading-[1.5] text-slate-300 text-balance">
-                    Te doy el método 1 a 1 para transformar tu proceso de ventas en una máquina de comisiones predecible.
+                    Te doy el método 1 a 1 para mejorar tu proceso de ventas y cobrar más comisiones de forma constante.
                 </p>
 
                 {/* Llamada a la Acción (CTA): Clara, visible y con un diseño premium */}

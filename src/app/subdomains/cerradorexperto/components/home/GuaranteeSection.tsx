@@ -26,7 +26,7 @@ export default function GuaranteeSection() {
 
                         <div className="bg-white rounded-[22px] pt-20 pb-12 px-4 lg:px-12 text-center">
                             <h2 className="text-3xl lg:text-4xl font-extrabold text-slate-900 text-balance">
-                                Mi Garantía: <br/>O Cierras Más, o es Gratis.
+                                Mi Garantía: <br/>Pruébalo 30 días. Si no te gusta, te devuelvo tu dinero.
                             </h2>
                             <p className="mt-2 text-lg text-primary-blue font-semibold">El riesgo es 100% mío. Así de simple.</p>
 

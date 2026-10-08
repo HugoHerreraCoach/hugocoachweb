@@ -19,7 +19,7 @@ const frustrations: Frustration[] = [
     {
         imageUrl: '/images/historia/scaryBurger.jpg',
         altText: 'Emprendimiento de hamburguesas "Scary Burger"',
-        description: 'Una hamburguesería en la cochera de un amigo.',
+        description: 'Una hamburguesería en la cochera de un amigo (Scary Burger).',
         width: 960,
         height: 539,
     },
@@ -33,14 +33,14 @@ const frustrations: Frustration[] = [
     {
         imageUrl: '/images/historia/enfoqueMagico.jpg',
         altText: 'Estudio fotográfico "Enfoque Mágico"',
-        description: 'Un pequeño estudio fotográfico para eventos.',
+        description: 'Un estudio fotográfico para eventos (Enfoque Mágico).',
         width: 600,
         height: 426,
     },
     {
         imageUrl: '/images/historia/emprendimientos.jpg',
         altText: 'Varios intentos de emprendimientos fallidos',
-        description: 'Y muchos otros intentos que nunca despegaron.',
+        description: 'Una lista de intentos más que nunca despegaron.',
         width: 600,
         height: 426,
     },
@@ -100,20 +100,18 @@ export const FrustracionCompartida = (): ReactElement => {
         <section className="bg-gray-100 text-black py-16 lg:py-24 bg-gradient-to-br from-[#ffffff] to-[#e4e2e2]">
             <div className="container mx-auto">
                 <div className="flex flex-col items-center gap-y-8 lg:gap-y-10">
-                    <div className="w-full max-w-7xl text-center px-4">
-                        <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 text-balance leading-[1.2]">
-                            Inteligente en el papel, novato en el mundo real
+                    <div className="w-full max-w-4xl text-center px-4">
+                        <p className="text-sm font-semibold uppercase tracking-widest text-blue-700">Capítulo 1</p>
+                        <h2 className="mt-3 text-4xl lg:text-5xl font-bold text-gray-900 text-balance leading-[1.2]">
+                            El mejor alumno del colegio. El peor en su primer negocio.
                         </h2>
                         <p className="mt-6 text-xl lg:text-2xl text-gray-700 leading-[1.4] text-balance">
-                            En el colegio era el chico de las notas perfectas. Todos a mi
-                            alrededor daban por hecho que tendría éxito, pero el mundo real
-                            tenía otros planes y me golpeó con fuerza.
-                            <br />
-                            <br />A los 17 años,{' '}
-                            <span className="font-semibold">
-                                mi hambre por emprender era incontrolable.
-                            </span>{' '}
-                            Soñaba con tener mi propio negocio, así que lo intenté todo:
+                            En el colegio sacaba las mejores notas. Todos daban por hecho que me iría bien.
+                        </p>
+                        <p className="mt-4 text-xl lg:text-2xl text-gray-700 leading-[1.4] text-balance">
+                            A los 17 años,{' '}
+                            <span className="font-semibold">quería un negocio propio más que cualquier otra cosa.</span>{' '}
+                            Y lo intenté todo:
                         </p>
                     </div>
 
@@ -125,13 +123,14 @@ export const FrustracionCompartida = (): ReactElement => {
                                 ref={carouselRef}
                                 className="flex snap-x snap-mandatory overflow-x-auto scroll-smooth pb-4 -mx-4 px-4 [&::-webkit-scrollbar]:hidden scrollbar-width-none"
                             >
-                                {frustrations.map((item) => (
+                                {frustrations.map((item, indice) => (
                                     <div
                                         key={item.altText}
                                         className="w-[90%] flex-shrink-0 snap-center px-2"
                                     >
-                                        <div className="flex flex-col h-full bg-white/30 backdrop-blur-sm rounded-xl shadow-lg overflow-hidden border border-gray-200/80">
+                                        <div className="flex flex-col h-full bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200">
                                             <div className="relative w-full aspect-[4/3]">
+                                                <span className="absolute left-3 top-3 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-[#0a4afc] text-lg font-bold text-white">{indice + 1}</span>
                                                 <Image
                                                     src={item.imageUrl}
                                                     alt={item.altText}
@@ -187,12 +186,13 @@ export const FrustracionCompartida = (): ReactElement => {
 
                         {/* --- Vista Desktop (Grid) --- */}
                         <div className="hidden sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-6 px-4 py-4">
-                            {frustrations.map((item) => (
+                            {frustrations.map((item, indice) => (
                                 <div
                                     key={item.altText}
-                                    className="flex flex-col h-full bg-white/30 backdrop-blur-sm rounded-xl shadow-lg overflow-hidden border border-gray-200/80 transition-transform hover:scale-105 duration-300"
+                                    className="flex flex-col h-full bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200"
                                 >
                                     <div className="relative w-full aspect-[4/3]">
+                                                <span className="absolute left-3 top-3 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-[#0a4afc] text-lg font-bold text-white">{indice + 1}</span>
                                         <Image
                                             src={item.imageUrl}
                                             alt={item.altText}
@@ -216,19 +216,13 @@ export const FrustracionCompartida = (): ReactElement => {
 
                     <div className="w-full max-w-4xl text-center px-4">
                         <p className="text-xl lg:text-2xl text-gray-700 leading-relaxed text-balance">
-                            El resultado siempre era el mismo:{' '}
-                            <span className="font-semibold">un fracaso rotundo.</span> Me
-                            esforzaba hasta el agotamiento, pero no entendía por qué nada
-                            funcionaba. ¿Te suena familiar?
+                            Siempre el mismo final. Me esforzaba hasta agotarme y no entendía por qué nada funcionaba.{' '}
+                            <span className="font-semibold">¿Te suena?</span>
                         </p>
-                        <p className="mt-6 text-xl lg:text-2xl text-gray-700 leading-relaxed font-semibold">
-                            Fue entonces cuando choqué contra la dura verdad:
-                        </p>
-                        <AnimatedOpacity className="w-full mt-6">
+                        <AnimatedOpacity className="w-full mt-8">
                             <blockquote className="max-w-4xl mx-auto italic border-l-4 border-blue-600 pl-6 lg:pl-8 text-left">
                                 <p className="text-2xl lg:text-3xl text-gray-800 font-medium leading-[1.4] text-balance">
-                                    &quot;No importaba qué tan bueno era mi producto. Si no sabía
-                                    cómo venderlo, estaba destinado a desaparecer.&quot;
+                                    &quot;No importaba qué tan bueno fuera mi producto. Si no sabía venderlo, iba a desaparecer.&quot;
                                 </p>
                             </blockquote>
                         </AnimatedOpacity>

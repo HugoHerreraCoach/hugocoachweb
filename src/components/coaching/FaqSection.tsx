@@ -14,15 +14,15 @@ type FaqItem = {
 const faqData: FaqItem[] = [
     {
         question: "¿Esto es para principiantes o para vendedores con experiencia?",
-        answer: "Es para vendedores con experiencia que quieren pasar de buenos a imparables. No vemos lo básico, optimizamos tu proceso actual para que dupliques tus resultados.",
+        answer: "Es para vendedores con experiencia que quieren mejorar sus resultados. No vemos lo básico: optimizamos tu proceso actual.",
     },
     {
         question: "Mi industria es muy específica, ¿cómo me aseguras que funcionará?",
         answer: "Porque no te vendo trucos, te instalo un sistema universal basado en la psicología del comprador. En la sesión, adaptamos este sistema 100% a tu producto y a tu cliente.",
     },
     {
-        question: "¿Cómo sé que los $1000 USD son una buena inversión y no un gasto?",
-        answer: "Una inversión de $1000 se siente grande hasta que la comparas con el costo de seguir igual. ¿Cuánto dinero dejaste sobre la mesa el mes pasado por cierres que se escaparon? Este programa es la inversión más segura de tu carrera por una razón: mi Garantía de ROI Imparable. O recuperas tu inversión con nuevas comisiones, o yo trabajo gratis hasta que lo hagas. El único riesgo real es seguir perdiendo esas ventas.",
+        question: "¿Cómo sé que los USD 1,000 son una buena inversión y no un gasto?",
+        answer: "Una inversión de USD 1,000 se siente grande hasta que la comparas con el costo de seguir igual. ¿Cuánto dinero dejaste sobre la mesa el mes pasado por cierres que se escaparon? Por eso te doy una garantía: o recuperas tu inversión con nuevas comisiones, o yo trabajo gratis hasta que lo hagas.",
     },
     {
         question: "¿Qué diferencia hay entre esto y ver videos gratuitos en YouTube?",

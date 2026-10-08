@@ -30,10 +30,10 @@ const phases: Phase[] = [
     number: '02',
     icon: Users,
     title: 'Inmersión In-House',
-    subtitle: 'Bootcamp de 8h',
+    subtitle: '5 días en tu empresa',
     description:
-      'Entro a la trinchera con tus vendedores. Inyectamos el ADN "Lobos de Ventas". Estandarizamos guiones, manejo de objeciones y técnicas de cierre agresivo.',
-    highlights: ['Guiones estandarizados', 'Manejo de objeciones', 'Técnicas de cierre'],
+      'Estoy 5 días en tu empresa. Los días 1 y 2 trabajo con tus líderes de ventas; los días 3 y 4 con tus vendedores, con práctica y llamadas reales en vivo; el día 5 medimos y definimos el plan de 90 días.',
+    highlights: ['Líderes y vendedores', 'Llamadas reales en vivo', 'Plan de 90 días'],
   },
   {
     number: '03',

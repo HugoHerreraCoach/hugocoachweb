@@ -22,17 +22,17 @@ interface QualificationCardProps {
 }
 
 const positivePoints: QualificationItem[] = [
-    { icon: CheckCircle2, text: 'Exiges un ROI, no solo un aplauso.', iconClassName: 'text-green-600' },
-    { icon: CheckCircle2, text: 'Valoras un sistema probado por encima del talento individual.', iconClassName: 'text-green-600' },
-    { icon: CheckCircle2, text: 'Tu objetivo es estandarizar para poder escalar.', iconClassName: 'text-green-600' },
-    { icon: CheckCircle2, text: 'Buscas instalar herramientas, no escuchar discursos.', iconClassName: 'text-green-600' },
+    { icon: CheckCircle2, text: 'Quieres que tu equipo venda más, no solo aplausos.', iconClassName: 'text-green-600' },
+    { icon: CheckCircle2, text: 'Prefieres un método probado a depender de un vendedor estrella.', iconClassName: 'text-green-600' },
+    { icon: CheckCircle2, text: 'Quieres que todos tus vendedores vendan con el mismo método y que tu negocio crezca.', iconClassName: 'text-green-600' },
+    { icon: CheckCircle2, text: 'Quieres herramientas para usar, no discursos.', iconClassName: 'text-green-600' },
 ];
 
 const negativePoints: QualificationItem[] = [
-    { icon: XCircle, text: 'Solo necesitas "rellenar una hora" en tu evento.', iconClassName: 'text-red-600' },
-    { icon: XCircle, text: 'Crees que la venta es un "arte" basado en el carisma.', iconClassName: 'text-red-600' },
-    { icon: XCircle, text: 'Buscas una charla, no un resultado medible.', iconClassName: 'text-red-600' },
-    { icon: XCircle, text: 'Prefieres la operación diaria a la estrategia a largo plazo.', iconClassName: 'text-red-600' },
+    { icon: XCircle, text: 'Solo necesitas llenar una hora de tu evento.', iconClassName: 'text-red-600' },
+    { icon: XCircle, text: 'Crees que vender es cuestión de carisma.', iconClassName: 'text-red-600' },
+    { icon: XCircle, text: 'Quieres una charla bonita, no resultados.', iconClassName: 'text-red-600' },
+    { icon: XCircle, text: 'Prefieres apagar incendios del día a mejorar tu forma de vender.', iconClassName: 'text-red-600' },
 ];
 
 
@@ -76,10 +76,10 @@ export const QualificationSection = () => {
             <div className="mx-auto max-w-7xl px-6 lg:px-8">
                 <div className="mx-auto text-center">
                     <h2 className="text-4xl font-bold tracking-tight text-slate-900 lg:text-5xl text-balance">
-                        No Trabajo con Todos. Construyo con Estrategas.
+                        No trabajo con todos. Elijo con quién construir.
                     </h2>
                     <p className="mt-6 text-xl lg:text-2xl leading-[1.4] text-slate-600 text-balance">
-                        Mi sistema exige un socio comprometido. No busco clientes que escuchen, busco líderes que ejecutan.
+                        Mi método funciona cuando tú te comprometes. Busco líderes que aplican lo que aprenden, no solo que escuchan.
                     </p>
                 </div>
 
@@ -107,7 +107,7 @@ export const QualificationSection = () => {
                         <div className="md:hidden">
                             {activeTab === 'positive' && (
                                 <QualificationCard
-                                    title="Construimos Juntos si:"
+                                    title="Trabajamos juntos si:"
                                     items={positivePoints}
                                     type="positive"
                                     isActive={true}
@@ -117,7 +117,7 @@ export const QualificationSection = () => {
                             {/* Columna NEGATIVA - Mobile */}
                             {activeTab === 'negative' && (
                                 <QualificationCard
-                                    title="No Somos Compatibles si:"
+                                    title="No es para ti si:"
                                     items={negativePoints}
                                     type="negative"
                                     isActive={true}
@@ -129,7 +129,7 @@ export const QualificationSection = () => {
                         {/* Layout para Desktop */}
                         <div className="hidden md:block">
                             <QualificationCard
-                                title="Construimos Juntos si:"
+                                title="Trabajamos juntos si:"
                                 items={positivePoints}
                                 type="positive"
                                 isActive={activeTab === 'positive'}
@@ -138,7 +138,7 @@ export const QualificationSection = () => {
                         </div>
                         <div className="hidden md:block">
                             <QualificationCard
-                                title="No Somos Compatibles si:"
+                                title="No es para ti si:"
                                 items={negativePoints}
                                 type="negative"
                                 isActive={activeTab === 'negative'}

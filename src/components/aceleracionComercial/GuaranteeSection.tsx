@@ -28,24 +28,20 @@ export function GuaranteeSection() {
               <div className="mt-6 lg:mt-8 text-lg lg:text-2xl leading-[1.6] text-slate-300 text-balance space-y-4 max-w-3xl mx-auto">
                 <p>
                   Te garantizo un aumento mínimo del{' '}
-                  <span className="font-bold text-white">20% en tu facturación en 90 días</span>.
+                  <span className="font-bold text-white">10% en la facturación de tu equipo comercial, medido en los 90 días después de la inmersión</span>.
                 </p>
                 <p>
-                  Si no lo logramos, <span className="font-bold text-white">sigo trabajando gratis</span>{' '}
-                  con tu equipo hasta lograrlo.
-                  Si después de 6 meses no hay resultados, te devuelvo el{' '}
-                  <span className="font-bold text-white">100% de tu inversión + un 20% extra</span>{' '}
-                  de mi bolsillo por tu tiempo.
+                  Si no lo logramos, <span className="font-bold text-white">te devuelvo el 100% de lo que pagaste por el programa</span>.
                 </p>
                 <p className="text-sm lg:text-base text-slate-500 italic">
-                  *Firmado por contrato. Aplica tras nuestra sesión de validación.
+                  *Firmado por contrato. Se mide sobre la facturación acordada el día 0. Aplica si tu equipo asiste a las jornadas y llena el reporte semanal.
                 </p>
               </div>
 
               <div className="mt-6 lg:mt-8 inline-flex items-center gap-2 px-4 lg:px-5 py-2 lg:py-2.5 rounded-full bg-[#0a4afc]/10 border border-[#0a4afc]/30">
                 <ArrowRight className="h-4 w-4 lg:h-5 lg:w-5 text-[#4d8bff]" />
                 <span className="text-base lg:text-lg font-bold text-[#4d8bff]">
-                  Cero riesgos para ti.
+                  Tu inversión está protegida.
                 </span>
               </div>
             </div>

@@ -1,6 +1,7 @@
 // src/components/coaching/CtaSection.tsx
 
 import { Check, Rocket } from 'lucide-react';
+import Link from 'next/link';
 import React from 'react';
 
 // La interfaz y el array de datos se mantienen para seguir las buenas prácticas de TypeScript.
@@ -52,15 +53,15 @@ export default function CtaSection(): React.ReactElement {
 
                         <div className="mt-8 border-t border-slate-700 pt-6">
                             <p className="text-xl font-medium text-slate-400">
-                                Valor Total del Paquete: <span className="line-through">${totalValue} USD</span>
+                                Valor Total del Paquete: <span className="line-through">USD {totalValue.toLocaleString('en-US')}</span>
                             </p>
                             <p className="mt-1 text-4xl font-bold tracking-tight text-white lg:text-5xl">
-                                Única Inversión: ${investment} USD
+                                Única Inversión: USD {investment.toLocaleString('en-US')}
                             </p>
                         </div>
 
                         <p className="mt-6 text-xl leading-[1.4] text-yellow-400 font-semibold">
-                            Para garantizar resultados de élite, solo acepto a 4 vendedores por mes.
+                            Trabajo con un máximo de 4 vendedores por mes para atender a cada uno de forma personal.
                         </p>
 
                         <div className="mt-6 mb-12">
@@ -75,6 +76,13 @@ export default function CtaSection(): React.ReactElement {
                                 </span>
                             </a>
                         </div>
+
+                        <p className="-mt-6 mb-10 text-lg text-slate-400">
+                            ¿Tienes un equipo de 4 a 20 vendedores?{' '}
+                            <Link href="/servicios#coaching-equipos" className="font-semibold text-blue-400 underline underline-offset-4 hover:text-blue-300">
+                                Mira el coaching para equipos
+                            </Link>
+                        </p>
 
                     </div>
                 </div>

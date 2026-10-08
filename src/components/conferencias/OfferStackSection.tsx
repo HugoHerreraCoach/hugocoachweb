@@ -25,33 +25,33 @@ interface SystemComponent {
 const systemComponents: SystemComponent[] = [
     {
         icon: Presentation,
-        title: 'Instalación del Sistema',
-        description: 'Una sesión práctica de hasta 120 min para instalar en tu equipo el proceso exacto para cerrar más ventas.',
+        title: 'Sesión práctica con tu equipo',
+        description: 'Hasta 2 horas para enseñarle a tu equipo, paso a paso, cómo cerrar más ventas.',
     },
     {
         icon: Settings2,
         title: 'Manual de Ventas a Medida',
-        description: 'Recibes un activo para la empresa: un manual que estandariza tu proceso de ventas y sirve como guion para todo el equipo.',
+        description: 'Un manual hecho para tu empresa, con tu forma de vender paso a paso. Sirve de guía para todo el equipo.',
     },
     {
         icon: BookOpen,
         title: 'Soporte Directo (15 Días)',
-        description: 'Aseguro la ejecución. Tu equipo tiene línea directa conmigo para resolver dudas del campo de batalla y aplicar el sistema.',
+        description: 'Durante 15 días tu equipo puede escribirme sus dudas de venta y yo les respondo.',
     },
     {
         icon: Award,
         title: 'Acceso a "Lobos de Ventas"',
-        description: 'Acceso de por vida a +300 videos y herramientas para que dirijas la implementación del sistema con control total.',
+        description: 'Acceso de por vida a más de 350 videos para que sigas entrenando a tu equipo.',
     },
     {
         icon: FileText,
-        title: 'Manual "Cerrador Experto"',
-        description: 'Cada vendedor recibe mi sistema con 139 respuestas probadas para que nunca más se pierda una venta por una objeción.',
+        title: 'Libro digital "Cerrador Experto"',
+        description: 'Cada vendedor recibe el libro digital con 139 respuestas probadas para que no pierdan ventas por una duda del cliente.',
     },
     {
         icon: BadgeDollarSign,
-        title: 'Bono de Crecimiento de $500',
-        description: 'Te otorgo un bono para que sigas creciendo conmigo en futuros programas o entrenamientos de mi portafolio.',
+        title: 'Crédito de USD 500 para tu siguiente programa',
+        description: 'Recibes USD 500 de crédito para usar en otro programa o taller conmigo.',
     },
 ];
 
@@ -67,10 +67,10 @@ export const OfferStackSection = () => {
             <div className="mx-auto max-w-3xl px-6 lg:px-8">
                 <div className="text-center">
                     <h2 className="text-4xl font-bold tracking-tight text-white lg:text-5xl text-balance">
-                        No Vendo Conferencias. Entrego Sistemas Completos.
+                        No vendo solo una conferencia. Dejo un método completo.
                     </h2>
                     <p className="mt-6 text-xl lg:text-2xl text-slate-300 text-balance">
-                        Una intervención conmigo es el punto de partida. Explora cada componente del sistema que instalaremos juntos.
+                        La conferencia es el primer paso. Esto es lo que recibe tu equipo:
                     </p>
                 </div>
 

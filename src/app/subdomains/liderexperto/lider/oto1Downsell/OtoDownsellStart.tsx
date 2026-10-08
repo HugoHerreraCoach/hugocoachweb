@@ -9,6 +9,7 @@ import dynamic from 'next/dynamic';
 import { usePaymentFlow } from '@liderexperto/hooks/usePaymentFlow';
 import PaymentButton from '@liderexperto/components/PaymentButton';
 import CVVConfirmationPopup from '@liderexperto/components/CVVConfirmationPopup';
+import { PRODUCTOS_LE } from "@liderexperto/lib/productos";
 
 // Meta Ads tracking
 declare global {
@@ -219,6 +220,7 @@ export default function OtoDownsellStart() {
           onClose={handlePaymentClose}
           onPaymentSuccess={handlePaymentSuccess}
           productName="Programa Lobos de Ventas (Oferta en cuotas)"
+          productId={PRODUCTOS_LE.LOBOS}
           productPrice={497}
           userEmail={userData?.email}
           prefillData={userData}

@@ -1,5 +1,6 @@
 'use client';
 
+import { CUPO_INMERSION } from '@/lib/servicios';
 import Link from 'next/link';
 import Image from 'next/image';
 import { AnimatedOpacity } from '@/components/ui/AnimatedOpacity';
@@ -25,23 +26,23 @@ export function HeroSection() {
         <AnimatedOpacity>
           {/* Eyebrow */}
           <p className="inline-block mb-4 lg:mb-6 px-3 lg:px-4 py-1.5 text-xs lg:text-sm font-semibold tracking-widest uppercase rounded-full border border-[#0a4afc]/40 text-[#4d8bff] bg-[#0a4afc]/10">
-            Solo 4 empresas por mes
+            Máximo {CUPO_INMERSION.empresasPorMes} empresa por mes
           </p>
         </AnimatedOpacity>
         
         <AnimatedOpacity>
           <h1 className="text-3xl font-bold tracking-tight leading-[1.15] text-white lg:text-6xl xl:text-7xl text-balance">
-            Deja de depender de &ldquo;vendedores estrella&rdquo;. Instala una{' '}
+            Deja de depender de &ldquo;vendedores estrella&rdquo;. Instala un{' '}
             <span className="bg-gradient-to-r from-[#4d8bff] to-[#0a4afc] bg-clip-text text-transparent">
-              Máquina de Ventas Autónoma.
+              sistema de ventas en tu equipo.
             </span>
           </h1>
         </AnimatedOpacity>
 
         <AnimatedOpacity duration="duration-[1500ms]">
           <p className="mt-4 lg:mt-6 text-lg lg:text-2xl leading-[1.4] text-slate-300 text-balance max-w-3xl mx-auto">
-            Diseñamos, instalamos y auditamos el sistema comercial de tu empresa para aumentar tu facturación un{' '}
-            <span className="font-bold text-white">20% en 90 días</span>. Garantizado por contrato o trabajamos gratis.
+            Estoy 5 días en tu empresa, instalo el sistema comercial y lo audito durante 3 meses para aumentar la facturación de tu equipo comercial al menos un{' '}
+            <span className="font-bold text-white">10% en 90 días</span>. Si no lo logramos, te devolvemos tu inversión.
           </p>
         </AnimatedOpacity>
 
@@ -66,10 +67,10 @@ export function HeroSection() {
               📕 Autor de 2 libros
             </span>
             <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/5 border border-white/10">
-              🏢 120+ empresas capacitadas
+              🏢 120+ equipos comerciales
             </span>
             <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/5 border border-white/10">
-              🎤 +7,000 asistentes en eventos
+              🎤 +10,000 asistentes en eventos
             </span>
           </div>
         </AnimatedOpacity>

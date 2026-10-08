@@ -14,10 +14,10 @@ interface Phase {
 
 // --- DATOS CENTRALIZADOS ---
 const processPhases: Phase[] = [
-  { phase: 1, title: 'Diagnóstico Estratégico', Icon: CalendarCheck, description: 'Agendas una sesión, diagnosticamos tu situación y validamos que mi sistema es la solución correcta para tu equipo.' },
-  { phase: 2, title: 'Reserva y Alineamiento', Icon: FilePenLine, description: 'Te envío un contrato simple y directo. Con tu aprobación, bloqueamos la fecha y preparamos el plan de intervención.' },
-  { phase: 3, title: 'La Instalación del Sistema', Icon: Presentation, description: 'Ejecuto el plan en tu evento. No es una charla, es la instalación de un sistema y la entrega de herramientas a tus vendedores.' },
-  { phase: 4, title: 'Medición del Retorno', Icon: TrendingUp, description: 'Activamos el soporte y seguimiento post-evento para asegurar que la implementación se traduzca en un ROI medible.' },
+  { phase: 1, title: 'Hablamos de tu equipo', Icon: CalendarCheck, description: 'Agendas una videollamada gratis de 20 minutos con un asesor de mi equipo. Le cuentas tu situación y vemos si mi método es lo que tu equipo necesita.' },
+  { phase: 2, title: 'Reservamos la fecha', Icon: FilePenLine, description: 'Te envío un contrato simple. Con tu aprobación, bloqueamos la fecha y preparo el plan para tu equipo.' },
+  { phase: 3, title: 'Lo hacemos en tu evento', Icon: Presentation, description: 'Hago el plan en tu evento. No es una charla: tu equipo practica y recibe herramientas para vender.' },
+  { phase: 4, title: 'Seguimiento después', Icon: TrendingUp, description: 'Durante 15 días tu equipo me escribe sus dudas, para que lo aprendido se use y se note en las ventas.' },
 ];
 
 // --- Subcomponente para cada escena/fase ---
@@ -103,10 +103,10 @@ export const ProcessSection = () => {
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="pt-20 pb-8 text-center lg:pt-28">
             <h2 className="text-4xl font-bold tracking-tight text-white lg:text-5xl text-balance">
-                Nuestro Plan de Ejecución
+                Cómo trabajamos, paso a paso
             </h2>
             <p className="mt-6 text-xl lg:text-2xl leading-[1.4] text-slate-300 text-balance">
-                Un proceso de 4 fases visible y conectado, diseñado para construir sistemas que generan resultados.
+                Cuatro pasos. Siempre en el mismo orden.
             </p>
         </div>
         

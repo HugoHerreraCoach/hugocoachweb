@@ -89,3 +89,13 @@ body {
     border-left-color: var(--color-prose-quote-borders-invert);
   }
 }
+
+/* Aparición suave de los paneles del menú */
+@keyframes menu-in {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: none; }
+}
+.menu-in { animation: menu-in 150ms ease-out; }
+@media (prefers-reduced-motion: reduce) {
+  .menu-in { animation: none; }
+}

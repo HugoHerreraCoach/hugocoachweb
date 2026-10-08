@@ -1,56 +1,44 @@
 // src/components/conferencias/InvestmentSection.tsx
 
 import Link from 'next/link';
+import { ServicioCard } from '@/components/servicios/ServicioCard';
+import { comboConferenciaTaller, serviciosEmpresas, type ServicioEmpresa } from '@/lib/servicios';
+
+// Esta página vende conferencia y taller. El resto de la escalera vive en /servicios.
+// La conferencia va primero: es el precio ancla de la página.
+const formatos = ['conferencia', 'full-day']
+    .map((id) => serviciosEmpresas.find((s) => s.id === id))
+    .filter((s): s is ServicioEmpresa => Boolean(s));
 
 export const InvestmentSection = () => {
     return (
-        <section className="w-full bg-black py-20 lg:py-28">
+        <section id="inversion" className="w-full bg-black py-20 lg:py-28">
             <div className="mx-auto max-w-7xl px-6 lg:px-8">
-                {/* Encabezado de la sección */}
                 <div className="mx-auto text-center">
                     <h2 className="text-4xl font-bold tracking-tight text-white lg:text-5xl text-balance">
-                        Una Inversión Fija. Un Retorno Exponencial.
+                        Conferencias y talleres. Un precio, todo incluido.
                     </h2>
                     <p className="mt-6 text-xl lg:text-2xl text-slate-300 text-balance">
-                        Piensa en una sola venta que tu equipo pierde al mes por falta de un sistema. Mi intervención no es un costo, es la inversión más rentable que harás en tu equipo este año.
+                        Piensa en una sola venta que tu equipo pierde cada mes por no tener un método. Eso es lo que quiero ayudarte a recuperar.
                     </p>
                 </div>
 
-                {/* Cajas de Inversión */}
-                <div className="mx-auto mt-8 grid max-w-5xl grid-cols-1 gap-8 md:grid-cols-2 lg:mt-16">
-
-                    {/* Opción 1: Nacional */}
-                    <div className="flex flex-col rounded-2xl border border-slate-800 bg-slate-900/50 p-8 text-center transition-all duration-300 hover:border-[#0a4afc]/50 hover:bg-slate-900">
-                        <h3 className="text-2xl font-semibold text-white">Conferencia en Perú</h3>
-                        <p className="mt-2 text-slate-400">(Todo el territorio nacional)</p>
-                        <p className="mt-6 text-5xl font-bold tracking-tight text-white">$1,000 USD</p>
-                        <p className="mt-4 font-semibold text-lg lg:text-xl text-[#0a4afc]">PAGO ÚNICO. TODO INCLUIDO.</p>
-                        <p className="text-base text-slate-400">(Traslados, estancia y honorarios)</p>
-                        <Link
-                            href="https://calendly.com/hugoherrerateam/sesion-estrategica"
-                            target="_blank"
-                            className="rounded-md bg-gradient-to-b from-[#0a4afc] to-[#153eb5] px-4 py-3 mt-6 text-xl font-semibold leading-[1.2] text-white shadow-sm transition-colors duration-500 ease-in-out hover:from-[#153eb5] hover:to-[#0a4afc]"
-                        >
-                            Agendar Sesión
-                        </Link>
+                <div className="mx-auto mt-8 max-w-6xl space-y-8 lg:mt-16">
+                    <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+                        {formatos.map((formato) => (
+                            <ServicioCard key={formato.id} servicio={formato} />
+                        ))}
                     </div>
-
-                    {/* Opción 2: Internacional */}
-                    <div className="flex flex-col rounded-2xl border border-slate-800 bg-slate-900/50 p-8 text-center transition-all duration-300 hover:border-[#0a4afc]/50 hover:bg-slate-900">
-                        <h3 className="text-2xl font-semibold text-white">Impacto Internacional</h3>
-                        <p className="mt-2 text-slate-400">(Bolivia, Colombia y Ecuador)</p>
-                        <p className="mt-6 text-5xl font-bold tracking-tight text-white">$2,000 USD</p>
-                        <p className="mt-4 font-semibold text-lg lg:text-xl text-[#0a4afc]">PAGO ÚNICO. TODO INCLUIDO.</p>
-                        <p className="text-base text-slate-400">(Traslados, estancia y honorarios)</p>
-                        <Link
-                            href="https://calendly.com/hugoherrerateam/sesion-estrategica"
-                            target="_blank"
-                            className="rounded-md bg-gradient-to-b from-[#0a4afc] to-[#153eb5] px-4 py-3 mt-6 text-xl font-semibold leading-[1.2] text-white shadow-sm transition-colors duration-500 ease-in-out hover:from-[#153eb5] hover:to-[#0a4afc]"
-                        >
-                            Agendar Sesión
-                        </Link>
-                    </div>
+                    <ServicioCard servicio={comboConferenciaTaller} layout="wide" badge="Mismo viaje" />
                 </div>
+
+                <p className="mx-auto mt-10 max-w-3xl text-center text-lg text-slate-400">
+                    ¿Prefieres acompañar a tu equipo varias semanas o instalar un sistema completo?{' '}
+                    <Link href="/servicios" className="font-semibold text-[#4d8bff] underline underline-offset-4 hover:text-white">
+                        Mira todos los servicios
+                    </Link>
+                    .
+                </p>
             </div>
         </section>
     );

@@ -11,9 +11,9 @@ import { CtaFinalSection } from '@/components/aceleracionComercial/CtaFinalSecti
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Aceleración Comercial | Instala una Máquina de Ventas Autónoma | Hugo Herrera',
+  title: 'Aceleración Comercial | Sistema de ventas para tu equipo | Hugo Herrera',
   description:
-    'Diseñamos, instalamos y auditamos el sistema comercial de tu empresa para aumentar tu facturación un 20% en 90 días. Garantizado por contrato o trabajamos gratis.',
+    'Estoy 5 días en tu empresa y dejo instalado un sistema de ventas para aumentar la facturación de tu equipo comercial al menos un 10% en 90 días. Si no lo logramos, te devolvemos tu inversión.',
 };
 
 export default function AceleracionComercialPage() {

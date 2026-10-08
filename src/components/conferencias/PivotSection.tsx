@@ -5,9 +5,9 @@ export const PivotSection = () => {
     <section className="w-full bg-slate-900 py-20 sm:py-28">
       <div className="mx-auto max-w-7xl px-6 text-center lg:px-8">
         <h2 className="text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl text-balance">
-          Deja de Contratar Motivadores.
+          Más que motivación.
           <br />
-          <span className="text-[#0a4afc]">Contrata un Arquitecto.</span>
+          <span className="text-[#0a4afc]">Un método para vender.</span>
         </h2>
         
         {/* La tarjeta estática de "El Arquitecto" con el contenido original */}
@@ -19,7 +19,7 @@ export const PivotSection = () => {
               </div>
             </div>
             <p className="mt-6 text-xl lg:text-2xl leading-relaxed text-balance text-slate-200">
-              Un motivador da un impulso. Un arquitecto entrega un plano. Yo no vengo a dar una charla a tu equipo; vengo a construir con ellos el proceso exacto para cerrar más ventas.
+              La motivación dura un día. Un método dura años. Yo no vengo solo a dar una charla: construyo con tu equipo el método exacto para vender más.
             </p>
           </div>
         </div>

@@ -20,7 +20,7 @@ const offerComponents = [
     {
         type: 'Bono #1',
         name: 'Kit de Cierre de Emergencia',
-        description: 'Un PDF de acción rápida con 5 guiones exactos para salvar una venta en los primeros 60 segundos. Resultados inmediatos.',
+        description: 'Un PDF de acción rápida con 5 guiones exactos para salvar una venta en los primeros 60 segundos.',
         value: 47,
         imageSrc: '/subdomains/cerradorexperto/images/bono1.jpg',
         width: 600,
@@ -135,7 +135,7 @@ export default function OfferSection() {
                         Tu arsenal completo para dejar de perder ventas.
                     </h2>
                     <p className="mt-4 text-xl lg:text-2xl text-slate-600 leading-relaxed max-w-4xl mx-auto text-balance">
-                        No solo recibes un libro, obtienes un arsenal de herramientas diseñadadas para asegurar resultados.
+                        No solo recibes un libro, obtienes un arsenal de herramientas diseñadas para ayudarte a cerrar más ventas.
                     </p>
                 </div>
 

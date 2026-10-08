@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { AnimatedOpacity } from '@/components/ui/AnimatedOpacity';
+import { CUPO_INMERSION } from '@/lib/servicios';
 
 const CALENDLY_URL = 'https://calendly.com/hugoherrera-coach/agendar-videollamada';
 
@@ -28,8 +29,10 @@ export function CtaFinalSection() {
             Las excusas se acabaron.
           </h2>
           <p className="mt-4 lg:mt-6 text-lg lg:text-2xl leading-[1.4] text-slate-200 text-balance">
-            Solo acepto <span className="font-bold text-white">4 empresas por mes</span> para garantizar resultados.
-            Si estás leyendo esto, hay una vacante disponible.
+            Solo acepto <span className="font-bold text-white">{CUPO_INMERSION.empresasPorMes} empresa por mes</span> para garantizar resultados.
+            {CUPO_INMERSION.proximaFecha
+              ? ` Próxima fecha disponible: ${CUPO_INMERSION.proximaFecha}.`
+              : ' Agenda tu llamada para confirmar la próxima fecha disponible.'}
           </p>
 
           {/* Pulsing CTA button */}

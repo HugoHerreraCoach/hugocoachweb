@@ -10,6 +10,7 @@ import CVVConfirmationPopup from '@liderexperto/components/CVVConfirmationPopup'
 import PaymentButton from '@liderexperto/components/PaymentButton';
 import { usePaymentFlow } from '@liderexperto/hooks/usePaymentFlow';
 import { useCountdownTimer, CountdownDisplay } from '@liderexperto/hooks/useCountdownTimer';
+import { PRODUCTOS_LE } from "@liderexperto/lib/productos";
 
 // Meta Ads tracking
 declare global {
@@ -219,6 +220,7 @@ export default function LobosPageWithPopup() {
           onClose={handlePaymentClose}
           onPaymentSuccess={handlePaymentSuccess}
           productName="Programa Lobos de Ventas (Oferta especial)"
+          productId={PRODUCTOS_LE.LOBOS}
           productPrice={497}
           userEmail={userData?.email}
           prefillData={userData}

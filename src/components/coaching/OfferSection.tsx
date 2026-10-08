@@ -37,10 +37,10 @@ const offerItems: OfferItem[] = [
                     Es un sprint de implementación 1 a 1 de 4 semanas donde instalamos tu sistema pieza por pieza:
                 </span>
                 <ul className="list-none pt-4 space-y-2">
-                    <li><strong>Fase 1: La Arquitectura de un Ingreso Predecible.</strong> Diseñamos tu máquina personal de hacer dinero y el mapa de tu nuevo proceso de ventas.</li>
-                    <li><strong>Fase 2: El Arsenal de Cierre Inquebrantable.</strong> Forjamos tus guiones y te armamos con respuestas para pulverizar cualquier objeción.</li>
-                    <li><strong>Fase 3: Dominio de la Influencia y la Autoridad.</strong> Aprendes a proyectar una autoridad que magnetiza y te posiciona como el experto.</li>
-                    <li><strong>Fase 4: La Máquina de Seguimiento y Multiplicación.</strong> Construimos un sistema que convierte un &quot;no ahora&quot; en un &quot;sí después&quot; y multiplica tus clientes.</li>
+                    <li><strong>Fase 1: Un ingreso más estable.</strong> Diseñamos tu sistema personal de ventas y el mapa de tu nuevo proceso.</li>
+                    <li><strong>Fase 2: Un cierre con seguridad.</strong> Armamos tus guiones y te preparamos con respuestas para las dudas más comunes de tus clientes.</li>
+                    <li><strong>Fase 3: Confianza y autoridad.</strong> Aprendes a transmitir seguridad y a que tus clientes te vean como el experto.</li>
+                    <li><strong>Fase 4: Seguimiento.</strong> Construimos un sistema que convierte un &quot;no ahora&quot; en un &quot;sí después&quot;.</li>
                 </ul>
             </>
         ),
@@ -84,13 +84,13 @@ const offerItems: OfferItem[] = [
 // Componente que renderiza la visualización del valor, manejando los distintos casos.
 const ValueDisplay = ({ value, isPrimary }: { value: number | 'Incalculable'; isPrimary: boolean }): ReactNode => {
     if (isPrimary) {
-        return <span className="text-slate-900 text-lg lg:text-xl">${value} USD</span>;
+        return <span className="text-slate-900 text-lg lg:text-xl">USD {value.toLocaleString('en-US')}</span>;
     }
 
     if (typeof value === 'number') {
         return (
             <>
-                <span className="line-through text-lg lg:text-xl text-slate-400/80 mr-2">${value} USD</span>
+                <span className="line-through text-lg lg:text-xl text-slate-400/80 mr-2">USD {value.toLocaleString('en-US')}</span>
                 <span className="text-green-600 font-semibold">INCLUIDO</span>
             </>
         );
@@ -166,9 +166,9 @@ export default function OfferSection() {
                                     >
                                         <div className="overflow-hidden">
                                             <div className="pb-4 border-b border-slate-200">
-                                                <p className="text-xl lg:text-2xl leading-[1.4] text-slate-600">
+                                                <div className="text-xl lg:text-2xl leading-[1.4] text-slate-600">
                                                     {item.description}
-                                                </p>
+                                                </div>
                                                 <div className="mt-4 text-right text-xl font-bold">
                                                     <span className="text-base lg:text-lg font-medium mr-2 text-slate-500">Valor:</span>
                                                     <ValueDisplay value={item.value} isPrimary={item.isPrimary} />

@@ -38,12 +38,12 @@ const PhasesSection: React.FC = () => {
         },
         {
             id: 4,
-            title: "Forma vendedores expertos en solo 30 días",
+            title: "Forma vendedores más capaces en 30 días",
             image: "/subdomains/liderexperto/venta/calendarIcon.jpg",
             description: "No necesitas más capacitaciones eternas. Solo necesitas enseñar lo correcto, de la forma correcta.",
             bullets: [
                 "Diseña un plan de formación continua que no dependa de ti.",
-                "Convierte a cualquier vendedor en experto en 30 días.",
+                "Lleva a tus vendedores a un mejor nivel en 30 días.",
                 "Enséñales lo que sí necesitan para vender… y descarta lo innecesario."
             ]
         },
@@ -71,9 +71,9 @@ const PhasesSection: React.FC = () => {
         },
         {
             id: 7,
-            title: "Implementa tu sistema en solo 24 horas",
+            title: "Empieza a implementar tu sistema en 24 horas",
             image: "/subdomains/liderexperto/venta/24hoursIcon.jpg",
-            description: "No necesitas meses para empezar. Aquí tienes los pasos exactos para aplicar lo aprendido y ver resultados inmediatos.",
+            description: "No necesitas meses para empezar. Aquí tienes los pasos exactos para aplicar lo aprendido y empezar a ver cambios pronto.",
             bullets: [
                 "Checklist clara para líderes que quieren empezar hoy.",
                 "Cómo ajustar si tu equipo no responde como esperabas.",

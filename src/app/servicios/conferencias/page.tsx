@@ -7,6 +7,7 @@ import { PivotSection } from '@/components/conferencias/PivotSection';
 import  SolutionSection  from '@/components/conferencias/SolutionSection';
 import { OfferStackSection } from '@/components/conferencias/OfferStackSection';
 import { GuaranteeSection } from '@/components/conferencias/GuaranteeSection';
+import { EventosMasivosSection } from '@/components/eventos/EventosMasivosSection';
 import { InvestmentSection } from '@/components/conferencias/InvestmentSection';
 import { SocialProofSection } from '@/components/conferencias/SocialProofSection';
 import { QualificationSection } from '@/components/conferencias/QualificationSection';
@@ -15,8 +16,8 @@ import { CtaSection } from '@/components/conferencias/CtaSection';
 
 
 export const metadata: Metadata = {
-  title: 'Conferencias | Hugo Herrera',
-  description: 'TDeja de contratar motivación. Instala un sistema de ventas probado en tu equipo con una conferencia de alto impacto y resultados medibles.',
+  title: 'Conferencias y talleres | Hugo Herrera',
+  description: 'Deja de contratar motivación. Instala un sistema de ventas probado en tu equipo con una conferencia de alto impacto y resultados medibles.',
 };
 
 export default function ConferenciasHugoHerreraPage() {
@@ -28,6 +29,7 @@ export default function ConferenciasHugoHerreraPage() {
         <SolutionSection />
         <OfferStackSection />
         <GuaranteeSection />
+        <EventosMasivosSection />
         <InvestmentSection />
         <SocialProofSection />
         <QualificationSection />

@@ -71,6 +71,7 @@ export default function TermsPage() {
             <h2 id="eventos">5. Servicios profesionales y eventos</h2>
             <ul>
                 <li>Las asesorías, entrenamientos y conferencias se rigen por las condiciones específicas acordadas en cada propuesta/orden.</li>
+                <li>Los servicios presenciales en zonas de difícil acceso se cotizan aparte.</li>
                 <li>En eventos presenciales, nos reservamos el derecho de reprogramar por causas de fuerza mayor. Si no pudieras asistir a la nueva fecha, podrás solicitar opciones equivalentes (p. ej., crédito para otro evento o acceso online).</li>
             </ul>
 
@@ -96,7 +97,7 @@ export default function TermsPage() {
             <h2 id="responsabilidad">9. Descargos y limitación de responsabilidad</h2>
             <p>
                 Los Servicios se proporcionan “tal cual” y “según disponibilidad”. En la
-                medida permitida por la ley, excluimos garantías implícitas. No seremos
+                medida permitida por la ley, excluimos garantías implícitas, salvo las garantías expresas que consten en la propuesta firmada. No seremos
                 responsables por pérdidas indirectas, lucro cesante o daños emergentes
                 derivados del uso o imposibilidad de uso del Sitio/Servicios, salvo dolo o
                 culpa inexcusable.

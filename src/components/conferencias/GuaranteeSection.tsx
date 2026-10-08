@@ -33,18 +33,18 @@ export const GuaranteeSection: FC = () => {
                         </div>
 
                         <h2 className="text-2xl font-bold tracking-tight text-slate-900 lg:text-3xl">
-                            Mi Garantía de Arquitecto:
+                            Mi garantía:
                             <br />
-                            <span className="text-slate-700">O Construimos o No Cobro.</span>
+                            <span className="text-slate-700">si no te sirve, no me pagas.</span>
                         </h2>
 
                         <p className="mt-4 text-lg leading-[1.4] text-slate-600">
-                            Un motivador vende palabras. Un arquitecto entrega planos. Estoy tan seguro de la estructura de mi sistema que mis honorarios están en juego.
+                            Estoy tan seguro de mi método que arriesgo mis honorarios.
                         </p>
 
                         <div className="mt-6 rounded-lg border border-slate-200/80 bg-slate-50 p-5">
                             <p className="relative text-xl leading-[1.4] font-medium text-slate-800">
-                                &quot;Mi promesa es directa: si a mitad de la sesión no tienes en tus manos un <strong className="text-[#0a4afc]">plan de acción claro con herramientas listas para ser ejecutadas</strong> por tu equipo, no me pagas. Es así de simple. El sistema funciona, y yo asumo todo el riesgo para probártelo.&quot;
+                                &quot;Mi promesa es simple: si a mitad de la sesión tu equipo no tiene <strong className="text-[#0a4afc]">un plan claro y herramientas listas para usar</strong>, no me pagas. Yo asumo el riesgo.&quot;
                             </p>
                         </div>
                     </div>

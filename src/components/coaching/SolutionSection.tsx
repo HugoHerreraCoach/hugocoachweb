@@ -32,7 +32,7 @@ export default function SolutionSection() {
 
                         <div className="mt-0 text-xl lg:text-2xl leading-[1.4] text-slate-300 space-y-6 text-balance">
                             <p>
-                                He entrenado a más de 20,000 vendedores y el patrón es el mismo: el esfuerzo sin estructura solo produce agotamiento.
+                                He capacitado a más de 20,000 vendedores y el patrón es el mismo: el esfuerzo sin estructura solo produce agotamiento.
                                 <br /> <br/>Yo no enseño trucos, instalo sistemas. Esa es la diferencia entre una comisión casual y un ingreso predecible.
                             </p>
                             <p>

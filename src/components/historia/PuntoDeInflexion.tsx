@@ -69,8 +69,9 @@ export const PuntoDeInflexion = () => {
         <section className="bg-gradient-to-tr from-[#0F172A] to-[#000000] text-white py-16 lg:py-24">
             <div className="px-4 lg:px-6 max-w-7xl mx-auto">
                 {/* El Título */}
-                <h2 className="text-3xl lg:text-5xl font-bold text-balance text-center">
-                    Mi mayor fracaso profesional me mostró el verdadero secreto.
+                <p className="text-center text-sm font-semibold uppercase tracking-widest text-[#4d8bff]">Capítulo 4</p>
+                <h2 className="mt-3 text-3xl lg:text-5xl font-bold text-balance text-center">
+                    Mi quinto fracaso me mostró el verdadero problema.
                 </h2>
 
                 {/* --- SECCIÓN INTRODUCTORIA CON LAYOUT DIVIDIDO --- */}
@@ -90,9 +91,9 @@ export const PuntoDeInflexion = () => {
                     {/* Columna Derecha: Texto */}
                     <div className="text-center lg:text-left">
                         <p className="text-xl lg:text-2xl text-gray-200 text-balance leading-[1.4]">
-                            Me lancé a entrenar equipos comerciales y, al principio, los resultados eran increíbles. Los equipos salían motivados y las ventas subían... <span className="font-semibold">pero solo por unas semanas.</span>
+                            Al principio los resultados eran buenos. Los equipos salían motivados y las ventas subían, <span className="font-semibold">pero solo unas semanas.</span>
                             <br /><br />
-                            Creí que había encontrado la fórmula, pero estaba equivocado. Poco después, siempre recibía la misma llamada:
+                            Después llegaba siempre la misma llamada:
                         </p>
                         {/* --- EFECTO DE OPACIDAD APLICADO AQUÍ --- */}
                         <AnimatedOpacityText>
@@ -107,7 +108,7 @@ export const PuntoDeInflexion = () => {
                 {/* --- SECCIÓN DE MAYOR FRUSTRACIÓN --- */}
                 <div className="text-center mt-8 lg:mt-16">
                     <p className="text-xl lg:text-2xl text-gray-200 mx-auto text-balance leading-[1.4] max-w-4xl">
-                        Mi frustración llegó a su límite con una empresa de 70 vendedores. Después de dar mi mejor entrenamiento, el dueño me dijo la frase que lo cambió todo:
+                        Mi límite fue una empresa de 70 vendedores. Di mi mejor entrenamiento. Semanas después, el dueño me dijo:
                     </p>
 
                     {/* --- EFECTO DE MÁQUINA DE ESCRIBIR APLICADO AQUÍ --- */}
@@ -121,10 +122,10 @@ export const PuntoDeInflexion = () => {
                 {/* --- SECCIÓN DE TARJETAS --- */}
                 <div className="mt-8 lg:mt-12 text-left max-w-7xl mx-auto">
                     <h3 className="text-2xl lg:text-3xl text-white font-bold text-center text-balance">
-                        Ese golpe me dolió, pero no me detuvo.
+                        Dolió. Pero esta vez no culpé a los vendedores.
                     </h3>
                     <p className="mt-4 text-xl lg:text-2xl text-gray-200 leading-[1.4] text-center text-balance max-w-4xl mx-auto">
-                        En lugar de culpar a los vendedores, hice algo diferente: <span className="font-semibold text-white">me fui al campo para ver su trabajo de cerca.</span>
+                        <span className="font-semibold text-white">Me fui a verlos trabajar.</span>
                     </p>
 
                     {/* Contenedor de las tarjetas con Grid Layout */}
@@ -140,8 +141,8 @@ export const PuntoDeInflexion = () => {
                                 className="w-full h-auto object-cover"
                             />
                             <div className="p-6 pt-4 flex-1">
-                                <p className="text-white font-bold leading-snug text-xl lg:text-2xl">1. Acompañé a los vendedores en sus rutas.</p>
-                                <p className="mt-2 text-lg text-gray-200 leading-[1.4]">Observé cómo hablaban con los clientes y manejaban las objeciones. Vi que algunos aplicaban mis técnicas, pero otros volvían a sus viejos hábitos.</p>
+                                <p className="text-white font-bold leading-snug text-xl lg:text-2xl">1. Los acompañé en sus rutas.</p>
+                                <p className="mt-2 text-lg text-gray-200 leading-[1.4]">Vi cómo hablaban con los clientes y respondían sus dudas. Algunos usaban lo que enseñé. Otros volvían a sus viejos hábitos.</p>
                             </div>
                         </div>
 
@@ -155,22 +156,22 @@ export const PuntoDeInflexion = () => {
                                 className="w-full h-auto object-cover"
                             />
                             <div className="p-6 pt-4 flex-1">
-                                <p className="text-white font-bold leading-snug text-xl lg:text-2xl">2. Asistí a sus reuniones de equipo.</p>
-                                <p className="mt-2 text-lg text-gray-200 leading-relaxed">Escuché cómo los gerentes los dirigían, qué métricas revisaban y, más importante, qué información clave estaban ignorando.</p>
+                                <p className="text-white font-bold leading-snug text-xl lg:text-2xl">2. Fui a sus reuniones de equipo.</p>
+                                <p className="mt-2 text-lg text-gray-200 leading-relaxed">Escuché cómo los jefes dirigían, qué números miraban y qué datos importantes ignoraban.</p>
                             </div>
                         </div>
                     </div>
 
                     <p className="mt-8 lg:mt-12 text-xl lg:text-2xl text-gray-300 leading-[1.4] text-center max-w-4xl mx-auto">
-                        <span className="font-semibold text-white text-2xl lg:text-3xl">Fue en esas reuniones donde lo entendí todo.</span><br/><br/>
-                        Noté una desconexión total entre los líderes y el equipo de ventas. La comunicación se limitaba a resolver los problemas urgentes del día, pero sin un plan o dirección. No había una estructura de trabajo ni un seguimiento real.
+                        <span className="font-semibold text-white text-2xl lg:text-3xl">Ahí lo entendí.</span><br/><br/>
+                        Los jefes y los vendedores no estaban conectados. Solo apagaban el incendio del día. No había un plan, ni un orden de trabajo, ni seguimiento.
                     </p>
                 </div>
 
                 {/* La Gran Epifanía (se mantiene) */}
                 <div className="text-center">
                     <p className="mt-8 lg:mt-12 text-3xl lg:text-4xl font-barlow-condensed text-blue-500 font-black uppercase tracking-wide text-balance">
-                        El problema nunca fue la habilidad del vendedor.<br /> <span className="text-white">¡Era la ausencia de un sistema que lo respaldara!</span>
+                        El problema nunca fue el vendedor.<br /> <span className="text-white">Faltaba un sistema que lo sostuviera.</span>
                     </p>
                 </div>
             </div>

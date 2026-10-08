@@ -22,6 +22,8 @@ interface PaymentRetryPopupProps {
     prefillData?: UserData | null;
     currency?: string;
     installments?: number;
+    /** Qué producto se está vendiendo. Sin esto no se puede entregar nada. */
+    productId?: string;
 }
 
 interface PaymentResult {
@@ -219,7 +221,8 @@ export default function PaymentPopup({
     productPrice,
     prefillData,
     currency = "PEN",
-    installments = 1
+    installments = 1,
+    productId = "liderexperto-completo"
 }: PaymentRetryPopupProps) {
     const installmentAmount = installments > 1 ? productPrice / installments : productPrice;
     const isInstallmentPlan = installments > 1;
@@ -827,7 +830,7 @@ export default function PaymentPopup({
                         expiryYear: String(formData.expiryYear),
                         cvc: formData.cvv,
                         description: isInstallmentPlan ? `Cuota 1 de ${installments} - ${productName}` : productName,
-                        productId: isInstallmentPlan ? `liderexperto-cuota1-${installments}` : 'liderexperto-completo',
+                        productId: isInstallmentPlan ? `${productId}-cuota1-${installments}` : productId,
                     }),
                 });
 

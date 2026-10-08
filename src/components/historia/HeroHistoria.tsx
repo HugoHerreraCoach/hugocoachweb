@@ -20,8 +20,11 @@ export const HeroHistoria = () => {
                 <h1 className="text-4xl md:text-6xl font-extrabold leading-[1.2] text-balance">
                     Mis 5 fracasos. Tu próximo sistema de ventas.
                 </h1>
-                <p className="mt-6 text-xl md:text-2xl mx-auto text-gray-300 text-balance leading-[1.2]">
-                    No te voy a contar cómo trabajar más duro. Te voy a mostrar la estructura que construí para no volver a fallar. La misma que hoy puede ahorrarte años de tropiezos.
+                <p className="mt-6 max-w-3xl text-xl md:text-2xl mx-auto text-gray-200 text-balance leading-[1.3]">
+                    Fracasé con negocios propios. Después fracasé entrenando equipos. De todo eso salió un método que hoy usan más de 120 equipos comerciales.
+                </p>
+                <p className="mt-8 text-sm font-semibold uppercase tracking-widest text-gray-300">
+                    Hugo Herrera · Entrenador de ventas · Cajamarca, Perú
                 </p>
             </div>
         </section>

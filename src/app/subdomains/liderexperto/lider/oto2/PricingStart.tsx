@@ -8,6 +8,7 @@ import dynamic from 'next/dynamic';
 import CVVConfirmationPopup from '@liderexperto/components/CVVConfirmationPopup';
 import PaymentButton from '@liderexperto/components/PaymentButton';
 import { usePaymentFlow } from '@liderexperto/hooks/usePaymentFlow';
+import { PRODUCTOS_LE } from "@liderexperto/lib/productos";
 
 // Meta Ads tracking
 declare global {
@@ -210,6 +211,7 @@ export default function PricingStart() {
                 onClose={handlePaymentClose}
                 onPaymentSuccess={handlePaymentSuccess}
                 productName="Programa Pricing de Poder (Oferta especial)"
+                productId={PRODUCTOS_LE.PRICING}
                 productPrice={750}
                 userEmail={userData?.email}
                 prefillData={userData}

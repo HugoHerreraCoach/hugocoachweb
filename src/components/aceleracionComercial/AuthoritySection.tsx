@@ -16,7 +16,7 @@ const credentials: Credential[] = [
   { icon: Users, value: '25', label: 'Personas en mi equipo' },
   { icon: BookOpen, value: '2', label: 'Libros publicados' },
   { icon: Tv, value: '+350', label: 'Lecciones en video' },
-  { icon: Building2, value: '+7,000', label: 'Asistentes a eventos' },
+  { icon: Building2, value: '+10,000', label: 'Asistentes a eventos' },
   { icon: Code, value: '5', label: 'Empresas con software creado' },
 ];
 
@@ -63,7 +63,7 @@ export function AuthoritySection() {
               <p className="mt-4 lg:mt-6 text-base lg:text-xl leading-[1.6] text-slate-300 text-balance">
                 A los 27 años dirijo una empresa de <span className="font-semibold text-white">más de 25 personas</span>, desarrollo{' '}
                 <span className="font-semibold text-white">mis propios CRMs y ERPs</span>,
-                y soy creador de <span className="font-semibold text-white">los eventos educativos de ventas y negocios más grandes de Perú</span>.
+                y organizo <span className="font-semibold text-white">eventos de ventas y negocios con miles de asistentes</span>.
                 Sé lo que es tener planilla que pagar, metas agresivas que cumplir y
                 un equipo que necesita estructura para rendir.
               </p>

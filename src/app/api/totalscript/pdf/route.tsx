@@ -334,10 +334,10 @@ const ScriptPdfDocument = ({
         <View style={styles.ctaContainer} wrap={false}>
           <Text style={styles.ctaTitle}>¿Quieres dominar objeciones y cerrar el 80% de tus ventas?</Text>
           <Text style={styles.ctaText}>
-            Consigue nuestro libro digital "Cerrador Experto" por solo $7 USD. Aprende las 139 respuestas exactas y probadas ante objeciones difíciles como "Está caro", "Déjame pensarlo" o "No tengo tiempo".
+            Consigue nuestro libro digital "Cerrador Experto" por solo USD 7. Aprende las 139 respuestas exactas y probadas ante objeciones difíciles como "Está caro", "Déjame pensarlo" o "No tengo tiempo".
           </Text>
           <Link src="https://cerradorexperto.hugoherreracoach.com/" style={styles.ctaButton}>
-            <Text style={styles.ctaButtonText}>Obtener Libro por Solo $7 USD</Text>
+            <Text style={styles.ctaButtonText}>Obtener Libro por Solo USD 7</Text>
           </Link>
         </View>
 

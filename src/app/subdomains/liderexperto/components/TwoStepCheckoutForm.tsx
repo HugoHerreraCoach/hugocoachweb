@@ -32,6 +32,7 @@ import {
   departamentosPeru,
   codigosPaisCelular,
 } from "../constants/checkout";
+import { idDelLibro } from "@liderexperto/lib/productos";
 
 
 //Trakeo de Facebook (Meta)
@@ -673,7 +674,7 @@ function Step2Form(props: Step2FormProps) {
             currency: "PEN",
           }}
           showUpsell={false}
-          productId="liderexperto"
+          productId={idDelLibro(selectedBumps)}
           onSuccessRedirectTo="/subdomains/liderexperto/gracias"
         />
       </div>

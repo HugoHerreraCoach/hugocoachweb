@@ -25,23 +25,23 @@ interface InterventionPillar {
 const pillars: InterventionPillar[] = [
     {
         icon: <DollarSign className="h-8 w-8 text-slate-400" />,
-        title: 'El Sistema de Cierre',
+        title: 'Cómo cerrar la venta',
         description:
-            'Les entrego el arsenal de técnicas probadas para manejar objeciones y provocar el "sí". Esta es la herramienta central para aumentar la facturación de inmediato.',
+            'Técnicas probadas para responder dudas como "está caro" o "lo voy a pensar" y lograr el sí. Es lo que más ayuda a vender más.',
         imageUrl: '/images/conferencias/arsenal.jpg',
     },
     {
         icon: <FileText className="h-8 w-8 text-slate-400" />,
-        title: 'El Guion de Venta',
+        title: 'Un guion de venta',
         description:
-            'Construimos la estructura de la conversación. Un proceso claro que elimina las dudas y estandariza el camino hacia la venta.',
+            'Armamos paso a paso la conversación de venta. Todos tus vendedores siguen el mismo camino y saben qué decir.',
         imageUrl: '/images/conferencias/guion.jpg',
     },
     {
         icon: <Brain className="h-8 w-8 text-slate-400" />,
-        title: 'La Mentalidad de Control',
+        title: 'Confianza para vender',
         description:
-            'Forjamos la mentalidad de un profesional que lidera la venta, defiende el precio y opera con un sistema, no con excusas.',
+            'Tu equipo aprende a llevar la conversación, defender el precio y vender con método, no con excusas.',
         imageUrl: '/images/conferencias/brain.jpg',
     },
 ];
@@ -132,10 +132,10 @@ export default function SolutionSection(): ReactElement {
             <div className="mx-auto max-w-7xl px-4 lg:px-8">
                 <div className="mx-auto text-center">
                     <h2 className="text-balance text-4xl font-bold tracking-tight text-white lg:text-5xl">
-                        Una Intervención Estratégica, no una Charla.
+                        Una sesión de trabajo, no una charla.
                     </h2>
                     <p className="text-balance mt-6 text-xl leading-[1.4] text-slate-300 lg:text-2xl">
-                        Mi conferencia es una sesión de trabajo de alto impacto. No comparto teorías; instalo el núcleo de mi sistema de ventas, enfocándome en las herramientas que tu equipo necesita hoy.
+                        Mi conferencia es una sesión de trabajo. No cuento teoría: le enseño a tu equipo las herramientas que necesita para vender desde mañana.
                     </p>
                 </div>
 

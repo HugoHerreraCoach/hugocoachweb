@@ -50,7 +50,7 @@ const LiderExpertoSection: React.FC = () => {
                     Un Buen Líder no Nace, se Construye.
                 </h2>
                 <p className="mt-6 text-xl lg:text-2xl text-slate-300 mx-auto text-balance">
-                    Referentes del más alto nivel y empresarios de campo te muestran el antes y el después de aplicar &quot;Líder Experto&quot;.
+                    Líderes y empresarios cuentan qué cambió después de aplicar el libro &quot;Líder Experto&quot;.
                 </p>
             </div>
 

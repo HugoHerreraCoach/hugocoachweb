@@ -49,8 +49,8 @@ export function PivotSection() {
             </h2>
 
             <p className="text-base lg:text-2xl leading-[1.5] text-slate-300 text-balance max-w-3xl">
-              No soy un orador motivacional. Soy el <span className="font-bold text-white">Arquitecto de tu próximo récord de ventas</span>.
-              Dirijo un equipo de 25 personas, desarrollo CRMs propios y soy creador de los eventos educativos más grandes de Perú.
+              Soy el <span className="font-bold text-white">Arquitecto de tu próximo récord de ventas</span>.
+              Dirijo un equipo de 25 personas, desarrollo CRMs propios y organizo eventos de ventas y negocios con miles de asistentes.
               Conozco las trincheras. Vengo a construir los planos de tu éxito y a darle las herramientas a tu equipo para ejecutarlo.
             </p>
           </div>

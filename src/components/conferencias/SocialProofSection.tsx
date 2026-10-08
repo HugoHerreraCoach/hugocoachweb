@@ -123,10 +123,10 @@ export const SocialProofSection: FC = () => {
                     {/* ... (código de cabecera y testimonios sin cambios) ... */}
                     <div className="mx-auto text-center">
                         <h2 className="text-4xl font-bold tracking-tight text-slate-900 lg:text-5xl text-balance">
-                            El Sistema Funciona. Esta es la Evidencia.
+                            Esto funciona. Mira lo que dicen.
                         </h2>
                         <p className="mt-6 text-xl lg:text-2xl leading-[1.4] text-slate-600 text-balance">
-                            No pido que confíes en mis palabras. Pido que verifiques los resultados medibles.
+                            No me creas a mí. Lee lo que dicen quienes ya trabajaron conmigo.
                         </p>
                     </div>
                     

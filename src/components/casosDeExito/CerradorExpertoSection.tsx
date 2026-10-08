@@ -104,9 +104,8 @@ const CerradorExpertoSection = (): React.ReactElement => {
                         El Guion que Cierra Ventas
                     </h2>
                     <p className="mt-4 text-xl lg:text-2xl leading-8 text-slate-600 sm:mt-6 sm:text-xl text-balance">
-                        Cuando un vendedor tiene las palabras exactas, la confianza cambia.
-                        Mira cómo &quot;Cerrador Experto&quot; está armando a cientos de vendedores
-                        para ganar.
+                        Cuando un vendedor sabe qué decir, vende con más confianza.
+                        Mira cómo el libro &quot;Cerrador Experto&quot; ayuda a cientos de vendedores.
                     </p>
                 </div>
 

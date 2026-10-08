@@ -19,20 +19,20 @@ const painPoints: PainPointData[] = [
   {
     id: 'pain-1',
     icon: TrendingDown,
-    title: 'El subidón del viernes es la caída del lunes.',
-    description: 'La euforia dura 48 horas. El lunes, tu equipo vuelve a operar con los mismos hábitos de siempre. No necesitan un impulso de ánimo, necesitan un motor de ventas.',
+    title: 'El ánimo del viernes se acaba el lunes.',
+    description: 'Todos salen motivados. El lunes tu equipo vuelve a trabajar como siempre. No necesita más ánimo: necesita un método para vender.',
   },
   {
     id: 'pain-2',
     icon: Users,
-    title: 'Dependes del talento, no del proceso.',
-    description: 'Si solo tus "vendedores estrella" aplican lo aprendido, no estás construyendo un activo. Estás apostando a individualidades. Un sistema funciona para todos.',
+    title: 'Solo venden bien tus mejores vendedores.',
+    description: 'Si solo tus "vendedores estrella" aplican lo aprendido, el resto se queda igual. Un método sirve para todos.',
   },
   {
     id: 'pain-3',
     icon: MessagesSquare,
-    title: 'Tu equipo opera sin un guion.',
-    description: 'Después de la charla, cada vendedor vuelve a trabajar con su propio método. No hay un proceso unificado. No hay nada que medir ni escalar.',
+    title: 'Cada vendedor vende a su manera.',
+    description: 'Después de la charla, cada uno vuelve a su propio estilo. No hay una forma común de vender, así que no puedes medir ni mejorar nada.',
   },
 ];
 
@@ -94,10 +94,10 @@ export default function PainSection() {
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto text-center">
           <h2 className="text-4xl font-bold tracking-tight text-slate-900 lg:text-5xl text-balance">
-            El efecto aspirina de las charlas motivacionales
+            Las charlas de motivación duran un día.
           </h2>
           <p className="mt-6 text-xl lg:text-2xl leading-[1.4] text-slate-600 text-balance">
-            La inyección de ánimo alivia el síntoma un día, pero no cura el problema real: la falta de un sistema. Estos son los indicadores de que tu inversión se evapora.
+            Animan un rato, pero no arreglan el problema: tu equipo no tiene un método para vender. Así se pierde tu dinero:
           </p>
         </div>
 

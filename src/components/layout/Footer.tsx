@@ -3,51 +3,15 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowRight, BookA } from 'lucide-react';
+import { columnasFooter } from '@/lib/navegacion';
+import { WHATSAPP_URL } from '@/lib/servicios';
 
-// --- DEFINICIONES DE TIPOS (Intactas) ---
+// --- DEFINICIONES DE TIPOS ---
 interface SocialLink {
     name: string;
     href: string;
     iconSrc: string;
 }
-
-interface FooterLink {
-    label: string;
-    href: string;
-    isExternal?: boolean;
-}
-
-interface FooterColumn {
-    title: string;
-    links: readonly FooterLink[];
-}
-
-// --- CONFIGURACIÓN DE COLUMNAS (MODIFICADA PARA REFLEJAR TUS PRIORIDADES DENTRO DE 3 COLUMNAS) ---
-const footerColumns: Readonly<FooterColumn[]> = [
-    {
-        title: 'Soluciones',
-        links: [
-            { label: 'Libro: Cerrador Experto', href: 'https://cerradorexperto.hugoherreracoach.com/', isExternal: true },
-            { label: 'Libro: Líder Experto', href: 'https://liderexperto.hugoherreracoach.com/', isExternal: true },
-            { label: 'Programa Lobos de Ventas', href: 'https://lobosdeventas.hugoherreracoach.com/', isExternal: true },
-        ],
-    },
-    {
-        title: 'Servicios',
-        links: [
-            { label: 'Aceleración Comercial', href: '/servicios/aceleracion-comercial' },
-            { label: 'Conferencias', href: '/servicios/conferencias' },
-        ],
-    },
-    {
-        title: 'Recursos',
-        links: [
-            { label: 'Blog de Ventas', href: '/blog' },
-            { label: 'Recursos Gratuitos', href: '/recursos' },
-            { label: 'App con IA: TotalScript', href: 'https://totalscript.hugoherreracoach.com/', isExternal: true },
-        ],
-    },
-];
 
 // --- ÍCONOS SOCIALES (Intactos, como los proporcionaste) ---
 const socialLinks: Readonly<SocialLink[]> = [
@@ -55,7 +19,7 @@ const socialLinks: Readonly<SocialLink[]> = [
     { name: 'Facebook', href: 'https://www.facebook.com/hugoherreracoach/', iconSrc: 'facebookIcon.png' },
     { name: 'TikTok', href: 'https://www.tiktok.com/@hugoherreracoach', iconSrc: 'tiktokIcon.png' },
     { name: 'LinkedIn', href: 'https://www.linkedin.com/in/hugoherreracoach/', iconSrc: 'linkeinIcon.png' },
-    { name: 'WhatsApp', href: 'https://api.whatsapp.com/send?phone=51900239201&text=%C2%A1Hola%20Hugo!%20%F0%9F%98%8A%20Vengo%20de%20tu%20p%C3%A1gina%20web.%20Mi%20nombre%20es...', iconSrc: 'whatsappIcon.png' },
+    { name: 'WhatsApp', href: WHATSAPP_URL, iconSrc: 'whatsappIcon.png' },
     { name: 'YouTube', href: 'https://www.youtube.com/@hugoherreracoach', iconSrc: 'youtubeIcon.png' },
 ];
 
@@ -66,21 +30,21 @@ export default function Footer() {
     return (
         <footer className="bg-black text-white border-t border-gray-800/50">
             <div className="container mx-auto px-6 lg:px-8 py-16">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:col-span-3 gap-8">
-                        {footerColumns.map((column) => (
-                            <div key={column.title}>
-                                <h3 className="text-sm font-bold tracking-wider uppercase text-gray-400">{column.title}</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-12">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 lg:col-span-4 gap-8">
+                        {columnasFooter.map((columna) => (
+                            <div key={columna.titulo}>
+                                <h3 className="text-sm font-bold tracking-wider uppercase text-gray-400">{columna.titulo}</h3>
                                 <ul className="mt-4 space-y-3">
-                                    {column.links.map((link) => (
-                                        <li key={link.label}>
+                                    {columna.enlaces.map((enlace) => (
+                                        <li key={enlace.etiqueta}>
                                             <Link
-                                                href={link.href}
-                                                target={link.isExternal ? '_blank' : '_self'}
-                                                rel={link.isExternal ? 'noopener noreferrer' : undefined}
+                                                href={enlace.href}
+                                                target={enlace.externo ? '_blank' : '_self'}
+                                                rel={enlace.externo ? 'noopener noreferrer' : undefined}
                                                 className="text-gray-300 hover:text-white transition-colors duration-200"
                                             >
-                                                {link.label}
+                                                {enlace.etiqueta}
                                             </Link>
                                         </li>
                                     ))}
@@ -89,8 +53,8 @@ export default function Footer() {
                         ))}
                     </div>
 
-                    <div className="md:col-start-2 lg:col-start-4 lg:col-span-2">
-                        <Link href="https://api.whatsapp.com/send?phone=51900239201&text=%C2%A1Hola%20Hugo!%20%F0%9F%98%8A%20Vengo%20de%20tu%20p%C3%A1gina%20web.%20Mi%20nombre%20es..." target="_blank" rel="noopener noreferrer" className="group inline-flex items-center mb-2">
+                    <div className="lg:col-span-2">
+                        <Link href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="group inline-flex items-center mb-2">
                             <h3 className="text-lg font-semibold text-white">Atención Personalizada</h3>
                             <ArrowRight size={18} className="ml-2 text-gray-400 group-hover:text-white group-hover:translate-x-1 transition-transform" />
                         </Link>

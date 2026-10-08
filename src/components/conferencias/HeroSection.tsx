@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { ChevronRight } from 'lucide-react';
+import { LLAMADA_GRATIS_URL } from '@/lib/servicios';
 
 export const HeroSection = () => {
   return (
@@ -21,18 +22,18 @@ export const HeroSection = () => {
 
       <div className="max-w-5xl px-4 relative z-20">
         <h1 className="text-4xl font-bold tracking-tight leading-[1.2] text-white lg:text-6xl text-balance">
-          Menos Aplausos. Más Cierres.
+          Menos aplausos. Más ventas.
         </h1>
         <p className="mt-6 text-xl lg:text-2xl leading-[1.4] text-slate-300 text-balance">
-          Deja de invertir en charlas que generan aplausos el viernes y se olvidan el lunes. Instala un sistema de ventas probado en tu equipo.
+          Las charlas de motivación se olvidan el lunes. Yo le dejo a tu equipo un método para vender que puede usar desde ese mismo día.
         </p>
         <div className="mt-10 flex flex-col md:flex-row items-center justify-center gap-6">
           <Link
-            href="https://calendly.com/hugoherrerateam/sesion-estrategica"
+            href={LLAMADA_GRATIS_URL}
             target="_blank"
             className="rounded-md bg-gradient-to-b from-[#0a4afc] to-[#153eb5] px-4 py-3 text-lg lg:text-xl font-semibold leading-[1.2] text-white shadow-sm transition-colors duration-500 ease-in-out hover:from-[#153eb5] hover:to-[#0a4afc]"
           >
-            Quiero Más Cierres
+            Llamada gratis de 20 min
           </Link>
           <Link
             href="#testimonios"
