@@ -312,7 +312,7 @@ export function StripePaymentForm({
   }, [datosCompletos, firmaActual, extraJson, name, email, selectedCountry, totalAmount, currency, productId, effectiveIncludeBump, enCuotas]);
 
   return (
-    <div className="w-full max-w-md mx-auto bg-white p-4 sm:p-6 rounded-xl shadow-sm border border-slate-200">
+    <div className="w-full max-w-md mx-auto bg-white text-slate-900 p-4 sm:p-6 rounded-xl shadow-sm border border-slate-200">
       {!hideCustomerFields && (
         <div className="mb-4 space-y-3">
           <div>
@@ -324,7 +324,7 @@ export function StripePaymentForm({
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Juan Pérez"
-              className="w-full border border-slate-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+              className="w-full border border-slate-300 rounded-md px-3 py-2 text-sm text-slate-900 bg-white placeholder:text-slate-400 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
               required
             />
           </div>
@@ -338,7 +338,7 @@ export function StripePaymentForm({
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="juan@ejemplo.com"
-              className="w-full border border-slate-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+              className="w-full border border-slate-300 rounded-md px-3 py-2 text-sm text-slate-900 bg-white placeholder:text-slate-400 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
               required
             />
           </div>
@@ -356,7 +356,7 @@ export function StripePaymentForm({
                     setIncludeBump(false);
                   }
                 }}
-                className="w-full border border-slate-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none bg-white"
+                className="w-full border border-slate-300 rounded-md px-3 py-2 text-sm text-slate-900 focus:ring-2 focus:ring-emerald-500 focus:outline-none bg-white"
               >
                 <option value="PE">Perú 🇵🇪 (Soles - S/)</option>
                 <option value="US">Estados Unidos 🇺🇸 (USD - $)</option>
