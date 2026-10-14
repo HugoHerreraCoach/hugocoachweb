@@ -4,8 +4,7 @@ import Image from "next/image"
 import VideoPlayer from "@liderexperto/components/VideoPlayer"
 import { useState, useEffect } from 'react'; 
 import Link from "next/link";
-import { CHECKOUT_STORAGE_KEY, shippingCost } from "@liderexperto/constants/checkout";
-import { idDelLibro, montoDelLibro } from "@liderexperto/lib/productos";
+import { CHECKOUT_STORAGE_KEY, COMPRADOR_STORAGE_KEY } from "@liderexperto/constants/checkout";
 
 // Meta Ads tracking
 declare global {
@@ -55,67 +54,14 @@ export default function GraciasStart() {
     // El estado openQuestionId puede ser un número o null
     const [openQuestionId, setOpenQuestionId] = useState<number | null>(null);
 
-    // Compra confirmada: se avisa a Meta con el píxel del navegador y se borra el avance guardado
-    // del checkout para que el próximo pedido empiece limpio.
-    // El servidor reporta el mismo Purchase desde el webhook de Stripe; ambos llevan el id del
-    // cobro como eventID, así que Meta lo cuenta una sola vez.
+    // El recorrido terminó: se borran los datos temporales del pedido para que el próximo empiece limpio.
     useEffect(() => {
-        let valor = shippingCost;
-        let productId = idDelLibro({});
-        try {
-            const guardado = sessionStorage.getItem(CHECKOUT_STORAGE_KEY);
-            if (guardado) {
-                const bumps = JSON.parse(guardado).selectedBumps || {};
-                productId = idDelLibro(bumps);
-                valor = montoDelLibro(productId);
-            }
-        } catch {
-            // Sin el avance guardado se reporta el valor base del libro.
-        }
-
-        // Devuelve true cuando ya no hay nada más que intentar (se reportó o no corresponde reportar).
-        const reportarCompra = (): boolean => {
-            try {
-                const cobroId = localStorage.getItem('last_payment_intent');
-                if (!cobroId || localStorage.getItem('liderexperto_purchase_reportado') === cobroId) return true;
-                // El píxel se instala después de que la página carga: si aún no está, se reintenta.
-                if (typeof window.fbq !== 'function') return false;
-                (window.fbq as unknown as (...args: unknown[]) => void)(
-                    'track',
-                    'Purchase',
-                    {
-                        value: valor,
-                        currency: 'PEN',
-                        content_ids: [productId],
-                        content_name: 'Libro Líder Experto',
-                        content_type: 'product',
-                        num_items: 1,
-                    },
-                    { eventID: cobroId }
-                );
-                localStorage.setItem('liderexperto_purchase_reportado', cobroId);
-                return true;
-            } catch {
-                return true; // El seguimiento nunca debe romper la página de gracias.
-            }
-        };
-
-        let intervalo: ReturnType<typeof setInterval> | undefined;
-        if (!reportarCompra()) {
-            let intentos = 0;
-            intervalo = setInterval(() => {
-                intentos += 1;
-                if (reportarCompra() || intentos >= 40) clearInterval(intervalo);
-            }, 250);
-        }
-
         try {
             sessionStorage.removeItem(CHECKOUT_STORAGE_KEY);
+            sessionStorage.removeItem(COMPRADOR_STORAGE_KEY);
         } catch {
             // Sin sessionStorage no hay nada que borrar.
         }
-
-        return () => clearInterval(intervalo);
     }, []);
 
     // Track ViewContent when component mounts (only once)

@@ -5,11 +5,8 @@ import { useEffect } from "react";
 import Image from "next/image";
 import VideoPlayer from "@liderexperto/components/VideoPlayer";
 import Link from "next/link";
-import dynamic from 'next/dynamic';
-import { usePaymentFlow } from '@liderexperto/hooks/usePaymentFlow';
-import PaymentButton from '@liderexperto/components/PaymentButton';
-import CVVConfirmationPopup from '@liderexperto/components/CVVConfirmationPopup';
 import { PRODUCTOS_LE } from "@liderexperto/lib/productos";
+import OfertaUpsell from "@liderexperto/components/OfertaUpsell";
 
 // Meta Ads tracking
 declare global {
@@ -30,37 +27,7 @@ const trackEvent = (eventName: string, data?: Record<string, unknown>) => {
   }
 };
 
-// Importar dinámicamente el componente de payment retry popup
-const PaymentRetryPopup = dynamic(() => import('@liderexperto/components/PaymentPopup'), {
-  loading: () => <div className="text-center py-8">Cargando formulario...</div>
-});
-
 export default function OtoDownsellStart() {
-  const {
-    isProcessing,
-    message,
-    hasTokens,
-    hasUserData,
-    userData,
-    showCVVInput,
-    showCVVPopup,
-    selectedToken,
-    showPaymentPopup,
-    handleOneClickPurchase,
-    handleCVVPayment,
-    handlePayWithOtherMethod,
-    handlePaymentSuccess,
-    handlePaymentClose,
-    setShowCVVPopup,
-    setMessage,
-  } = usePaymentFlow({
-    productName: "Programa Lobos de Ventas (Oferta en cuotas)",
-    productPrice: 497,
-    currency: "PEN",
-    installments: 3, //Número de cuotas
-    redirectUrl: "/pricing"
-  });
-
   // Track ViewContent when component mounts (only once)
   useEffect(() => {
     // 1. Browser pixel tracking
@@ -80,12 +47,7 @@ export default function OtoDownsellStart() {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             eventName: 'ViewContent',
-            userData: userData ? {
-              fn: userData.firstName,
-              ln: userData.lastName,
-              em: userData.email,
-              ph: userData.phoneNumber,
-            } : {},
+            userData: {},
             customData: {
               content_type: 'product',
               content_ids: ['lobos-downsell-program'],
@@ -163,18 +125,13 @@ export default function OtoDownsellStart() {
 
           {/* Botones de pago */}
           <div className="bg-white flex pt-4 flex-col items-center justify-center text-center">
-            {/* Componente de botón de pago reutilizable */}
-            <PaymentButton
-              onClick={handleOneClickPurchase}
-              isProcessing={isProcessing}
-              hasUserData={hasUserData}
-              hasTokens={hasTokens}
-              showCVVInput={showCVVInput}
-              showCVVPopup={showCVVPopup}
-              selectedToken={selectedToken}
-              userData={userData}
-              message={message}
-              buttonText="¡Sí, quiero entrar a Lobos de Ventas en cuotas!"
+            {/* Cobro con 1 clic (tarjeta guardada al pagar el libro) o formulario seguro de Stripe */}
+            <OfertaUpsell
+              productId={PRODUCTOS_LE.LOBOS_CUOTAS}
+              monto={167}
+              descripcion="Programa Lobos de Ventas (oferta en 3 cuotas)"
+              textoBoton="¡Sí, quiero entrar a Lobos de Ventas en cuotas!"
+              exitoUrl="/gracias"
             />
             
             <p className="font-barlow font-bold text-black underline text-2xl md:text-3xl pt-4 pb-2">
@@ -186,7 +143,7 @@ export default function OtoDownsellStart() {
             </p>
             
             <Link 
-              href="/pricing"
+              href="/gracias"
               className="text-[#575757] font-barlow font-regular text-xl md:text-2xl mt-8 mb-2 md:mt-10 md:mb-4 lg:mt-12 lg:mb-8 underline cursor-pointer text-center">
               No, gracias. No quiero entrenar a mi equipo.
             </Link>
@@ -194,40 +151,6 @@ export default function OtoDownsellStart() {
         </div>
       </section>
 
-      {/* CVV Confirmation Popup */}
-      {showCVVPopup && selectedToken && (
-        <CVVConfirmationPopup
-          isOpen={showCVVPopup}
-          onClose={() => {
-            setShowCVVPopup(false);
-            setMessage(null);
-          }}
-          onConfirmPayment={handleCVVPayment}
-          onPayWithOtherMethod={handlePayWithOtherMethod}
-          selectedToken={selectedToken}
-          productName="Programa Lobos de Ventas (Oferta en cuotas)"
-          productPrice={497}
-          currency="PEN"
-          installments={3}
-          isProcessing={isProcessing}
-        />
-      )}
-
-      {/* PaymentRetryPopup con datos autocompletados */}
-      {showPaymentPopup && (
-        <PaymentRetryPopup
-          isOpen={showPaymentPopup}
-          onClose={handlePaymentClose}
-          onPaymentSuccess={handlePaymentSuccess}
-          productName="Programa Lobos de Ventas (Oferta en cuotas)"
-          productId={PRODUCTOS_LE.LOBOS}
-          productPrice={497}
-          userEmail={userData?.email}
-          prefillData={userData}
-          currency="PEN"
-          installments={3}
-        />
-      )}
     </>
   );
 }

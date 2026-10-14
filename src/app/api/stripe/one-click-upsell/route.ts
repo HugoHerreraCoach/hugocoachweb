@@ -1,10 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { stripe } from '@/lib/stripe';
+import { esProductoLiderExperto, montoLiderExperto } from '@liderexperto/lib/productos';
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { customerId, productId, amount, currency = 'USD', description } = body;
+    const { customerId, productId, amount, description } = body;
+    let { currency = 'USD' } = body;
 
     if (!customerId) {
       return NextResponse.json(
@@ -15,6 +17,19 @@ export async function POST(req: NextRequest) {
 
     if (!amount || amount <= 0) {
       return NextResponse.json({ error: 'Monto inválido para el Upsell.' }, { status: 400 });
+    }
+
+    // Productos del embudo de Líder Experto: el monto sale del catálogo del servidor.
+    // Con la tarjeta guardada se cobra sin pedir nada más, así que el navegador no puede decidir cuánto.
+    if (typeof productId === 'string' && esProductoLiderExperto(productId)) {
+      currency = 'PEN';
+      const esperado = montoLiderExperto(productId);
+      if (esperado === undefined || Math.abs(esperado - Number(amount)) > 0.005) {
+        return NextResponse.json(
+          { error: 'El monto no coincide con la oferta. Recarga la página e inténtalo de nuevo.' },
+          { status: 400 }
+        );
+      }
     }
 
     // Buscar datos del cliente para la notificación

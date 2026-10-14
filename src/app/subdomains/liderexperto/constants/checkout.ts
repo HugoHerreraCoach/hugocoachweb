@@ -20,8 +20,14 @@ export const CAPTURA_DE_LEADS_ACTIVA = false;
 /** Ruta que registra el lead en Brevo. */
 export const RUTA_LEADS = "/api/lider-experto/subscribe";
 
-/** Clave de sessionStorage donde se guarda el avance del checkout; /gracias la borra. */
+/** Clave de sessionStorage donde se guarda el avance del checkout hasta que se paga el libro. */
 export const CHECKOUT_STORAGE_KEY = "liderexperto_checkout_v1";
+
+/**
+ * Nombre y correo de quien ya pagó el libro. Las ofertas siguientes (Lobos) los usan para
+ * prellenar el formulario si el cobro de 1 clic no se puede hacer. /gracias lo borra.
+ */
+export const COMPRADOR_STORAGE_KEY = "liderexperto_comprador_v1";
 
 export const paisesDireccion: CountryOption[] = [
   { code: "PE", name: "Perú" }

@@ -16,6 +16,14 @@ const nextConfig: NextConfig = {
         destination: "/servicios/aceleracion-comercial",
         permanent: true, // 301
       },
+      // Pricing de Poder se retiró del embudo de Líder Experto. Quien tenga el enlace viejo
+      // (correos, mensajes) llega a la confirmación en vez de a un 404. Temporal: la oferta podría volver.
+      {
+        source: "/pricing",
+        has: [{ type: "host", value: "liderexperto.hugoherreracoach.com" }],
+        destination: "/gracias",
+        permanent: false,
+      },
       {
         source: "/servicios/asesoria-comercial",
         destination: "/servicios/aceleracion-comercial",

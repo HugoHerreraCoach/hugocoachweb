@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { stripe } from '@/lib/stripe';
-import { esPedidoDelLibro, montoDelLibro } from '@liderexperto/lib/productos';
+import { esProductoLiderExperto, montoLiderExperto } from '@liderexperto/lib/productos';
 import { primeraIp } from '@/lib/metaConversions';
 
 /** Texto limpio y acotado: lo que llega del navegador nunca se guarda tal cual. */
@@ -45,12 +45,13 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Monto inválido.' }, { status: 400 });
     }
 
-    // El libro de Líder Experto: el monto sale del catálogo del servidor, no del navegador.
-    // Así un pedido con bumps no puede cobrarse por menos de lo que vale, ni el id decir
-    // que lleva audiolibro cuando se pagó solo el libro.
-    if (typeof productId === 'string' && esPedidoDelLibro(productId)) {
+    // Productos del embudo de Líder Experto (libro con sus bumps, Lobos): el monto sale del
+    // catálogo del servidor, no del navegador. Así nadie puede pagar menos de lo que vale, ni el
+    // id decir que lleva audiolibro cuando se pagó solo el libro.
+    if (typeof productId === 'string' && esProductoLiderExperto(productId)) {
       currency = 'PEN';
-      if (Math.abs(montoDelLibro(productId) - Number(amount)) > 0.005) {
+      const esperado = montoLiderExperto(productId);
+      if (esperado === undefined || Math.abs(esperado - Number(amount)) > 0.005) {
         return NextResponse.json(
           { error: 'El monto no coincide con tu pedido. Recarga la página e inténtalo de nuevo.' },
           { status: 400 }

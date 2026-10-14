@@ -3,7 +3,7 @@ import { stripe } from '@/lib/stripe';
 import * as Brevo from '@getbrevo/brevo';
 import { sendPurchaseNotificationToAdmin } from '@/lib/sendPurchaseNotification';
 import { sendAccessEmailToCustomer, entregasPendientesLiderExperto } from '@/lib/sendAccessEmail';
-import { esPedidoDelLibro, bumpsDelPedido } from '@liderexperto/lib/productos';
+import { esPedidoDelLibro, esProductoLiderExperto, bumpsDelPedido } from '@liderexperto/lib/productos';
 import { enviarEventoMeta } from '@/lib/metaConversions';
 
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
@@ -27,6 +27,61 @@ async function addContactToBrevo(email: string, firstName: string, listId: numbe
     console.log(`[Stripe Webhook] Contacto ${email} añadido a Brevo (Lista ${listId}).`);
   } catch (error) {
     console.error('[Stripe Webhook] Error al añadir contacto a Brevo:', error);
+  }
+}
+
+/**
+ * Reporta a Meta una compra del embudo de Líder Experto (libro o Lobos).
+ * El event_id es el id del cobro: si el píxel del navegador mandó el mismo, Meta lo cuenta una vez.
+ * Nunca lanza: un fallo de seguimiento no debe afectar la entrega ni el aviso al administrador.
+ */
+async function reportarCompraAMeta(c: {
+  eventId: string;
+  paginaOrigen: string;
+  email: string;
+  telefono?: string;
+  nombreCompleto: string;
+  pais?: string;
+  monto: number;
+  moneda: string;
+  productId: string;
+  nombreProducto: string;
+  fbp?: string;
+  fbc?: string;
+  ip?: string;
+  ua?: string;
+}) {
+  try {
+    const [nombrePila, ...apellidos] = c.nombreCompleto.split(' ');
+    const resultado = await enviarEventoMeta({
+      eventName: 'Purchase',
+      eventId: c.eventId,
+      eventSourceUrl: `https://liderexperto.hugoherreracoach.com${c.paginaOrigen}`,
+      userData: {
+        em: c.email !== 'Sin email' ? c.email : undefined,
+        ph: c.telefono || undefined,
+        fn: nombrePila,
+        ln: apellidos.join(' ') || undefined,
+        country: c.pais || 'PE',
+      },
+      customData: {
+        value: c.monto,
+        currency: c.moneda,
+        content_ids: [c.productId],
+        content_name: c.nombreProducto,
+        content_type: 'product',
+        num_items: 1,
+      },
+      fbp: c.fbp,
+      fbc: c.fbc,
+      clientIp: c.ip,
+      clientUserAgent: c.ua,
+    });
+    if (resultado.skipped) {
+      console.warn('[Stripe Webhook] Purchase no enviado a Meta: faltan META_PIXEL_ID / META_CAPI_ACCESS_TOKEN.');
+    }
+  } catch (error) {
+    console.error('[Stripe Webhook] Error reportando la compra a Meta:', error);
   }
 }
 
@@ -149,40 +204,23 @@ export async function POST(req: NextRequest) {
       }
 
       // 3. Reportar la compra a Meta (el píxel del navegador puede no llegar a verla).
-      // El event_id es el id del cobro: el píxel de /gracias usa el mismo, y Meta lo cuenta una vez.
-      if (pedidoLiderExperto) {
-        try {
-          const [nombrePila, ...apellidos] = customerName.split(' ');
-          const meta = await enviarEventoMeta({
-            eventName: 'Purchase',
-            eventId: paymentIntent.id,
-            eventSourceUrl: 'https://liderexperto.hugoherreracoach.com/',
-            userData: {
-              em: customerEmail !== 'Sin email' ? customerEmail : undefined,
-              ph: phone || undefined,
-              fn: nombrePila,
-              ln: apellidos.join(' ') || undefined,
-              country: country || 'PE',
-            },
-            customData: {
-              value: rawAmount,
-              currency,
-              content_ids: [productId as string],
-              content_name: 'Libro Líder Experto',
-              content_type: 'product',
-              num_items: 1,
-            },
-            fbp: metadata.fbp,
-            fbc: metadata.fbc,
-            clientIp: metadata.ip,
-            clientUserAgent: metadata.ua,
-          });
-          if (meta.skipped) {
-            console.warn('[Stripe Webhook] Purchase no enviado a Meta: faltan META_PIXEL_ID / META_CAPI_ACCESS_TOKEN.');
-          }
-        } catch (metaErr) {
-          console.error('[Stripe Webhook] Error reportando la compra a Meta:', metaErr);
-        }
+      if (productId && esProductoLiderExperto(productId)) {
+        await reportarCompraAMeta({
+          eventId: paymentIntent.id,
+          paginaOrigen: pedidoLiderExperto ? '/' : '/lobos',
+          email: customerEmail,
+          telefono: phone,
+          nombreCompleto: customerName,
+          pais: country,
+          monto: rawAmount,
+          moneda: currency,
+          productId,
+          nombreProducto: pedidoLiderExperto ? 'Libro Líder Experto' : 'Programa Lobos de Ventas',
+          fbp: metadata.fbp,
+          fbc: metadata.fbc,
+          ip: metadata.ip,
+          ua: metadata.ua,
+        });
       }
 
       // 4. Registrar como comprador en Brevo
@@ -229,6 +267,22 @@ export async function POST(req: NextRequest) {
         } catch (err) {
           console.error('[Stripe Webhook] ❌ FALLÓ LA ENTREGA tras la primera cuota:', err);
         }
+      }
+
+      // Primera cuota de la oferta de Lobos del embudo de Líder Experto: se reporta como la compra.
+      if (cuotaActual === 1 && meta.productId && esProductoLiderExperto(meta.productId)) {
+        await reportarCompraAMeta({
+          eventId: invoice.id,
+          paginaOrigen: '/lobos-downsell',
+          email: customerEmail,
+          telefono: meta.phone,
+          nombreCompleto: customerName,
+          pais: meta.country,
+          monto,
+          moneda: currency,
+          productId: meta.productId,
+          nombreProducto: 'Programa Lobos de Ventas (3 cuotas)',
+        });
       }
 
       const esUltima = cuotasTotales > 0 && cuotaActual >= cuotasTotales;

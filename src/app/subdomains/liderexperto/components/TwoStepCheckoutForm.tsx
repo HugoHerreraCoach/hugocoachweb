@@ -30,6 +30,7 @@ import {
   baseBookPrice,
   CAPTURA_DE_LEADS_ACTIVA,
   CHECKOUT_STORAGE_KEY,
+  COMPRADOR_STORAGE_KEY,
   RUTA_LEADS,
   paisesDireccion,
   departamentosPeru,
@@ -747,7 +748,45 @@ function Step2Form(props: Step2FormProps) {
           }}
           showUpsell={false}
           productId={idDelLibro(selectedBumps)}
-          onSuccessRedirectTo="/subdomains/liderexperto/gracias"
+          // Después del libro viene la oferta de Lobos (/lobos); desde ahí se llega a /gracias.
+          onSuccessRedirectTo="/lobos"
+          onPaid={(cobroId) => {
+            // Compra confirmada: el píxel avisa a Meta con el mismo id que usa el servidor
+            // (el webhook de Stripe), así Meta la cuenta una sola vez.
+            try {
+              if (typeof window.fbq === "function") {
+                (window.fbq as unknown as (...args: unknown[]) => void)(
+                  "track",
+                  "Purchase",
+                  {
+                    value: totalPrice,
+                    currency: "PEN",
+                    content_ids: [idDelLibro(selectedBumps)],
+                    content_name: "Libro Líder Experto",
+                    content_type: "product",
+                    num_items: 1,
+                  },
+                  { eventID: cobroId }
+                );
+              }
+            } catch {
+              // El seguimiento nunca debe frenar la compra.
+            }
+            // El pedido ya está pagado: se borra el avance del checkout (no volver a pagar con
+            // "atrás") y se deja nombre y correo para prellenar la oferta de Lobos.
+            try {
+              sessionStorage.removeItem(CHECKOUT_STORAGE_KEY);
+              sessionStorage.setItem(
+                COMPRADOR_STORAGE_KEY,
+                JSON.stringify({
+                  nombre: `${formData.firstName} ${formData.lastName}`.trim(),
+                  email: formData.email,
+                })
+              );
+            } catch {
+              // Sin sessionStorage la oferta pide los datos de nuevo.
+            }
+          }}
         />
       </div>
 

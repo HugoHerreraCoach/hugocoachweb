@@ -5,12 +5,9 @@ import { useEffect } from "react";
 import Image from "next/image";
 import VideoPlayer from "@liderexperto/components/VideoPlayer";
 import Link from "next/link";
-import dynamic from 'next/dynamic';
-import CVVConfirmationPopup from '@liderexperto/components/CVVConfirmationPopup';
-import PaymentButton from '@liderexperto/components/PaymentButton';
-import { usePaymentFlow } from '@liderexperto/hooks/usePaymentFlow';
 import { useCountdownTimer, CountdownDisplay } from '@liderexperto/hooks/useCountdownTimer';
 import { PRODUCTOS_LE } from "@liderexperto/lib/productos";
+import OfertaUpsell from "@liderexperto/components/OfertaUpsell";
 
 // Meta Ads tracking
 declare global {
@@ -31,43 +28,12 @@ const trackEvent = (eventName: string, data?: Record<string, unknown>) => {
   }
 };
 
-// Importar dinámicamente el componente de payment retry popup
-const PaymentRetryPopup = dynamic(() => import('@liderexperto/components/PaymentPopup'), {
-  loading: () => <div className="text-center py-8">Cargando formulario...</div>
-});
-
 export default function LobosPageWithPopup() {
   // Usar el hook del timer
   const { timeLeft, formatTime } = useCountdownTimer({
     initialHours: 0,
     initialMinutes: 15,
     initialSeconds: 0
-  });
-
-  // Usar el hook de pago centralizado
-  const {
-    isProcessing,
-    message,
-    hasTokens,
-    hasUserData,
-    userData,
-    showCVVInput,
-    showCVVPopup,
-    selectedToken,
-    showPaymentPopup,
-    handleOneClickPurchase,
-    handleCVVPayment,
-    handlePayWithOtherMethod,
-    handlePaymentSuccess,
-    handlePaymentClose,
-    setShowCVVPopup,
-    setMessage,
-  } = usePaymentFlow({
-    productName: "Programa Lobos de Ventas (Oferta)",
-    productPrice: 497.0,
-    currency: "PEN",
-    installments: 1,
-    redirectUrl: "/pricing"
   });
 
   // Track ViewContent when component mounts (only once)
@@ -89,12 +55,7 @@ export default function LobosPageWithPopup() {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             eventName: 'ViewContent',
-            userData: userData ? {
-              fn: userData.firstName,
-              ln: userData.lastName,
-              em: userData.email,
-              ph: userData.phoneNumber,
-            } : {},
+            userData: {},
             customData: {
               content_type: 'product',
               content_ids: ['lobos-oto-program'],
@@ -163,18 +124,13 @@ export default function LobosPageWithPopup() {
         </div>
 
         <div className="bg-white pt-[27vh] p-4 flex flex-col items-center">
-          {/* Componente de botón de pago reutilizable */}
-          <PaymentButton
-            onClick={handleOneClickPurchase}
-            isProcessing={isProcessing}
-            hasUserData={hasUserData}
-            hasTokens={hasTokens}
-            showCVVInput={showCVVInput}
-            showCVVPopup={showCVVPopup}
-            selectedToken={selectedToken}
-            userData={userData}
-            message={message}
-            buttonText="¡Sí, quiero entrenar a mi equipo como profesionales!"
+          {/* Cobro con 1 clic (tarjeta guardada al pagar el libro) o formulario seguro de Stripe */}
+          <OfertaUpsell
+            productId={PRODUCTOS_LE.LOBOS}
+            monto={497}
+            descripcion="Programa Lobos de Ventas (oferta Líder Experto)"
+            textoBoton="¡Sí, quiero entrenar a mi equipo como profesionales!"
+            exitoUrl="/gracias"
           />
 
           <p className="font-barlow font-bold text-black text-center underline text-2xl md:text-3xl pt-4 pb-2">
@@ -194,40 +150,6 @@ export default function LobosPageWithPopup() {
         </div>
       </div>
 
-      {/* CVV Confirmation Popup */}
-      {showCVVPopup && selectedToken && (
-        <CVVConfirmationPopup
-          isOpen={showCVVPopup}
-          onClose={() => {
-            setShowCVVPopup(false);
-            setMessage(null);
-          }}
-          onConfirmPayment={handleCVVPayment}
-          onPayWithOtherMethod={handlePayWithOtherMethod}
-          selectedToken={selectedToken}
-          productName="Programa Lobos de Ventas (Oferta)"
-          productPrice={497}
-          currency="PEN"
-          installments={1}
-          isProcessing={isProcessing}
-        />
-      )}
-
-      {/* PaymentRetryPopup con datos autocompletados */}
-      {showPaymentPopup && (
-        <PaymentRetryPopup
-          isOpen={showPaymentPopup}
-          onClose={handlePaymentClose}
-          onPaymentSuccess={handlePaymentSuccess}
-          productName="Programa Lobos de Ventas (Oferta especial)"
-          productId={PRODUCTOS_LE.LOBOS}
-          productPrice={497}
-          userEmail={userData?.email}
-          prefillData={userData}
-          currency="PEN"
-          installments={1}
-        />
-      )}
     </>
   );
 }

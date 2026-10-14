@@ -1,11 +1,8 @@
 "use client"
 import Image from "next/image";
 import Link from "next/link";
-import dynamic from 'next/dynamic';
-import { usePaymentFlow } from '@liderexperto/hooks/usePaymentFlow';
-import PaymentButton from '@liderexperto/components/PaymentButton';
-import CVVConfirmationPopup from '@liderexperto/components/CVVConfirmationPopup';
 import { PRODUCTOS_LE } from "@liderexperto/lib/productos";
+import OfertaUpsell from "@liderexperto/components/OfertaUpsell";
 
 const products = [
   {
@@ -30,37 +27,7 @@ const products = [
   },
 ];
 
-// Importar dinámicamente el componente de payment retry popup
-const PaymentRetryPopup = dynamic(() => import('@liderexperto/components/PaymentPopup'), {
-  loading: () => <div className="text-center py-8">Cargando formulario...</div>
-});
-
 export default function OfferSection() {
-  const {
-    isProcessing,
-    message,
-    hasTokens,
-    hasUserData,
-    userData,
-    showCVVInput,
-    showCVVPopup,
-    selectedToken,
-    showPaymentPopup,
-    handleOneClickPurchase,
-    handleCVVPayment,
-    handlePayWithOtherMethod,
-    handlePaymentSuccess,
-    handlePaymentClose,
-    setShowCVVPopup,
-    setMessage,
-  } = usePaymentFlow({
-    productName: "Programa Lobos de Ventas (Oferta en cuotas)",
-    productPrice: 497,
-    currency: "PEN",
-    installments: 3,
-    redirectUrl: "/pricing"
-  });
-
   return (
     <>
       <section className="flex flex-col justify-center items-center text-center pb-16">
@@ -120,18 +87,13 @@ export default function OfferSection() {
                 S/167
               </p>
 
-              {/* PaymentButton reemplazando el botón anterior */}
+              {/* Cobro con 1 clic (tarjeta guardada al pagar el libro) o formulario seguro de Stripe */}
               <div className="mx-auto my-4">
-                <PaymentButton
-                  onClick={handleOneClickPurchase}
-                  isProcessing={isProcessing}
-                  hasUserData={hasUserData}
-                  hasTokens={hasTokens}
-                  showCVVInput={showCVVInput}
-                  showCVVPopup={showCVVPopup}
-                  selectedToken={selectedToken}
-                  userData={userData}
-                  message={message}
+                <OfertaUpsell
+                  productId={PRODUCTOS_LE.LOBOS_CUOTAS}
+                  monto={167}
+                  descripcion="Programa Lobos de Ventas (oferta en 3 cuotas)"
+                  exitoUrl="/gracias"
                   showIcon={false}
                   buttonClassName="bg-[#2375ED] p-4 rounded-xl text-white cursor-pointer block"
                 >
@@ -139,13 +101,13 @@ export default function OfferSection() {
                     ¡Reclamar oferta ahora!<br/>
                     <span className="font-barlow-condensed font-normal text-lg">¡SÍ! Quiero el programa en 3 cuotas</span>
                   </span>
-                </PaymentButton>
+                </OfertaUpsell>
               </div>
 
               <p className="font-montserrat font-normal text-black text-normal md:text-xl leading-[1.2]">
                   🔒 Pago 100% seguro y encriptado. <span className="font-semibold">Garantía de satisfacción por 7 días.</span>
               </p>
-              <Link className="font-montserrat font-medium text-[#565454] text-xl underline mb-8 mt-10 cursor-pointer leading-[1.2]" href="/pricing">
+              <Link className="font-montserrat font-medium text-[#565454] text-xl underline mb-8 mt-10 cursor-pointer leading-[1.2]" href="/gracias">
                   No, gracias. No quiero entrenar a mi equipo.
               </Link>
             </div>
@@ -153,41 +115,6 @@ export default function OfferSection() {
         </div>
         
       </section>
-      {/* CVV Confirmation Popup */}
-      {showCVVPopup && selectedToken && (
-        <CVVConfirmationPopup
-          isOpen={showCVVPopup}
-          onClose={() => {
-            setShowCVVPopup(false);
-            setMessage(null);
-          }}
-          onConfirmPayment={handleCVVPayment}
-          onPayWithOtherMethod={handlePayWithOtherMethod}
-          selectedToken={selectedToken}
-          productName="Programa Lobos de Ventas (Oferta en cuotas)"
-          productPrice={497}
-          currency="PEN"
-          installments={3}
-          isProcessing={isProcessing}
-        />
-      )}
-      
-      {/* PaymentRetryPopup con datos autocompletados */}
-      {showPaymentPopup && (
-        <PaymentRetryPopup
-          isOpen={showPaymentPopup}
-          onClose={handlePaymentClose}
-          onPaymentSuccess={handlePaymentSuccess}
-          productName="Programa Lobos de Ventas (Oferta en cuotas)"
-          productId={PRODUCTOS_LE.LOBOS}
-          productPrice={497}
-          userEmail={userData?.email}
-          prefillData={userData}
-          currency="PEN"
-          installments={3}
-        />
-      )}
-      
     </>
   );
 }

@@ -36,6 +36,10 @@ type StripePaymentFormProps = {
   customerExtra?: { phone?: string; address?: string; shipping?: EnvioDelPedido };
   /** Oculta nombre, correo y país cuando ya se pidieron en un paso anterior. */
   hideCustomerFields?: boolean;
+  /** Oculta solo el país (la venta es únicamente en soles, para Perú). */
+  hideCountryField?: boolean;
+  /** Se llama con el id del cobro cuando el pago se confirma, justo antes de redirigir. */
+  onPaid?: (paymentIntentId: string) => void;
   offerDetails?: {
     amount: number;
     currency: "PEN" | "USD";
@@ -56,6 +60,7 @@ function CheckoutForm({
   productId,
   onSuccessRedirectTo,
   includeBump,
+  onPaid,
 }: {
   customerName: string;
   customerEmail: string;
@@ -65,6 +70,7 @@ function CheckoutForm({
 
   onSuccessRedirectTo: string;
   includeBump: boolean;
+  onPaid?: (paymentIntentId: string) => void;
 }) {
   const stripe = useStripe();
   const elements = useElements();
@@ -109,6 +115,12 @@ function CheckoutForm({
           }
         }
 
+
+        try {
+          onPaid?.(paymentIntent.id);
+        } catch (err) {
+          console.error("Error en onPaid:", err); // El seguimiento nunca debe frenar la redirección.
+        }
 
         window.location.href = onSuccessRedirectTo;
       } else {
@@ -181,6 +193,8 @@ export function StripePaymentForm({
   customerData,
   customerExtra,
   hideCustomerFields = false,
+  hideCountryField = false,
+  onPaid,
   offerDetails,
   showUpsell = true,
   productId,
@@ -329,32 +343,34 @@ export function StripePaymentForm({
             />
           </div>
 
-          <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">
-              País de Residencia
-            </label>
-            <select
-              value={selectedCountry}
-              onChange={(e) => {
-                setSelectedCountry(e.target.value);
-                if (e.target.value !== "PE") {
-                  setIncludeBump(false);
-                }
-              }}
-              className="w-full border border-slate-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none bg-white"
-            >
-              <option value="PE">Perú 🇵🇪 (Soles - S/)</option>
-              <option value="US">Estados Unidos 🇺🇸 (USD - $)</option>
-              <option value="MX">México 🇲🇽 (USD - $)</option>
-              <option value="CO">Colombia 🇨🇴 (USD - $)</option>
-              <option value="CL">Chile 🇨🇱 (USD - $)</option>
-              <option value="AR">Argentina 🇦🇷 (USD - $)</option>
-              <option value="ES">España 🇪🇸 (USD - $)</option>
-              <option value="EC">Ecuador 🇪🇨 (USD - $)</option>
-              <option value="BO">Bolivia 🇧🇴 (USD - $)</option>
-              <option value="OTHER">Otro País 🌐 (USD - $)</option>
-            </select>
-          </div>
+          {!hideCountryField && (
+            <div>
+              <label className="block text-xs font-semibold text-slate-700 mb-1">
+                País de Residencia
+              </label>
+              <select
+                value={selectedCountry}
+                onChange={(e) => {
+                  setSelectedCountry(e.target.value);
+                  if (e.target.value !== "PE") {
+                    setIncludeBump(false);
+                  }
+                }}
+                className="w-full border border-slate-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none bg-white"
+              >
+                <option value="PE">Perú 🇵🇪 (Soles - S/)</option>
+                <option value="US">Estados Unidos 🇺🇸 (USD - $)</option>
+                <option value="MX">México 🇲🇽 (USD - $)</option>
+                <option value="CO">Colombia 🇨🇴 (USD - $)</option>
+                <option value="CL">Chile 🇨🇱 (USD - $)</option>
+                <option value="AR">Argentina 🇦🇷 (USD - $)</option>
+                <option value="ES">España 🇪🇸 (USD - $)</option>
+                <option value="EC">Ecuador 🇪🇨 (USD - $)</option>
+                <option value="BO">Bolivia 🇧🇴 (USD - $)</option>
+                <option value="OTHER">Otro País 🌐 (USD - $)</option>
+              </select>
+            </div>
+          )}
         </div>
       )}
 
@@ -423,6 +439,7 @@ export function StripePaymentForm({
             productId={productId}
             onSuccessRedirectTo={onSuccessRedirectTo}
             includeBump={includeBump}
+            onPaid={onPaid}
           />
         </Elements>
       ) : (

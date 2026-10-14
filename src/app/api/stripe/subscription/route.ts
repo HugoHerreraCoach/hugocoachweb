@@ -118,13 +118,31 @@ export async function POST(req: NextRequest) {
     const metodos = await stripe.paymentMethods.list({ customer: customerId, limit: 1 });
     const metodoGuardado = metodos.data[0]?.id;
 
+    // Con 1 clic solo llega el id del cliente: nombre, correo y teléfono se toman de Stripe,
+    // para que el correo de acceso lo salude por su nombre y el aviso al administrador los traiga.
+    let correoCliente = email;
+    let nombreCliente = name;
+    let telefonoCliente = phone;
+    if (customerIdEntrante && (!correoCliente || !nombreCliente)) {
+      try {
+        const registrado = await stripe.customers.retrieve(customerId);
+        if (!registrado.deleted) {
+          correoCliente = correoCliente || registrado.email || undefined;
+          nombreCliente = nombreCliente || registrado.name || undefined;
+          telefonoCliente = telefonoCliente || registrado.phone || undefined;
+        }
+      } catch (e) {
+        console.warn('[Stripe Suscripción] No se pudo leer al cliente:', e);
+      }
+    }
+
     const metadata = {
       productId,
       programa: plan.programa,
       cuotasTotales: String(plan.cuotas),
-      email: email || '',
-      name: name || '',
-      phone: phone || '',
+      email: correoCliente || '',
+      name: nombreCliente || '',
+      phone: telefonoCliente || '',
       country: country || '',
     };
 

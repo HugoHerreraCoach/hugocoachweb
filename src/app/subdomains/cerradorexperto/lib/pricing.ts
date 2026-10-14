@@ -1,6 +1,12 @@
 // src/lib/pricing.ts
 
-export type ProductID = "libro-digital" | "libro-fisico" | "comunidad-lobos"| "comunidad-lobos-cuota-inicial";
+export type ProductID =
+  | "libro-digital"
+  | "libro-fisico"
+  | "comunidad-lobos"
+  | "comunidad-lobos-cuota-inicial"
+  | "lobos-de-ventas"
+  | "lobos-de-ventas-cuota-inicial";
 export type Currency = "PEN" | "USD";
 
 // Definimos la estructura de cada producto
@@ -34,6 +40,21 @@ const productCatalog: Product[] = [
     prices: {
       PEN: 500.0,
       USD: 130.0,
+    },
+  },
+  // Oferta de Lobos que se muestra después del libro Líder Experto (otro precio que la de Cerrador Experto).
+  {
+    id: "lobos-de-ventas",
+    description: "Programa Lobos de Ventas (oferta Líder Experto)",
+    prices: {
+      PEN: 497.0,
+    },
+  },
+  {
+    id: "lobos-de-ventas-cuota-inicial",
+    description: "Programa Lobos de Ventas (Pago 1 de 3)",
+    prices: {
+      PEN: 167.0,
     },
   },
   {
@@ -70,6 +91,11 @@ export const PLANES_EN_CUOTAS: Partial<
     cuotas: 5,
     intervalo: "month",
     programa: "comunidad-lobos",
+  },
+  "lobos-de-ventas-cuota-inicial": {
+    cuotas: 3,
+    intervalo: "month",
+    programa: "lobos-de-ventas",
   },
 };
 
