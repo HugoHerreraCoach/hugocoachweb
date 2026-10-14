@@ -9,6 +9,20 @@ export const bumpPrices = {
 export const shippingCost = 19.0;
 export const baseBookPrice = 0.0;
 
+/**
+ * ¿Mandar a Brevo los datos del cliente apenas los escribe (antes de pagar)?
+ * Estuvo apagado sin querer desde que el embudo se unió a este proyecto: la ruta no respondía.
+ * Prenderlo agrega a esas personas a BREVO_LIST_ID, la misma lista de los recursos gratuitos;
+ * antes de prenderlo conviene revisar qué automatizaciones de Brevo escuchan esa lista.
+ */
+export const CAPTURA_DE_LEADS_ACTIVA = false;
+
+/** Ruta que registra el lead en Brevo. */
+export const RUTA_LEADS = "/api/lider-experto/subscribe";
+
+/** Clave de sessionStorage donde se guarda el avance del checkout; /gracias la borra. */
+export const CHECKOUT_STORAGE_KEY = "liderexperto_checkout_v1";
+
 export const paisesDireccion: CountryOption[] = [
   { code: "PE", name: "Perú" }
 ];

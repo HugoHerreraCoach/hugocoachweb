@@ -1,4 +1,6 @@
-// src/app/api/subscribe/route.ts
+// src/app/api/lider-experto/subscribe/route.ts
+// Captura de leads del embudo de Líder Experto (Brevo). Vive aparte de /api/subscribe, que es de
+// los recursos gratuitos y espera otro formato ({name, email, resource}).
 import { NextResponse } from 'next/server';
 
 // Define una interfaz para el payload esperado de la solicitud
@@ -7,6 +9,7 @@ interface SubscribePayload {
   lastName: string;
   email: string;
   phone?: string; // Opcional
+  sms?: string; // Alias de phone: así lo manda la lista de espera
   address?: string; // Opcional - puede no estar en la primera fase
   apartment?: string; // Opcional
   country?: string; // Opcional - puede no estar en la primera fase
@@ -51,7 +54,8 @@ export async function POST(request: Request) {
       firstName,
       lastName,
       email,
-      phone,
+      phone: phoneRaw,
+      sms,
       address,
       apartment,
       country,
@@ -61,6 +65,7 @@ export async function POST(request: Request) {
       isBasicData
     } = await request.json() as SubscribePayload; // <-- Tipado aquí
 
+    const phone = phoneRaw || sms;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       return NextResponse.json({ error: 'El correo electrónico no es válido.' }, { status: 400 });
@@ -140,7 +145,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ message: successMessage, contactDetails: brevoData }, { status: finalStatus });
 
   } catch (error) {
-    console.error('Error interno del servidor en /api/subscribe:', error);
+    console.error('Error interno del servidor en /api/lider-experto/subscribe:', error);
     // Es buena práctica verificar el tipo de error antes de acceder a sus propiedades
     let errorMessage = 'Ocurrió un error inesperado en el servidor.';
     if (error instanceof Error) {

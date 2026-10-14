@@ -11,14 +11,12 @@ import {
 } from '@/lib/precios-servicios';
 import { TODO_INCLUIDO, serviciosEmpresas } from '@/lib/servicios';
 
-const sesion = serviciosEmpresas.find((s) => s.id === 'sesion-estrategica');
 const programa = serviciosEmpresas.find((s) => s.id === 'aceleracion-comercial');
-const abono = sesion?.incluye.find((texto) => texto.toLowerCase().includes('abona'));
 
 const preguntas: PreguntaFaq[] = [
     {
         pregunta: '¿Cuál me conviene si no sé por dónde empezar?',
-        respuesta: `Agenda la llamada gratis de 20 minutos: un asesor de mi equipo te escucha y te recomienda un servicio. Si prefieres un plan claro antes de decidir, la Sesión Estratégica (${formatUsd(PRECIOS.sesionEstrategica)}, 2 horas por videollamada) es el primer paso.${abono ? ` ${abono}.` : ''}`,
+        respuesta: `Agenda la llamada gratis de 20 minutos: un asesor de mi equipo te escucha y te recomienda un servicio. Si prefieres un plan claro antes de decidir, la Sesión Estratégica (${formatUsd(PRECIOS.sesionEstrategica)}, 2 horas por videollamada) es el primer paso.`,
     },
     {
         pregunta: '¿Para qué sirve la Sesión Estratégica?',

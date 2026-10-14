@@ -18,8 +18,24 @@ const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || ""
 );
 
+/** Dirección de envío tal como la guarda Stripe en el cobro (campo `shipping`). */
+type EnvioDelPedido = {
+  name?: string;
+  phone?: string;
+  line1?: string;
+  line2?: string;
+  city?: string;
+  state?: string;
+  postal_code?: string;
+  country?: string;
+};
+
 type StripePaymentFormProps = {
   customerData?: { name: string; email: string; countryCode?: string };
+  /** Datos del pedido que quedan en el cobro: teléfono y dirección de envío. */
+  customerExtra?: { phone?: string; address?: string; shipping?: EnvioDelPedido };
+  /** Oculta nombre, correo y país cuando ya se pidieron en un paso anterior. */
+  hideCustomerFields?: boolean;
   offerDetails?: {
     amount: number;
     currency: "PEN" | "USD";
@@ -60,6 +76,8 @@ function CheckoutForm({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    // Si algún día este formulario queda dentro de otro, que el envío no suba hasta él.
+    e.stopPropagation();
 
     if (!stripe || !elements) {
       return;
@@ -93,6 +111,13 @@ function CheckoutForm({
 
 
         window.location.href = onSuccessRedirectTo;
+      } else {
+        // Ni error ni pago confirmado (p. ej. el banco aún está confirmando).
+        // Sin este aviso el botón se quedaba en "Procesando" para siempre.
+        setErrorMessage(
+          "Tu banco aún está confirmando el pago. No vuelvas a pagar: si se aprueba, te llegará un correo de confirmación."
+        );
+        setIsProcessing(false);
       }
     } catch (err: any) {
       console.error("Error confirmando pago con Stripe:", err);
@@ -154,6 +179,8 @@ function CheckoutForm({
 
 export function StripePaymentForm({
   customerData,
+  customerExtra,
+  hideCustomerFields = false,
   offerDetails,
   showUpsell = true,
   productId,
@@ -165,8 +192,11 @@ export function StripePaymentForm({
     customerData?.countryCode || "PE"
   );
   const [includeBump, setIncludeBump] = useState(false);
-  const [clientSecret, setClientSecret] = useState<string | null>(null);
-  const [isLoadingSecret, setIsLoadingSecret] = useState(false);
+  // El cobro (PaymentIntent) viaja junto con la "firma" de los datos con que se creó.
+  // Stripe no permite cambiar el cobro de un formulario ya montado: si el monto, el
+  // producto o el correo cambian, hay que pagar sobre un cobro NUEVO, nunca sobre el viejo.
+  const [intent, setIntent] = useState<{ secret: string; firma: string } | null>(null);
+  const [secretError, setSecretError] = useState<string | null>(null);
 
   // Lógica de país y moneda:
   // Si el país es Perú (PE): Moneda Soles (PEN - S/), Libro Digital S/ 25, Libro Físico Bump S/ 50.
@@ -186,15 +216,34 @@ export function StripePaymentForm({
   const enCuotas = esPlanEnCuotas(productId);
   const plan = getPlanEnCuotas(productId);
 
+  // Objeto nuevo en cada render del padre: se compara por contenido para no recrear el cobro sin motivo.
+  const extraJson = JSON.stringify(customerExtra ?? null);
+  const datosCompletos = !!email && name.trim().length >= 3 && email.includes("@");
+  const firmaActual = JSON.stringify([
+    name,
+    email,
+    selectedCountry,
+    totalAmount,
+    currency,
+    productId,
+    effectiveIncludeBump,
+    enCuotas,
+    extraJson,
+  ]);
+  const intentVigente = intent && intent.firma === firmaActual ? intent : null;
+
   // Crear PaymentIntent (o suscripción) al cargar o al cambiar de datos/país/bump
   useEffect(() => {
-    if (!email || !name || name.trim().length < 3 || !email.includes("@")) {
+    if (!datosCompletos) {
       return;
     }
 
+    let cancelado = false;
+    setSecretError(null);
+
     const timer = setTimeout(async () => {
-      setIsLoadingSecret(true);
       try {
+        const extra = JSON.parse(extraJson) as StripePaymentFormProps["customerExtra"];
         // Los planes en cuotas crean una suscripción, no un cobro suelto:
         // así Stripe cobra las siguientes cuotas solo.
         const res = enCuotas
@@ -211,6 +260,9 @@ export function StripePaymentForm({
                 currency,
                 email,
                 name,
+                phone: extra?.phone,
+                address: extra?.address,
+                shipping: extra?.shipping,
                 country: selectedCountry,
                 productId: effectiveIncludeBump ? `${productId}+libro-fisico` : productId,
                 description: effectiveIncludeBump
@@ -220,80 +272,91 @@ export function StripePaymentForm({
             });
 
         const data = await res.json();
+        if (cancelado) return; // Llegó tarde: ya hay datos más nuevos.
         if (data.clientSecret) {
-          setClientSecret(data.clientSecret);
+          setIntent({ secret: data.clientSecret, firma: firmaActual });
           if (data.customerId && typeof window !== "undefined") {
             localStorage.setItem("stripe_customer_id", data.customerId);
           }
+        } else {
+          setSecretError(
+            data.error || "No pudimos preparar el pago. Recarga la página e inténtalo de nuevo."
+          );
         }
       } catch (err) {
         console.error("Error obteniendo clientSecret de Stripe:", err);
-      } finally {
-        setIsLoadingSecret(false);
+        if (!cancelado) {
+          setSecretError("No pudimos preparar el pago. Revisa tu conexión e inténtalo de nuevo.");
+        }
       }
     }, 400);
 
-    return () => clearTimeout(timer);
-  }, [name, email, selectedCountry, totalAmount, currency, productId, effectiveIncludeBump, enCuotas]);
+    return () => {
+      cancelado = true;
+      clearTimeout(timer);
+    };
+  }, [datosCompletos, firmaActual, extraJson, name, email, selectedCountry, totalAmount, currency, productId, effectiveIncludeBump, enCuotas]);
 
   return (
     <div className="w-full max-w-md mx-auto bg-white p-4 sm:p-6 rounded-xl shadow-sm border border-slate-200">
-      <div className="mb-4 space-y-3">
-        <div>
-          <label className="block text-xs font-semibold text-slate-700 mb-1">
-            Nombre Completo
-          </label>
-          <input
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Juan Pérez"
-            className="w-full border border-slate-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none"
-            required
-          />
-        </div>
+      {!hideCustomerFields && (
+        <div className="mb-4 space-y-3">
+          <div>
+            <label className="block text-xs font-semibold text-slate-700 mb-1">
+              Nombre Completo
+            </label>
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Juan Pérez"
+              className="w-full border border-slate-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+              required
+            />
+          </div>
 
-        <div>
-          <label className="block text-xs font-semibold text-slate-700 mb-1">
-            Correo Electrónico
-          </label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="juan@ejemplo.com"
-            className="w-full border border-slate-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none"
-            required
-          />
-        </div>
+          <div>
+            <label className="block text-xs font-semibold text-slate-700 mb-1">
+              Correo Electrónico
+            </label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="juan@ejemplo.com"
+              className="w-full border border-slate-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+              required
+            />
+          </div>
 
-        <div>
-          <label className="block text-xs font-semibold text-slate-700 mb-1">
-            País de Residencia
-          </label>
-          <select
-            value={selectedCountry}
-            onChange={(e) => {
-              setSelectedCountry(e.target.value);
-              if (e.target.value !== "PE") {
-                setIncludeBump(false);
-              }
-            }}
-            className="w-full border border-slate-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none bg-white"
-          >
-            <option value="PE">Perú 🇵🇪 (Soles - S/)</option>
-            <option value="US">Estados Unidos 🇺🇸 (USD - $)</option>
-            <option value="MX">México 🇲🇽 (USD - $)</option>
-            <option value="CO">Colombia 🇨🇴 (USD - $)</option>
-            <option value="CL">Chile 🇨🇱 (USD - $)</option>
-            <option value="AR">Argentina 🇦🇷 (USD - $)</option>
-            <option value="ES">España 🇪🇸 (USD - $)</option>
-            <option value="EC">Ecuador 🇪🇨 (USD - $)</option>
-            <option value="BO">Bolivia 🇧🇴 (USD - $)</option>
-            <option value="OTHER">Otro País 🌐 (USD - $)</option>
-          </select>
+          <div>
+            <label className="block text-xs font-semibold text-slate-700 mb-1">
+              País de Residencia
+            </label>
+            <select
+              value={selectedCountry}
+              onChange={(e) => {
+                setSelectedCountry(e.target.value);
+                if (e.target.value !== "PE") {
+                  setIncludeBump(false);
+                }
+              }}
+              className="w-full border border-slate-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none bg-white"
+            >
+              <option value="PE">Perú 🇵🇪 (Soles - S/)</option>
+              <option value="US">Estados Unidos 🇺🇸 (USD - $)</option>
+              <option value="MX">México 🇲🇽 (USD - $)</option>
+              <option value="CO">Colombia 🇨🇴 (USD - $)</option>
+              <option value="CL">Chile 🇨🇱 (USD - $)</option>
+              <option value="AR">Argentina 🇦🇷 (USD - $)</option>
+              <option value="ES">España 🇪🇸 (USD - $)</option>
+              <option value="EC">Ecuador 🇪🇨 (USD - $)</option>
+              <option value="BO">Bolivia 🇧🇴 (USD - $)</option>
+              <option value="OTHER">Otro País 🌐 (USD - $)</option>
+            </select>
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Order Bump Option (Solo visible si el país es Perú) */}
       {shouldShowBump && (
@@ -337,11 +400,13 @@ export function StripePaymentForm({
 
 
       {/* Stripe Payment Element container */}
-      {clientSecret ? (
+      {intentVigente ? (
+        // key: si cambia el cobro, el formulario se vuelve a montar con el cobro nuevo.
         <Elements
+          key={intentVigente.secret}
           stripe={stripePromise}
           options={{
-            clientSecret,
+            clientSecret: intentVigente.secret,
             appearance: {
               theme: "stripe",
               variables: {
@@ -362,7 +427,11 @@ export function StripePaymentForm({
         </Elements>
       ) : (
         <div className="text-center py-6">
-          {isLoadingSecret ? (
+          {secretError ? (
+            <div className="bg-red-50 border border-red-200 text-red-600 p-3 rounded-lg text-sm">
+              {secretError}
+            </div>
+          ) : datosCompletos ? (
             <div className="flex flex-col items-center justify-center gap-2 text-slate-500 text-sm">
               <div className="w-6 h-6 border-2 border-emerald-600 border-t-transparent rounded-full animate-spin"></div>
               <span>Preparando pasarela de pago Stripe...</span>

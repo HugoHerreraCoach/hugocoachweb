@@ -2,7 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { stripe } from '@/lib/stripe';
 import * as Brevo from '@getbrevo/brevo';
 import { sendPurchaseNotificationToAdmin } from '@/lib/sendPurchaseNotification';
-import { sendAccessEmailToCustomer } from '@/lib/sendAccessEmail';
+import { sendAccessEmailToCustomer, entregasPendientesLiderExperto } from '@/lib/sendAccessEmail';
+import { esPedidoDelLibro, bumpsDelPedido } from '@liderexperto/lib/productos';
+import { enviarEventoMeta } from '@/lib/metaConversions';
 
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
@@ -73,8 +75,14 @@ export async function POST(req: NextRequest) {
       }
 
       // Lobos vive en Hotmart, no se entrega solo: hay que matricular a mano.
-      const requiereMatriculaHotmart = !!productId?.includes('comunidad-lobos');
+      const requiereMatriculaHotmart =
+        !!productId?.includes('comunidad-lobos') || !!productId?.includes('lobos-de-ventas');
       const incluyeLibroFisico = !!productId?.includes('libro-fisico');
+
+      // Libro de Líder Experto (con o sin audiolibro y masterclass): hay que despachar el físico.
+      const pedidoLiderExperto = !!productId && esPedidoDelLibro(productId);
+      const bumpsLE = bumpsDelPedido(productId || '');
+      const entregasPendientesLE = entregasPendientesLiderExperto(productId || '');
 
       console.log(`[Stripe Webhook] Pago exitoso para ${customerEmail} (${productName}) - Monto: ${currency} ${rawAmount}`);
 
@@ -85,6 +93,7 @@ export async function POST(req: NextRequest) {
             customerName,
             customerEmail,
             productId: productId || '',
+            direccionEnvio: pedidoLiderExperto ? address || undefined : undefined,
           });
         } catch (accessErr) {
           console.error('[Stripe Webhook] ❌ FALLÓ LA ENTREGA al comprador:', customerEmail, accessErr);
@@ -116,13 +125,67 @@ export async function POST(req: NextRequest) {
             ...(incluyeLibroFisico
               ? { '📦 ACCIÓN REQUERIDA': `ENVIAR libro físico. Se le pidió la dirección por correo — revisa la respuesta de ${customerEmail}.` }
               : {}),
+            ...(pedidoLiderExperto
+              ? {
+                  'Pedido': [
+                    'Libro físico Líder Experto',
+                    bumpsLE.audiolibro ? 'Audiolibro' : null,
+                    bumpsLE.claseKit ? 'Masterclass + Herramientas IA' : null,
+                  ]
+                    .filter(Boolean)
+                    .join(' + '),
+                  '📦 ACCIÓN REQUERIDA': address
+                    ? `ENVIAR libro físico a: ${address}. Teléfono: ${phone || 'N/A'}.`
+                    : `ENVIAR libro físico, pero NO hay dirección guardada: escríbele a ${customerEmail}.`,
+                  ...(entregasPendientesLE.length > 0
+                    ? { '⚠️ ENTREGA MANUAL': `Enviar a ${customerEmail}: ${entregasPendientesLE.join('; ')}. El cliente ya recibió un correo que le promete el enlace en 24 h hábiles.` }
+                    : {}),
+                }
+              : {}),
           },
         });
       } catch (notifyErr) {
         console.error('[Stripe Webhook] Error al enviar email de notificación:', notifyErr);
       }
 
-      // 3. Registrar como comprador en Brevo
+      // 3. Reportar la compra a Meta (el píxel del navegador puede no llegar a verla).
+      // El event_id es el id del cobro: el píxel de /gracias usa el mismo, y Meta lo cuenta una vez.
+      if (pedidoLiderExperto) {
+        try {
+          const [nombrePila, ...apellidos] = customerName.split(' ');
+          const meta = await enviarEventoMeta({
+            eventName: 'Purchase',
+            eventId: paymentIntent.id,
+            eventSourceUrl: 'https://liderexperto.hugoherreracoach.com/',
+            userData: {
+              em: customerEmail !== 'Sin email' ? customerEmail : undefined,
+              ph: phone || undefined,
+              fn: nombrePila,
+              ln: apellidos.join(' ') || undefined,
+              country: country || 'PE',
+            },
+            customData: {
+              value: rawAmount,
+              currency,
+              content_ids: [productId as string],
+              content_name: 'Libro Líder Experto',
+              content_type: 'product',
+              num_items: 1,
+            },
+            fbp: metadata.fbp,
+            fbc: metadata.fbc,
+            clientIp: metadata.ip,
+            clientUserAgent: metadata.ua,
+          });
+          if (meta.skipped) {
+            console.warn('[Stripe Webhook] Purchase no enviado a Meta: faltan META_PIXEL_ID / META_CAPI_ACCESS_TOKEN.');
+          }
+        } catch (metaErr) {
+          console.error('[Stripe Webhook] Error reportando la compra a Meta:', metaErr);
+        }
+      }
+
+      // 4. Registrar como comprador en Brevo
       if (customerEmail && customerEmail !== 'Sin email' && productId?.includes('libro-digital')) {
         await addContactToBrevo(customerEmail, customerName, LISTA_COMPRADORES_CE);
       }

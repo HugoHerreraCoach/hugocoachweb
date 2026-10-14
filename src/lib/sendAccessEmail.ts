@@ -3,10 +3,14 @@
 // cliente pagaba, la página /gracias le prometía un correo, y ese correo
 // no existía en ninguna parte.
 
+import { esPedidoDelLibro, bumpsDelPedido } from '@liderexperto/lib/productos';
+
 interface AccessEmailParams {
   customerName: string;
   customerEmail: string;
   productId: string;
+  /** Dirección de envío del libro físico (solo Líder Experto), para confirmársela al cliente. */
+  direccionEnvio?: string;
   /** Párrafo opcional al inicio, para entregas manuales o reenvíos. */
   mensajeInicial?: string;
 }
@@ -40,7 +44,51 @@ const CONTENIDO_LIBRO = [
 
 const esLibro = (productId: string) => productId.includes('libro-digital');
 const esLibroFisico = (productId: string) => productId.includes('libro-fisico');
-const esLobos = (productId: string) => productId.includes('comunidad-lobos');
+const esLobos = (productId: string) =>
+  productId.includes('comunidad-lobos') || productId.includes('lobos-de-ventas');
+const esLiderExperto = (productId: string) => esPedidoDelLibro(productId);
+
+/** Escapa lo que escribió el cliente antes de ponerlo en el HTML del correo. */
+const esc = (texto: string) =>
+  texto.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+
+/** Enlaces de entrega de Líder Experto. Se configuran en Vercel; sin ellos, la entrega es manual. */
+const ENLACES_LE = {
+  bonos: { variable: 'LIDEREXPERTO_BONOS_URL', nombre: '5 bonos digitales del libro' },
+  audiolibro: { variable: 'LIDEREXPERTO_AUDIOLIBRO_URL', nombre: 'Audiolibro' },
+  claseKit: { variable: 'LIDEREXPERTO_CLASE_KIT_URL', nombre: 'Masterclass en video + Herramientas de IA' },
+} as const;
+
+/**
+ * Qué entregables de Líder Experto NO se pueden mandar solos porque falta su enlace.
+ * El webhook los pone en el aviso al administrador para que los envíe a mano.
+ */
+export function entregasPendientesLiderExperto(productId: string): string[] {
+  if (!esLiderExperto(productId)) return [];
+  const bumps = bumpsDelPedido(productId);
+  const pedidos = [
+    ENLACES_LE.bonos,
+    ...(bumps.audiolibro ? [ENLACES_LE.audiolibro] : []),
+    ...(bumps.claseKit ? [ENLACES_LE.claseKit] : []),
+  ];
+  return pedidos.filter((e) => !process.env[e.variable]).map((e) => `${e.nombre} (falta ${e.variable})`);
+}
+
+/** Un entregable: con enlace, botón de descarga; sin enlace, aviso honesto de que llega por correo. */
+function bloqueEntregable(titulo: string, descripcion: string, url: string, textoBoton: string) {
+  return `
+    <div style="border: 1px solid #dbe3ec; border-radius: 8px; padding: 18px; margin: 0 0 18px;">
+      <p style="font-size: 16px; font-weight: 700; color: ${TINTA}; margin: 0 0 6px;">${titulo}</p>
+      <p style="font-size: 14px; line-height: 1.6; color: #475569; margin: 0;">${descripcion}</p>
+      ${
+        url
+          ? bloqueBoton(url, textoBoton)
+          : `<p style="font-size: 14px; line-height: 1.6; color: #92400e; background-color: #fffbeb; border-radius: 6px; padding: 10px 12px; margin: 12px 0 0;">
+               Te env&iacute;o el enlace por este mismo correo en un m&aacute;ximo de 24 horas h&aacute;biles.
+             </p>`
+      }
+    </div>`;
+}
 
 /** Botón con el degradado azul que usan los CTA del sitio. */
 function bloqueBoton(url: string, texto: string) {
@@ -116,7 +164,7 @@ function bloqueFirma() {
  */
 function construirCorreo(params: AccessEmailParams): { subject: string; html: string } | null {
   const { customerName, productId } = params;
-  const nombre = customerName.split(' ')[0] || 'Hola';
+  const nombre = esc(customerName.split(' ')[0] || 'Hola');
   const driveUrl = process.env.CERRADOR_EXPERTO_DRIVE_URL || '';
 
   const bloques: string[] = [];
@@ -146,6 +194,61 @@ function construirCorreo(params: AccessEmailParams): { subject: string; html: st
         <strong>&laquo;Bonos&raquo;</strong>. Descárgalos a tu equipo para tenerlos siempre
         a la mano: el acceso no vence.
       </p>`);
+  }
+
+  if (esLiderExperto(productId)) {
+    const bumps = bumpsDelPedido(productId);
+    subject = '[ACCESO] Tu pedido de Líder Experto está confirmado';
+
+    const contenido = [
+      'Libro f&iacute;sico &quot;L&iacute;der Experto&quot; (env&iacute;o a todo el Per&uacute;)',
+      '5 bonos digitales incluidos',
+      ...(bumps.audiolibro ? ['Audiolibro L&iacute;der Experto'] : []),
+      ...(bumps.claseKit ? ['Masterclass en video + Herramientas de IA'] : []),
+    ];
+
+    bloques.push(`
+      <p style="font-size: 16px; line-height: 1.6; color: #334155; margin: 0 0 8px;">
+        Tu pago est&aacute; confirmado. Esto es lo que pediste:
+      </p>
+      ${bloqueLista(contenido)}
+      <div style="background-color: #eff6ff; border-left: 4px solid ${AZUL}; border-radius: 6px; padding: 18px; margin: 0 0 22px;">
+        <p style="font-size: 15px; font-weight: bold; color: #1e3a8a; margin: 0 0 6px;">&#128230; Tu libro</p>
+        <p style="font-size: 15px; line-height: 1.6; color: #1e3a8a; margin: 0;">
+          Lo preparo en 24 a 48 horas h&aacute;biles y suele llegar entre 3 y 7 d&iacute;as h&aacute;biles, seg&uacute;n tu ubicaci&oacute;n.
+          ${
+            params.direccionEnvio
+              ? `<br/><br/><strong>Lo enviar&eacute; a:</strong> ${esc(params.direccionEnvio)}`
+              : `<br/><br/>Resp&oacute;ndeme a este correo con tu <strong>direcci&oacute;n completa, distrito y un tel&eacute;fono de contacto</strong> para despacharlo.`
+          }
+        </p>
+      </div>
+      ${bloqueEntregable(
+        'Tus 5 bonos digitales',
+        'Guiones, plantillas y herramientas para aplicar con tu equipo.',
+        process.env[ENLACES_LE.bonos.variable] || '',
+        'DESCARGAR MIS BONOS'
+      )}
+      ${
+        bumps.audiolibro
+          ? bloqueEntregable(
+              'Tu audiolibro',
+              'Escúchalo en tu auto, en el gimnasio o mientras viajas. Empieza antes de que llegue tu libro.',
+              process.env[ENLACES_LE.audiolibro.variable] || '',
+              'ESCUCHAR MI AUDIOLIBRO'
+            )
+          : ''
+      }
+      ${
+        bumps.claseKit
+          ? bloqueEntregable(
+              'Tu masterclass en video + herramientas de IA',
+              'La clase grabada con las herramientas y plantillas editables para implementar más rápido.',
+              process.env[ENLACES_LE.claseKit.variable] || '',
+              'VER MI MASTERCLASS'
+            )
+          : ''
+      }`);
   }
 
   if (esLibroFisico(productId)) {
@@ -179,7 +282,7 @@ function construirCorreo(params: AccessEmailParams): { subject: string; html: st
       </div>`);
   }
 
-  // Producto sin entrega definida (ej. liderexperto, que tiene su propio flujo).
+  // Producto sin entrega definida (ej. Pricing de Poder, que se entrega a mano).
   // Mejor no enviar nada que enviar un correo vacío: el admin igual recibe su aviso.
   if (bloques.length === 0) return null;
 

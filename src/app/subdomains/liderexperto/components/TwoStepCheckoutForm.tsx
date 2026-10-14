@@ -28,6 +28,9 @@ import {
   bumpPrices,
   shippingCost,
   baseBookPrice,
+  CAPTURA_DE_LEADS_ACTIVA,
+  CHECKOUT_STORAGE_KEY,
+  RUTA_LEADS,
   paisesDireccion,
   departamentosPeru,
   codigosPaisCelular,
@@ -86,7 +89,7 @@ export default function TwoStepCheckoutForm() {
   const [containerWidth, setContainerWidth] = useState(0);
   const router = useRouter();
 
-  const formRef = useRef<HTMLFormElement>(null);
+  const formRef = useRef<HTMLDivElement>(null);
   const mainContainerRef = useRef<HTMLDivElement>(null);
 
   // Calcular precio total
@@ -113,6 +116,37 @@ export default function TwoStepCheckoutForm() {
       mainContainerRef.current?.scrollIntoView({ behavior: 'smooth' });
     }
   }, [currentStep]);
+
+  // Si la página se recarga (el celular descarta la pestaña al abrir la app del banco,
+  // se pierde la conexión, etc.), el cliente retoma donde estaba en vez de empezar de cero.
+  const [progressRestored, setProgressRestored] = useState(false);
+  useEffect(() => {
+    try {
+      const raw = sessionStorage.getItem(CHECKOUT_STORAGE_KEY);
+      if (raw) {
+        const saved = JSON.parse(raw);
+        if (saved.formData) setFormData({ ...initialFormData, ...saved.formData });
+        if (saved.selectedBumps) setSelectedBumps({ ...initialSelectedBumps, ...saved.selectedBumps });
+        if (saved.showShippingInfo) setShowShippingInfo(true);
+        if (saved.currentStep === 2) setCurrentStep(2);
+      }
+    } catch {
+      // Sin sessionStorage (modo privado, etc.): el checkout funciona igual, solo no retoma.
+    }
+    setProgressRestored(true);
+  }, []);
+
+  useEffect(() => {
+    if (!progressRestored) return;
+    try {
+      sessionStorage.setItem(
+        CHECKOUT_STORAGE_KEY,
+        JSON.stringify({ formData, selectedBumps, showShippingInfo, currentStep })
+      );
+    } catch {
+      // Ver arriba.
+    }
+  }, [progressRestored, formData, selectedBumps, showShippingInfo, currentStep]);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -190,40 +224,6 @@ export default function TwoStepCheckoutForm() {
     return isValid;
   };
 
-  // Guardar datos del usuario
-  const saveUserData = async () => {
-    try {
-      const dataToSend = {
-        firstName: formData.firstName,
-        lastName: formData.lastName,
-        email: formData.email,
-        phoneCountryCode: formData.phoneCountryCode,
-        phoneNumber: formData.phoneNumber,
-        address: formData.address,
-        reference: formData.reference,
-        country: formData.country,
-        department: formData.department,
-        city: formData.city,
-        postalCode: formData.postalCode,
-        billingSameAsShipping: formData.billingSameAsShipping,
-      };
-      const response = await fetch("/api/user/save", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(dataToSend),
-      });
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || "Error al guardar datos");
-      }
-      const result = await response.json();
-      return result;
-    } catch (error) {
-      console.error("Error guardando datos:", error);
-      throw error;
-    }
-  };
-
   // Manejar envío del formulario
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -234,9 +234,9 @@ export default function TwoStepCheckoutForm() {
       
       setIsProcessingPayment(true);
       try {
-        // Enviar datos básicos a Brevo
+        // Enviar datos básicos a Brevo (apagado hasta confirmar qué automatizaciones escuchan la lista)
         try {
-          await fetch("/api/subscribe", {
+          if (CAPTURA_DE_LEADS_ACTIVA) await fetch(RUTA_LEADS, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -270,7 +270,7 @@ export default function TwoStepCheckoutForm() {
                 fn: formData.firstName,
                 ln: formData.lastName,
                 em: formData.email,
-                ph: formData.phoneNumber,
+                ph: `${formData.phoneCountryCode}${formData.phoneNumber}`,
               }
             }),
           });
@@ -297,17 +297,9 @@ export default function TwoStepCheckoutForm() {
       // Segunda fase del paso 1: guardar datos completos en base de datos
       setIsProcessingPayment(true);
       try {
-        // Guardar datos completos en la base de datos
-        try {
-          await saveUserData();
-        } catch (error) {
-          console.error("Error al guardar en base de datos:", error);
-          // No detener la lógica si falla
-        }
- 
         // Enviar datos completos a Brevo (SIN DNI)
         try {
-          await fetch("/api/subscribe", {
+          if (CAPTURA_DE_LEADS_ACTIVA) await fetch(RUTA_LEADS, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -347,7 +339,7 @@ export default function TwoStepCheckoutForm() {
                 fn: formData.firstName,
                 ln: formData.lastName,
                 em: formData.email,
-                ph: formData.phoneNumber,
+                ph: `${formData.phoneCountryCode}${formData.phoneNumber}`,
               },
               customData: {
                 value: totalPrice,
@@ -411,19 +403,23 @@ export default function TwoStepCheckoutForm() {
       </div>
 
       <div className="bg-white shadow-xl rounded-b-lg">
-        <form ref={formRef} onSubmit={handleSubmit} noValidate className="max-w-2xl mx-auto p-0 bg-white rounded-lg shadow-lg">
+        <div ref={formRef} className="max-w-2xl mx-auto p-0 bg-white rounded-lg shadow-lg">
           {currentStep === 1 ? (
-            <Step1Form
-              formData={formData}
-              errors={errors}
-              handleChange={handleChange}
-              isSubmitting={isProcessingPayment}
-              codigosPaisCelular={codigosPaisCelular}
-              paisesDireccion={paisesDireccion}
-              departamentosPeru={departamentosPeru}
-              showShippingInfo={showShippingInfo}
-            />
+            <form onSubmit={handleSubmit} noValidate>
+              <Step1Form
+                formData={formData}
+                errors={errors}
+                handleChange={handleChange}
+                isSubmitting={isProcessingPayment}
+                codigosPaisCelular={codigosPaisCelular}
+                paisesDireccion={paisesDireccion}
+                departamentosPeru={departamentosPeru}
+                showShippingInfo={showShippingInfo}
+              />
+            </form>
           ) : (
+            // El paso 2 NO va dentro de un <form>: el formulario de Stripe ya trae el suyo,
+            // y con dos formularios anidados el navegador recargaba la página al pagar.
             <Step2Form
               formData={formData}
               errors={errors}
@@ -436,7 +432,7 @@ export default function TwoStepCheckoutForm() {
               containerWidth={containerWidth}
             />
           )}
-        </form>
+        </div>
       </div>
     </div>
   );
@@ -662,23 +658,6 @@ function Step2Form(props: Step2FormProps) {
         </div>
       </div>
 
-      <div className="mb-6">
-        <StripePaymentForm
-          customerData={{
-            name: `${formData.firstName} ${formData.lastName}`.trim(),
-            email: formData.email,
-            countryCode: formData.address ? "PE" : "PE",
-          }}
-          offerDetails={{
-            amount: totalPrice,
-            currency: "PEN",
-          }}
-          showUpsell={false}
-          productId={idDelLibro(selectedBumps)}
-          onSuccessRedirectTo="/subdomains/liderexperto/gracias"
-        />
-      </div>
-
       <div className="space-y-4 mb-6">
         <BumpItem
           id="audiolibro"
@@ -729,6 +708,47 @@ function Step2Form(props: Step2FormProps) {
           <span>Total</span>
           <span>S/{totalPrice.toFixed(2)}</span>
         </div>
+      </div>
+
+      {/* La tarjeta va DESPUÉS de elegir los extras: así el cobro nace con el monto final. */}
+      <div className="mb-6">
+        <StripePaymentForm
+          customerData={{
+            name: `${formData.firstName} ${formData.lastName}`.trim(),
+            email: formData.email,
+            countryCode: "PE",
+          }}
+          customerExtra={{
+            phone: `${formData.phoneCountryCode}${formData.phoneNumber}`,
+            address: [
+              formData.address,
+              formData.reference,
+              formData.city,
+              formData.department,
+              formData.postalCode && `CP ${formData.postalCode}`,
+            ]
+              .filter(Boolean)
+              .join(", "),
+            shipping: {
+              name: `${formData.firstName} ${formData.lastName}`.trim(),
+              phone: `${formData.phoneCountryCode}${formData.phoneNumber}`,
+              line1: formData.address,
+              line2: formData.reference,
+              city: formData.city,
+              state: formData.department,
+              postal_code: formData.postalCode,
+              country: "PE",
+            },
+          }}
+          hideCustomerFields
+          offerDetails={{
+            amount: totalPrice,
+            currency: "PEN",
+          }}
+          showUpsell={false}
+          productId={idDelLibro(selectedBumps)}
+          onSuccessRedirectTo="/subdomains/liderexperto/gracias"
+        />
       </div>
 
       <p className="text-sm text-gray-500 mt-3 text-center leading-[1.3]">

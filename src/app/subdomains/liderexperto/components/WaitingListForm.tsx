@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, FormEvent, ChangeEvent } from 'react';
+import { RUTA_LEADS } from "@liderexperto/constants/checkout";
 import { Loader2, CheckCircle, AlertTriangle } from 'lucide-react';
 
 export default function WaitingListForm() {
@@ -27,7 +28,7 @@ export default function WaitingListForm() {
         setMessage('');
 
         try {
-            const response = await fetch('/api/subscribe', {
+            const response = await fetch(RUTA_LEADS, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({

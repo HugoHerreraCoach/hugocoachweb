@@ -89,7 +89,6 @@ export const serviciosEmpresas: ServicioEmpresa[] = [
             'Sesión en vivo conmigo, por videollamada',
             `Eliges el enfoque: consultoría para el dueño o gerente, o entrenamiento rápido para tu equipo (hasta ${SESION_ENTRENAMIENTO_MAX_PERSONAS} personas)`,
             'Te llevas un plan con pasos y herramientas listas para usar',
-            'Se abona al contratar un programa dentro de 30 días',
         ],
         nota: 'Es virtual: la haces desde donde estés. Presencial solo si estás en Cajamarca.',
         cta: 'Agendar sesión virtual',
