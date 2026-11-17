@@ -1,0 +1,149 @@
+/* Estilos semánticos y física Liquid Glass para info.hugoherreracoach.com */
+
+.info-hub-root {
+  --info-bg: #070a12;
+  --info-bg-elevated: #0c111d;
+  --info-panel-opaque: #0f1626;
+  --info-panel-hover: #131c30;
+  --info-ink: #f8fafc;
+  --info-ink-secondary: #cbd5e1;
+  --info-ink-muted: #94a3b8;
+  --info-border: rgba(255, 255, 255, 0.09);
+  --info-border-strong: rgba(255, 255, 255, 0.16);
+  --conexigo-brand: #ff2000;
+  --conexigo-brand-hover: #e01b00;
+  --hugo-blue: #0a4afc;
+
+  background-color: var(--info-bg);
+  color: var(--info-ink);
+  overflow-wrap: break-word;
+}
+
+/* Margen de anclaje universal en cada sección destino para que la barra sticky y el notch nunca tapen el título (WCAG 2.4.11) */
+.info-anchor-section {
+  scroll-margin-top: calc(4.75rem + env(safe-area-inset-top, 0px));
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html:has(.info-hub-root) {
+    scroll-behavior: smooth;
+  }
+}
+
+/* Tipografía óptica en encabezados cortos y párrafos */
+.info-hub-root :where(h1, h2, h3) {
+  text-wrap: balance;
+}
+
+.info-hub-root :where(p, li) {
+  text-wrap: pretty;
+}
+
+/* Tamaño mínimo de objetivos táctiles (WCAG 2.5.8 / 2.5.5) */
+.info-hub-root :where(a, button) {
+  min-block-size: 24px;
+  min-inline-size: 24px;
+}
+
+@media (pointer: coarse) {
+  .info-hub-root :where(.info-tap-target) {
+    min-block-size: 44px;
+    min-inline-size: 44px;
+  }
+}
+
+/* Capa 1 + 2 + 3 + 4: Cabina Liquid Glass & Specular Relief (Apple HIG) */
+.info-conexigo-cockpit {
+  position: relative;
+  background: linear-gradient(
+    180deg,
+    rgba(22, 30, 49, 0.78) 0%,
+    rgba(11, 16, 28, 0.88) 100%
+  );
+  backdrop-filter: blur(22px) saturate(165%);
+  -webkit-backdrop-filter: blur(22px) saturate(165%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow:
+    0 2px 6px rgba(0, 0, 0, 0.28),
+    0 28px 68px -26px rgba(0, 0, 0, 0.78),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+
+/* Superficie interna opaca de lectura nítida (Contraste > 7:1) */
+.info-opaque-card {
+  background-color: var(--info-panel-opaque);
+  border: 1px solid var(--info-border);
+  box-shadow:
+    0 12px 32px -18px rgba(0, 0, 0, 0.65),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+/* Botón táctil secundario de cristal especular */
+.info-glass-pill {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.11) 0%,
+    rgba(255, 255, 255, 0.05) 100%
+  );
+  backdrop-filter: blur(14px) saturate(150%);
+  -webkit-backdrop-filter: blur(14px) saturate(150%);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow:
+    0 8px 20px -10px rgba(0, 0, 0, 0.55),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.info-glass-pill:hover {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.16) 0%,
+    rgba(255, 255, 255, 0.08) 100%
+  );
+  border-color: rgba(255, 255, 255, 0.26);
+}
+
+/* Barra superior pegajosa con respeto de safe-area en navegadores in-app móviles */
+.info-sticky-nav {
+  padding-top: max(0.5rem, env(safe-area-inset-top, 0px));
+  background: rgba(7, 10, 18, 0.82);
+  backdrop-filter: blur(18px) saturate(160%);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Container queries para tarjetas adaptativas (form-factor-adaptation) */
+.info-recurso-slot {
+  container: recurso-slot / inline-size;
+}
+
+@container recurso-slot (inline-size > 26rem) {
+  .info-recurso-card-inner {
+    display: grid;
+    grid-template-columns: 6.25rem minmax(0, 1fr);
+    align-items: center;
+    gap: 1.125rem;
+  }
+}
+
+/* Micro-interacciones espaciales opt-in solo si el usuario no pidió reducir movimiento */
+.info-pressable {
+  transition:
+    background-color 180ms ease-out,
+    border-color 180ms ease-out,
+    color 180ms ease-out,
+    box-shadow 180ms ease-out;
+  @media (prefers-reduced-motion: no-preference) {
+    transition:
+      transform 180ms cubic-bezier(0.22, 1, 0.36, 1),
+      background-color 180ms ease-out,
+      border-color 180ms ease-out,
+      color 180ms ease-out,
+      box-shadow 180ms ease-out;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .info-pressable:active {
+    transform: scale(0.98);
+  }
+}

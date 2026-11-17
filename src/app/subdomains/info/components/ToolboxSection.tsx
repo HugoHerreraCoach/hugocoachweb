@@ -1,122 +1,72 @@
 import React from 'react';
-import { ArrowRight } from 'lucide-react';
 import Image from 'next/image';
+import { ArrowUpRight } from 'lucide-react';
+import { RECURSOS_GRATUITOS_INFO } from '@info/lib/info-catalogo.utils';
 
-interface Resource {
-  title: string;
-  description: string;
-  buttonText: string;
-  href: string;
-  src: string;
-  width: number;
-  height: number;
-}
-
-// --- DATOS DE LOS RECURSOS (SIN CAMBIOS) ---
-const resources: Resource[] = [
-    {
-        title: "Mapa para Desarmar Objeciones",
-        description: "Ignora la excusa, ataca la objeción real y toma el control. Un sistema probado para cerrar más.",
-        buttonText: "Dominar Objeciones",
-        href: 'https://hugoherreracoach.com/recursos/objeciones',
-        src: '/subdomains/info/images/objeciones.png',
-        width: 700,
-        height: 921,
-    },
-    {
-        title: "Guion de Calificación Estratégica",
-        description: "El guion exacto para filtrar curiosos y detectar compradores reales en minutos. Deja de perder tu tiempo.",
-        buttonText: "Calificar en Minutos",
-        href: 'https://hugoherreracoach.com/recursos/preguntas',
-        src: '/subdomains/info/images/preguntas.png',
-        width: 700,
-        height: 848,
-    },
-    {
-        title: "Radiografía de Sistema Comercial",
-        description: "Encuentra los 15 errores ocultos que frenan tus ventas. Recibe un plan de acción claro para escalar.",
-        buttonText: "Quiero mi Plan de Acción",
-        href: 'https://hugoherreracoach.com/recursos/radiografia',
-        src: '/subdomains/info/images/radiografia.png',
-        width: 700,
-        height: 931,
-    },
-    {
-        title: "Sistema de Inducción para Vendedores",
-        description: "El sistema de 30 días para forjar vendedores de élite. Instala el proceso y ahorra tu tiempo.",
-        buttonText: "Automatizar Capacitación",
-        href: 'https://hugoherreracoach.com/recursos/capacitacion',
-        src: '/subdomains/info/images/capacitacion.jpg',
-        width: 700,
-        height: 989,
-    }
-];
-
-// --- COMPONENTE DE TARJETA REFACTORIZADO ---
-const ToolboxCard: React.FC<Resource> = ({ title, description, buttonText, href, src, width, height }) => {
+export default function ToolboxSection(): React.ReactElement {
   return (
-    <div className="group relative flex h-full flex-col overflow-hidden rounded-2xl p-px transition-shadow duration-300 hover:shadow-xl hover:shadow-blue-900/30">
-      {/* Efecto de borde iluminado al hacer hover */}
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-600 via-slate-900 to-slate-900 opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
-
-      <div className="relative flex h-full flex-col rounded-[15px] bg-slate-900 p-6 text-left">
-        {/* Contenedor de la Imagen */}
-        <div className="mb-6 flex justify-center">
-            <Image
-                src={src}
-                alt={title}
-                width={width}
-                height={height}
-                sizes="(max-width: 640px) 70vw, (max-width: 1024px) 40vw, 25vw"
-                className='w-auto h-auto max-h-[250px] max-w-full'
-            />
-        </div>
-        
-        <h3 className="mb-2 text-2xl font-bold text-white text-balance">{title}</h3>
-        <p className="mb-6 flex-grow text-slate-400 text-xl text-balance">{description}</p>
-        
-        {/* --- INICIO DE LA OPTIMIZACIÓN DE ESTILO DEL BOTÓN --- */}
-        <a
-          href={href}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="mt-auto inline-flex items-center justify-center gap-2 self-start rounded-lg bg-slate-800 px-5 py-3 text-xl font-semibold text-white shadow-md transition-all duration-300 hover:bg-[#0a4afc] hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400"
-        >
-          {buttonText}
-          <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-        </a>
-        {/* --- FIN DE LA OPTIMIZACIÓN DE ESTILO DEL BOTÓN --- */}
-      </div>
-    </div>
-  );
-};
-
-// --- COMPONENTE DE LA SECCIÓN PRINCIPAL (CON GRID AJUSTADO) ---
-const ToolboxSection: React.FC = () => {
-  return (
-    <section className="relative w-full overflow-hidden bg-black py-20 sm:py-24">
-      {/* Efecto de Aurora Estático */}
-      <div className="pointer-events-none absolute left-1/2 top-0 h-1/2 w-full -translate-x-1/2 bg-[radial-gradient(closest-side_at_50%_50%,rgba(37,99,235,0.15),transparent_100%)]"></div>
-
-      <div className="relative z-10 mx-auto max-w-7xl px-6">
-        <div className="mx-auto max-w-3xl text-center">
-          <h2 className="text-4xl font-extrabold tracking-tight text-white text-balance lg:text-5xl">
-            Recursos Gratuitos:
+    <section
+      id="recursos"
+      aria-labelledby="recursos-heading"
+      className="info-anchor-section border-t border-white/[0.06] bg-[#070a12] px-4 py-12 sm:px-6 sm:py-16"
+    >
+      <div className="mx-auto max-w-6xl">
+        <div className="max-w-2xl">
+          <p className="text-xs font-bold uppercase tracking-[0.1em] text-slate-400">
+            Descarga inmediata · $0
+          </p>
+          <h2
+            id="recursos-heading"
+            className="mt-2 text-2xl font-extrabold tracking-[-0.02em] text-white sm:text-3xl"
+          >
+            Recursos gratuitos para tu equipo
           </h2>
-          <p className="mt-4 text-xl lg:text-2xl text-slate-300 text-balance mx-auto">
-            Menos teoría, más acción. Descarga el método exacto que necesitas para escalar tus resultados.
+          <p className="mt-2 text-sm leading-relaxed text-slate-300 sm:text-base">
+            Plantillas y mapas prácticos listos para aplicar hoy mismo en tus llamadas y seguimientos.
           </p>
         </div>
 
-        {/* Grid ajustado para mejor espaciado */}
-        <div className="mx-auto mt-10 lg:mt-16 grid max-w-md grid-cols-1 gap-8 sm:max-w-none lg:grid-cols-2">
-          {resources.map((resource) => (
-            <ToolboxCard key={resource.title} {...resource} />
+        <div className="mt-7 grid grid-cols-1 gap-4 lg:grid-cols-2">
+          {RECURSOS_GRATUITOS_INFO.map((recurso) => (
+            <div key={recurso.id} className="info-recurso-slot">
+              <article className="info-opaque-card rounded-[22px] p-4 transition-colors duration-200 hover:border-white/20">
+                <div className="info-recurso-card-inner flex flex-col gap-4">
+                  <div className="flex h-28 w-full items-center justify-center rounded-xl border border-white/[0.06] bg-[#0a0f1c] p-2.5">
+                    <Image
+                      src={recurso.src}
+                      alt={recurso.titulo}
+                      width={recurso.width}
+                      height={recurso.height}
+                      loading="lazy"
+                      quality={60}
+                      sizes="96px"
+                      className="h-full w-auto object-contain"
+                    />
+                  </div>
+
+                  <div className="min-w-0">
+                    <h3 className="text-base font-bold tracking-[-0.01em] text-white sm:text-lg">
+                      {recurso.titulo}
+                    </h3>
+                    <p className="mt-1 text-sm leading-relaxed text-slate-300">
+                      {recurso.descripcion}
+                    </p>
+                    <a
+                      href={recurso.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="info-tap-target info-pressable mt-3 inline-flex min-h-11 items-center gap-1.5 rounded-lg border border-white/14 bg-white/[0.05] px-3.5 py-2 text-sm font-semibold text-white hover:border-white/28 hover:bg-white/[0.1] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+                    >
+                      <span>{recurso.botonTexto}</span>
+                      <ArrowUpRight className="h-4 w-4 flex-shrink-0 text-slate-300" aria-hidden="true" />
+                    </a>
+                  </div>
+                </div>
+              </article>
+            </div>
           ))}
         </div>
       </div>
     </section>
   );
-};
-
-export default ToolboxSection;
+}

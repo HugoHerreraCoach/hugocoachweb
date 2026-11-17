@@ -26,15 +26,16 @@ export function middleware(request: NextRequest) {
   }
 
   // 3. Extraer el subdominio del host
+  const hostname = host.split(':')[0] || '';
   let subdomain = '';
-  
-  if (host.includes('localhost:3000')) {
-    const parts = host.split('.');
-    if (parts.length > 1 && parts[0] !== 'localhost:3000') {
+
+  if (hostname.endsWith('localhost')) {
+    const parts = hostname.split('.');
+    if (parts.length > 1 && parts[0] !== 'localhost') {
       subdomain = parts[0];
     }
   } else {
-    const parts = host.split('.');
+    const parts = hostname.split('.');
     if (parts.length > 2) {
       if (parts[0] !== 'www') {
         subdomain = parts[0];
