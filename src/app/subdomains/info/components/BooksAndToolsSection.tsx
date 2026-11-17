@@ -32,20 +32,24 @@ export default function BooksAndToolsSection(): React.ReactElement {
               key={item.id}
               className="info-opaque-card flex flex-col rounded-[24px] p-4 sm:p-5"
             >
-              {/* Escenario visual con radio concéntrico rounded-2xl (24px - 16px/8px) */}
-              <div className="flex h-44 items-center justify-center rounded-2xl border border-white/[0.06] bg-[#070a12] p-4">
-                {item.imagen.esLogo ? (
-                  <div className="rounded-xl bg-white/95 px-5 py-3 shadow-lg">
-                    <Image
-                      src={item.imagen.src}
-                      alt={item.imagen.alt}
-                      width={item.imagen.width}
-                      height={item.imagen.height}
-                      loading="lazy"
-                      sizes="200px"
-                      className="h-auto w-full max-w-[180px]"
-                    />
-                  </div>
+              {/* Escenario visual con radio concéntrico rounded-2xl (24px - 8px) */}
+              <div
+                className={
+                  item.imagen.modoEncuadre === 'escena'
+                    ? 'relative h-48 overflow-hidden rounded-2xl border border-white/[0.08] bg-[#070a12] shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]'
+                    : 'flex h-48 items-center justify-center rounded-2xl border border-white/[0.06] bg-[#070a12] p-4'
+                }
+              >
+                {item.imagen.modoEncuadre === 'escena' ? (
+                  <Image
+                    src={item.imagen.src}
+                    alt={item.imagen.alt}
+                    width={item.imagen.width}
+                    height={item.imagen.height}
+                    loading="lazy"
+                    sizes="(min-width: 768px) 360px, 92vw"
+                    className="h-full w-full object-cover object-center"
+                  />
                 ) : (
                   <Image
                     src={item.imagen.src}
@@ -53,7 +57,7 @@ export default function BooksAndToolsSection(): React.ReactElement {
                     width={item.imagen.width}
                     height={item.imagen.height}
                     loading="lazy"
-                    sizes="140px"
+                    sizes="150px"
                     className="h-full w-auto rounded-md object-contain shadow-xl"
                   />
                 )}

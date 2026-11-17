@@ -147,7 +147,7 @@ export interface LibroOHerramientaInfo {
     alt: string;
     width: number;
     height: number;
-    esLogo?: boolean;
+    modoEncuadre?: 'portada' | 'escena';
   };
 }
 
@@ -194,11 +194,11 @@ export const LIBROS_Y_HERRAMIENTAS_INFO: readonly LibroOHerramientaInfo[] = [
     botonTexto: 'Generar guiones gratis',
     href: 'https://totalscript.hugoherreracoach.com/',
     imagen: {
-      src: '/subdomains/info/images/totalscript.png',
-      alt: 'Logo de TotalScript IA',
-      width: 299,
-      height: 52,
-      esLogo: true,
+      src: '/subdomains/info/images/totalscript-showcase.webp',
+      alt: 'Interfaz de TotalScript IA generando un guion comercial estructurado en 10 segundos',
+      width: 880,
+      height: 492,
+      modoEncuadre: 'escena',
     },
   },
 ];
